@@ -1,6 +1,5 @@
 --typed_collection
-local TypedCollection = {}
-TypedCollection.collection = require "collection"
+local TypedCollection = require "collection"
 TypedCollection.content_type = {}
 
 return TypedCollection
