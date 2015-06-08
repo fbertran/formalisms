@@ -1,8 +1,33 @@
 --labelled_vertex_HyperMultiGraph
-local Labelled_vertex_HyperMultiGraph = require "hyper-multi-graph"
+package.path = package.path .. ";/home/alexis/Documents/Stage_M1_01-06-15/CosyVerif/library/src/?.lua"
 
---on ajoute les labels sur les vertex, le type dans Labelled_vertex_hypergraph et le label dans vertex_type
-Labelled_vertex_HyperMultiGraph.label_edge_type = {}
-Labelled_vertex_HyperMultiGraph.vertex_type.label = {} --extends typed_collection with type label_vertex_type 
+local Repository = require "cosy.repository"
+local HMG = require "hyper-multi-graph"
 
-return Labelled_vertex_HyperMultiGraph
+repository = Repository.new()
+Repository.options (repository).create = function () return {} end
+Repository.options (repository).import = function () return {} end
+
+repository.hyper_multi_graph = HMG
+
+local _ = Repository.placeholder(repository)
+
+repository.labelled_vertex_hyper_multi_graph = {
+	[Repository.depends] = {
+		repository.hyper_multi_graph
+	},
+	
+	labelled_vertex_hyper_multi_graph_type = {
+		[Repository.refines] = {
+			_.hyper_multi_graph_type
+		},
+
+		label_vertex_type = {},
+		
+		vertex_type = {
+		  labels = {},
+		}
+	}
+}
+
+return repository.labelled_edges_vertex_multi_graph
