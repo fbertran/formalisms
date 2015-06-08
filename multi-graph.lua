@@ -1,14 +1,37 @@
 --multigraph
+package.path = package.path .. ";/home/alexis/Documents/Stage_M1_01-06-15/CosyVerif/library/src/?.lua"
 
-local multi_graph = require "hyper-multi-graph"
+local Repository = require "cosy.repository"
+local HMG = require "hyper-multi-graph"
 
-function multi_graph.edge_type.check()
-	for k,v in pairs(multi_graph.edges) do
-		if(#v > 2) then
-			return false
+repository = Repository.new()
+Repository.options (repository).create = function () return {} end
+Repository.options (repository).import = function () return {} end
+
+repository.hyper_multi_graph = HMG
+
+local _ = Repository.placeholder(repository)
+
+repository.multi_graph = {
+	[Repository.depends] = {
+		repository.hyper_multi_graph
+	},
+	
+	multi_graph_type = {
+		[Repository.refines] = {
+			_.hyper_multi_graph_type
+		},
+
+		[_.edge_type].check_arity = function ()
+			for k,v in pairs(_.edges) do
+				if(#v > 2) then
+					return false
+				end
+			end
+			return true
 		end
-	end
-	return true
-end
+	}
+}
 
-return multi_graph
+return repository.multi_graph
+				
