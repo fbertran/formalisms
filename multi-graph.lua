@@ -22,14 +22,17 @@ repository.multi_graph = {
 			_.hyper_multi_graph_type
 		},
 
-		[_.edge_type].check_arity = function ()
-			for k,v in pairs(_.edges) do
-				if(#v > 2) then
-					return false
-				end
-			end
-			return true
-		end
+		edge_type = {
+		  check_arity = function ()
+			  for k,v in pairs(_.edges) do
+				  if(#v > 2) then
+					  return false
+				  end
+			  end
+			  return true
+		  end,
+	  }
+	  
 	}
 }
 

@@ -1,33 +1,32 @@
---labelled_edges_HyperMultiGraph
+--graph
 package.path = package.path .. ";/home/alexis/Documents/Stage_M1_01-06-15/CosyVerif/library/src/?.lua"
 
 local Repository = require "cosy.repository"
-local HMG = require "hyper-multi-graph"
+local MG = require "multi-graph"
+local HG = require "hyper-graph"
 
 repository = Repository.new()
 Repository.options (repository).create = function () return {} end
 Repository.options (repository).import = function () return {} end
 
-repository.hyper_multi_graph = HMG
+repository.multi_graph = MG
+repository.hyper_graph = HG
 
 local _ = Repository.placeholder(repository)
 
-repository.labelled_edges_hyper_multi_graph = {
+repository.graph = {
 	[Repository.depends] = {
-		repository.hyper_multi_graph
+		repository.hyper_graph,
+		repository.multi_graph
 	},
 	
-	labelled_edges_hyper_multi_graph_type = {
+	graph_type = {
 		[Repository.refines] = {
-			_.hyper_multi_graph_type
+			_.hyper_graph_type,
+			_.multi_graph_type
 		},
-
-		label_edge_type = {},
-		
-		edge_type = {
-		  labels = {},
-		}
 	}
 }
 
-return repository.labelled_edges_hyper_multi_graph
+return repository.graph
+				
