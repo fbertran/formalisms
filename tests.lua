@@ -1,86 +1,56 @@
 --tests
 
---do 
---	local Collection = require "collection"
---	Collection.content.bla = "bla"
---	print(Collection.content.bla)
---end
+package.path = package.path .. ";/home/alexis/Documents/Stage_M1_01-06-15/CosyVerif/library/src/?.lua"
 
---function alphabet()
---	local alphabet = require "typed_collection"
---	alphabet.content_type.a = "a"
---	alphabet.content_type.b = "b"
---	alphabet.content_type.c = "c"
---	
---	return alphabet
---end
+local Repository = require "cosy.repository"
+local graph = require "graph"
 
---do
---	a_b = alphabet()
---	a_b.content.a = true
+repository = Repository.new()
+Repository.options (repository).create = function () return {} end
+Repository.options (repository).import = function () return {} end
+	
+repository.multi_graph = graph	
 
---end
+local _ = Repository.placeholder(repository)
 
-
-local function createHyperMultiGraph()
-	repository = require "hyper-multi-graph"
-	return repository
-end
-
-
-
---function createMultiGraph()
-
---	repository.hyperMultiGraph = require "hyper-multi-graph"
---	repository.multi_graph = require "multi-graph"
-
---	function repository.addNode(v, k)
---		repository.hyperMultiGraph.vertices[k] = v
---	end
---	
---	function repository.addEdge(node1, node2, k)
---		repository.hyperMultiGraph.edges[k] = {}
---		repository.hyperMultiGraph.edges[k].node1 = node1
---		repository.hyperMultiGraph.edges[k].node2 = node2
---		print(repository.multi_graph.edge_type.check())
---	end
---	
---	function repository.toString()
---		print("[vertices : ")
---		for k,v in pairs(repository.hyperMultiGraph.vertices) do
---			print(k .. " = " .. v .. "; ")
---		end
---		print("]\n")
---		
---		print("[edges : ")
---		for k,v in pairs(repository.hyperMultiGraph.edges) do
---			print("(" .. v.node1 .. ", " .. v.node2 .. "); ")
---		end
---		print("]\n")
---	end
---	
---	return repository
---end
+repository.graph_inst = {	
+	[Repository.depends] = {
+		repository.graph,
+	},
+	
+	vertices = {
+	  n1 = {
+		  [Repository.refines] = {
+		    _.hyper_multi_graph_type.vertex_type
+		  },
+		},
+		
+		n2 = {
+		  [Repository.refines] = {
+		    _.hyper_multi_graph_type.vertex_type
+		  },
+		},
+		
+		n3 = {
+		  [Repository.refines] = {
+		    _.hyper_multi_graph_type.vertex_type
+		  },
+		},
+	
+	},
+  
+}
 
 do
-	local multi_graph = createHyperMultiGraph()
---	multi_graph.addNode("nil", 1) 
---	multi_graph.addNode("nil", 2)
---	multi_graph.addNode(3, 1)
---	multi_graph.addEdge(1, 2, 1)
---	multi_graph.toString()
-end	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+  local G = repository.graph_inst
+  local V = G.vertices
+
+  for k,v in pairs(V) do
+    print(repository [RESOURCES])
+  end
+end
+
+return repository.graph_inst
 	
 	
 	
