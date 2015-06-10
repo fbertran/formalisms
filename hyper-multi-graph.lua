@@ -7,6 +7,8 @@ local repository = Repository.new()
 Repository.options (repository).create = function () return {} end
 Repository.options (repository).import = function () return {} end
 
+local _ = Repository.placeholder(repository)
+
 repository.hyper_multi_graph = {
 	hyper_multi_graph_type = {
 		vertex_type = {},
@@ -15,17 +17,31 @@ repository.hyper_multi_graph = {
 			arrow_type = {
 				value_type = vertex_type,
 			}, --vertex est une variable de type vertex_type
-			arrows = {} --extends typed_collection with type arrow_type
+			arrows = {
+			  ["cosy:meta"] = {
+		      content_type = _.arrow_type,
+		      checks = {},
+		    }
+			} --extends typed_collection with type arrow_type
 		},
 		
 		vertices = {
+		  ["cosy:meta"] = {
+		    content_type = _.vertex_type,
+		    checks = {},
+		  },
 --		  n1 = {
 --		    [Repository.refines] = {
 --		      _.hyper_multi_graph_type.vertex_type
 --		    },
 --		  }
 		}, --extends typed_collection with type vertex_type
-		edges = {} --extends typed_collection with type edge_type
+		edges = {
+		  ["cosy:meta"] = {
+		    content_type = _.vertex_type,
+		    checks = {},
+		  },
+		} --extends typed_collection with type edge_type
 	}
 }
 return repository.hyper_multi_graph
