@@ -48,6 +48,7 @@ repository.hybrid_automaton = {
       updates = {},
     },
       
+  }
 }
 
 return hybrid_automaton
