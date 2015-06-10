@@ -45,8 +45,8 @@ do
   local G = repository.graph_inst
   local V = G.vertices
 
-  for k,v in pairs(V) do
-    print(repository [RESOURCES])
+  for k,v in Repository.iterate(V) do
+    print(k, V[k])
   end
 end
 
