@@ -24,7 +24,9 @@ repository.interrupt_timed_automaton = {
       _.hybrid_automaton_type,
     },
     
-    level_type = {},
+    level_type = {
+      value_type = "number",
+    },
     levels = {
       ["cosy:meta"] = {
         content_type = _.level_type,
@@ -34,8 +36,14 @@ repository.interrupt_timed_automaton = {
 		  },
     },
     
-    differential_clocks_type = {
-      value_type, --polynomial_type
+    vertex_type = {
+      level = level_type,
+      flows_analogs = {}, -- 1 si id_level = id_analog, 0 sinon
+    },
+    
+    
+    flows_analogs_type = {
+      value_type, --1 ou 0
     },
     
     invariants_type = {

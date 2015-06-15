@@ -31,9 +31,13 @@ repository.multi_graph = {
 			  end
 			  return true
 		  end,
-	  }
-	  
+	  }, 
+	
+	  vertices = {},
+	
 	}
+	
+	
 }
 
 return repository.multi_graph

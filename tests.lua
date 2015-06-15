@@ -9,7 +9,7 @@ repository = Repository.new()
 Repository.options (repository).create = function () return {} end
 Repository.options (repository).import = function () return {} end
 	
-repository.multi_graph = graph	
+repository.graph = graph	
 
 local _ = Repository.placeholder(repository)
 
@@ -18,26 +18,34 @@ repository.graph_inst = {
 		repository.graph,
 	},
 	
+	[Repository.refines] = {
+	  _.graph_type,
+	},
+	
 	vertices = {
 	  n1 = {
 		  [Repository.refines] = {
 		    _.hyper_multi_graph_type.vertex_type
 		  },
+		  _ = "n1",
 		},
 		
 		n2 = {
 		  [Repository.refines] = {
 		    _.hyper_multi_graph_type.vertex_type
 		  },
+		  _ = "n2",
 		},
 		
 		n3 = {
 		  [Repository.refines] = {
 		    _.hyper_multi_graph_type.vertex_type
 		  },
+		  _ = "n3",
 		},
 	
 	},
+	
   
 }
 
@@ -46,7 +54,7 @@ do
   local V = G.vertices
 
   for k,v in Repository.iterate(V) do
-    print(k, V[k])
+    print(k, V[k]._)
   end
 end
 

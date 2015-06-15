@@ -21,7 +21,7 @@ repository.hyper_multi_graph = {
 			  ["cosy:meta"] = {
 		      content_type = _.arrow_type,
 		      checks = {},
-		    }
+  	    }
 			} --extends typed_collection with type arrow_type
 		},
 		

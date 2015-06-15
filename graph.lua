@@ -25,6 +25,8 @@ repository.graph = {
 			_.hyper_graph_type,
 			_.multi_graph_type
 		},
+	  
+	  vertices = {},
 	}
 }
 

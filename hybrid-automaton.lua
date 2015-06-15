@@ -24,18 +24,18 @@ repository.hybrid_automaton = {
       _.automaton_type,
     },
     
-    clock_type = {},
-    clocks = {},
+    analog_type = {},
+    analogs = {},
     
     initial_state_type = {
-      clocks_valuation = {},
+      analogs_valuation = {},
     },
     
-    differential_clocks_type = {},
-    invariants_type = {},
+    flows_analogs_type = {}, -- dans les parties de Rn
+    invariants_type = {}, -- dans les parties de Rn
     
     vertex_type = {
-      differential_clocks = {},
+      flows_analogs = {},
       invariants = {},
     },
     
