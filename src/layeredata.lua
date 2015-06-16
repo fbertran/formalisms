@@ -29,7 +29,7 @@ end
 local pack   = table.pack   or function (...) return { ... } end
 local unpack = table.unpack or unpack
 
-function Layer.new (t)
+function Layer.__new (t)
   assert (type (t) == "table")
   local layer = setmetatable ({
     __name    = t.name,
@@ -37,7 +37,7 @@ function Layer.new (t)
     __root    = false,
     __proxies = setmetatable ({}, IgnoreValues),
   }, Layer)
-  local proxy = Proxy.new (layer)
+  local proxy = Proxy.__new (layer)
   layer.__root = proxy
   return proxy
 end
@@ -48,7 +48,7 @@ function Layer.import (data)
   elseif getmetatable (data) == Proxy then
     return data
   elseif data.__proxy then
-    return Proxy.new (data)
+    return Proxy.__new (data)
   else
     local updates = {}
     for key, value in pairs (data) do
@@ -73,7 +73,7 @@ end
 
 local default_proxies = setmetatable ({}, IgnoreValues)
 
-function Proxy.new (t)
+function Proxy.__new (t)
   if getmetatable (t) == Layer then
     return setmetatable ({
       __keys   = {},
@@ -182,6 +182,33 @@ function Proxy.__newindex (proxy, key, value)
   end
 end
 
+function Proxy.replacewith (proxy, x)
+  assert (getmetatable (proxy) == Proxy)
+  local layer = proxy.__layer
+  proxy = Proxy.dereference (proxy)
+  x     = Layer.import (x)
+  if type (layer.__data) ~= "table" then
+    layer.__data = {
+      [Proxy.keys.value] = layer.__data,
+    }
+  end
+  local keys    = proxy.__keys
+  if #keys == 0 then
+    layer.__data = x
+  else
+    local current = layer.__data
+    for i = 1, #keys-1 do
+      if type (current [keys [i]]) ~= "table" then
+        current [keys [i]] = {
+          [Proxy.keys.value] = current [keys [i]],
+        }
+      end
+      current = current [keys [i]]
+    end
+    current [keys [#keys]] = x
+  end
+end
+
 function Proxy.export (proxy)
   assert (getmetatable (proxy) == Proxy)
   local layer    = proxy.__layer
@@ -252,6 +279,20 @@ function Proxy.dereference (proxy)
   return proxy
 end
 
+function Proxy.is_prefix (lhs, rhs)
+  assert (getmetatable (lhs) == Proxy)
+  assert (getmetatable (rhs) == Proxy)
+  if #lhs.__keys > #rhs.__keys then
+    return false
+  end
+  for i = 1, #lhs.__keys do
+    if lhs.__keys [i] ~= rhs.__keys [i] then
+      return false
+    end
+  end
+  return true
+end
+
 function Proxy.__lt (lhs, rhs)
   assert (getmetatable (lhs) == Proxy)
   assert (getmetatable (rhs) == Proxy)
@@ -301,10 +342,10 @@ Proxy.refines = c3.new {
 }
 
 function Proxy.apply (p)
-  assert (#p.__keys < 10)
   assert (getmetatable (p) == Proxy)
   local coroutine = coromake ()
   local seen      = {}
+  local noback    = {}
   local function perform (proxy)
     assert (getmetatable (proxy) == Proxy)
     proxy = Proxy.instantiate (proxy, p.__layer)
@@ -348,10 +389,15 @@ function Proxy.apply (p)
       local refines = Proxy.refines (current)
       for j = #refines-1, 1, -1 do
         local refined = refines [j]
-        for k = i+1, #keys do
-          refined = refined [keys [k]]
+        if not noback [refines [j]] then
+          local back = noback [refines [j]]
+          noback [refines [j]] = true
+          for k = i+1, #keys do
+            refined = refined [keys [k]]
+          end
+          perform (refined)
+          noback [refines [j]] = back
         end
-        perform (refined)
       end
       current = current.__parent
     end
@@ -439,11 +485,16 @@ function Proxy.exists (proxy)
   return Proxy.apply (proxy) (proxy) ~= nil
 end
 
-Proxy.new_layer = Layer.new
+Proxy.new = Layer.__new
 
 function Proxy.flatten (proxy)
   assert (getmetatable (proxy) == Proxy)
+  local special   = {}
+  for _, k in pairs (Proxy.keys) do
+    special [k] = true
+  end
   local equivalents = {}
+  local seen        = {}
   local function f (p)
     if getmetatable (p) ~= Proxy then
       return p
@@ -455,16 +506,39 @@ function Proxy.flatten (proxy)
     else
       equivalents [p] = result
     end
-    for key, pp in Proxy.pairs (p) do
-      result [f (key)] = f (pp)
+    for pp, t in Proxy.apply (p) do
+      if not seen [pp] then
+        if type (t) == "table" then
+          local keys     = {}
+          local previous = seen [pp]
+          seen [pp] = true
+          for k in pairs (t) do
+            if  not keys    [k]
+            and not special [k] then
+              result [f (k)] = f (p [k])
+              keys [k] = true
+            end
+          end
+          seen [pp] = previous
+        end
+      end
     end
     result.__value__ = p.__value__
+    local only_value = result.__value__ ~= nil
+    for k in pairs (result) do
+      only_value = only_value and k == "__value__"
+    end
+    if only_value then
+      result = result.__value__
+    end
     return result
   end
   local function g (t)
-    for k, v in pairs (t) do
-      if getmetatable (v) == Proxy then
-        t [k] = equivalents [v]
+    if type (t) == "table" then
+      for k, v in pairs (t) do
+        if getmetatable (v) == Proxy then
+          t [k] = equivalents [v]
+        end
       end
     end
     return t
