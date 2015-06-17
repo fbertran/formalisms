@@ -1,12 +1,12 @@
 local Proxy             = require "layeredata"
 Proxy.hyper_multi_graph = require "formalisms.hyper_multi_graph"
 local layer             = Proxy.new {
-  name = "hyper graph", 
+  name = "labelled edges & hyper & multi graph", 
 }
 local _                 = Proxy.placeholder
 
 
-layer.hyper_graph_type = {
+layer.labelled_edges_hyper_multi_graph_type = {
   __depends__ = {
     Proxy.hyper_multi_graph,
   },
@@ -15,17 +15,17 @@ layer.hyper_graph_type = {
     _.hyper_multi_graph_type,
   },
   
-  __meta__ = {
+  __meta__ = { 
+    label_edge_type = {},
+    
     edge_type = {
-      __meta__ = {
-        checks = {
-          function ()
-            -- TODO check same edges in table
-          end,
+      labels = {
+        __meta__ = {
+          content_type = _.hyper_multi_graph_type.__meta__.label_edge_type
         },
       },
     },
-  },
+  },  
 }
 
-return layer					
+return layer

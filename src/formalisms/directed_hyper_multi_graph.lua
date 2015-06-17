@@ -15,28 +15,21 @@ layer.directed_hyper_multi_graph_type = {
     _.hyper_multi_graph_type,
   },
   
-  __meta__ = {
-    
-	  edge_type = {
-		  __refines__ = {
-		    _.hyper_multi_graph_type.__meta__.edge_type,
-		  },
-		  __meta__ = {
-		    direction_type = {},
-		      
+  __meta__ = { 
+    edge_type = {
+      __meta__ = {
+        direction_type = {},
+          
         arrow_type = {
-          __refines__ = {
-            _.hyper_multi_graph_type.__meta__.edge_type.__meta__.arrow_type,
+          direction = {
+            __meta__ = {
+              content_type = _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+            },
           },
-		      direction = {
-		        __meta__ = {
-		          content_type = _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-		        },
-		      },
-	      },
+        },
       },
-	  },
-	},	  
+    },
+  },  
 }
 
 return layer
