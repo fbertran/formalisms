@@ -1,19 +1,19 @@
 local Serpent                    = require "serpent"
 local Proxy                      = require "layeredata"
-Proxy.directed_hyper_multi_graph = require "formalisms.labelled_edges_hyper_multi_graph"
+Proxy.directed_hyper_multi_graph = require "formalisms.labelled_vertices_hyper_multi_graph"
 local layer                      = Proxy.new { 
-  name = "labelled edges & hyper & multi graph instance",
+  name = "labelled vertices & hyper & multi graph instance",
 }
 local _                               = Proxy.placeholder
 
 layer.model = {	
 
   __depends__ = {
-    Proxy.labelled_edges_hyper_multi_graph,
+    Proxy.labelled_vertices_hyper_multi_graph,
   },
 
   __refines__ = {
-    _.labelled_edges_hyper_multi_graph_type,
+    _.labelled_vertices_hyper_multi_graph_type,
   },
 
   vertices = {
@@ -21,11 +21,39 @@ layer.model = {
       __refines__ = {
         _.hyper_multi_graph_type.__meta__.vertex_type
       },
+      
+      labels = {
+        [1] = {
+          __refines__ = {
+            _.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
+          },
+          
+          __value__ = "node 1",
+        },
+      },
     },
 
     n2 = {
       __refines__ = {
         _.hyper_multi_graph_type.__meta__.vertex_type
+      },
+      
+      labels = {
+        [1] = {
+          __refines__ = {
+            _.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
+          },
+          
+          __value__ = "node 2",
+        },
+        
+        [2] = {
+          __refines__ = {
+            _.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
+          },
+          
+          __value__ = "argument",
+        },
       },
     },
 
@@ -33,6 +61,8 @@ layer.model = {
       __refines__ = {
         _.hyper_multi_graph_type.__meta__.vertex_type
       },
+      
+      labels = {},
     },
   },
   
@@ -55,16 +85,6 @@ layer.model = {
           vertex =  _.model.vertices.n3,
         },
       },
-      
-      labels = {
-        [1] = {
-          __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
-          },
-          
-          __value__ = "a",
-        },
-      },
     },
     
     e2 = {
@@ -79,24 +99,6 @@ layer.model = {
         
         [2] = {
           vertex = _.model.vertices.n2,
-        },
-      },
-      
-      labels = {
-        [1] = {
-          __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
-          },
-          
-          __value__ = "b",
-        },
-        
-        [2] = {
-          __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
-          },
-          
-          __value__ = "c",
         },
       },
     },
