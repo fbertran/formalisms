@@ -35,6 +35,10 @@ layer.automaton_type = {
       },
     },
     
+    label_vertex_type = {
+      id = {},
+    },
+    
     initial_state_type = {
       __value__ = {
         content_type    = _.hyper_multi_graph_type.__meta__.vertex_type,
