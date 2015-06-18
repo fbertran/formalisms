@@ -47,7 +47,7 @@ layer.hyper_multi_graph_type = {
     __meta__ = {
       content_type = _.hyper_multi_graph_type.__meta__.edge_type,
     },
-  } --extends typed_collection with type edge_type
+  }
 }
 
 return layer
