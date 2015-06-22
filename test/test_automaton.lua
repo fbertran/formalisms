@@ -1,45 +1,45 @@
 local Serpent   = require "serpent"
-local Proxy     = require "layeredata"
-Proxy.automaton = require "formalisms.automaton"
-local layer     = Proxy.new { 
+local Layer     = require "layeredata"
+local automaton = require "formalisms.automaton"
+local layer     = Layer.new { 
   name = "automaton instance" 
 }
-local _         = Proxy.placeholder
+local _         = Layer.placeholder
 
-layer.model = {
-  __depends__ = {
-    Proxy.automaton,
-  },
-  
+layer.__depends__ = {
+  automaton
+}
+
+layer.model = {  
   __refines__ = {
-    _.automaton_type,
+    _.__meta__.automaton_type,
   },
 
   symbols = {
     a = {
       __refines__ = {
-        _.alphabet_type.__meta__.symbol_type
+        _.__meta__.alphabet_type.__meta__.symbol_type
       },
       __value__ = "a",
     },
 
     a2 = {
       __refines__ = {
-        _.alphabet_type.__meta__.symbol_type
+        _.__meta__.alphabet_type.__meta__.symbol_type
       },
       __value__ = "a'",
     },
     
     b = {
       __refines__ = {
-        _.alphabet_type.__meta__.symbol_type
+        _.__meta__.alphabet_type.__meta__.symbol_type
       },
       __value__ = "b",
     },
 
     c = {
       __refines__ = {
-        _.alphabet_type.__meta__.symbol_type
+        _.__meta__.alphabet_type.__meta__.symbol_type
       },
       __value__ = "c",
     },
@@ -48,45 +48,45 @@ layer.model = {
   vertices = {
     q0 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
+        _.__meta__.hyper_multi_graph_type.__meta__.vertex_type
       },
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
+            _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
           },
           
-          __value__ = "q0",
+          id = "q0",
         },
       },
     },
 
     q1 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
+        _.__meta__.hyper_multi_graph_type.__meta__.vertex_type
       },
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
+            _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
           },
           
-          __value__ = "q1",
+          id = "q1",
         },
       },
     },
 
     q2 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
+        _.__meta__.hyper_multi_graph_type.__meta__.vertex_type
       },
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
+            _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
           },
           
-          __value__ = "q2",
+          id = "q2",
         },
       },
     },
@@ -95,7 +95,7 @@ layer.model = {
   edges = {
     e1 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.edge_type
+        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
       },
       
       arrows = {
@@ -103,7 +103,7 @@ layer.model = {
           vertex = _.model.vertices.q0,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "input"
           },
@@ -112,7 +112,7 @@ layer.model = {
           vertex = _.model.vertices.q1,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "output"
           },
@@ -122,7 +122,7 @@ layer.model = {
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
+            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
           },
           __value__ = _.model.symbols.a,
         },
@@ -131,7 +131,7 @@ layer.model = {
     
     e2 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.edge_type
+        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
       },
       
       arrows = {
@@ -139,7 +139,7 @@ layer.model = {
           vertex = _.model.vertices.q0,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "input"
           },
@@ -148,7 +148,7 @@ layer.model = {
           vertex = _.model.vertices.q0,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "output"
           },
@@ -158,7 +158,7 @@ layer.model = {
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
+            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
           },
           __value__ = _.model.symbols.a2,
         },
@@ -167,7 +167,7 @@ layer.model = {
     
     e3 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.edge_type
+        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
       },
       
       arrows = {
@@ -175,7 +175,7 @@ layer.model = {
           vertex = _.model.vertices.q1,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "input"
           },
@@ -184,7 +184,7 @@ layer.model = {
           vertex = _.model.vertices.q2,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "output"
           },
@@ -194,7 +194,7 @@ layer.model = {
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
+            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
           },
           __value__ = _.model.symbols.b,
         },
@@ -203,7 +203,7 @@ layer.model = {
     
     e1 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.edge_type
+        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
       },
       
       arrows = {
@@ -211,7 +211,7 @@ layer.model = {
           vertex = _.model.vertices.q2,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "input"
           },          
@@ -220,7 +220,7 @@ layer.model = {
           vertex = _.model.vertices.q1,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "output"
           },
@@ -230,7 +230,7 @@ layer.model = {
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
+            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
           },
           __value__ = _.model.symbols.a,
         },
@@ -258,5 +258,5 @@ local function dump (x)
 end
 
 do
-  print(dump(Proxy.flatten(layer)))
+  print(dump(Layer.flatten(layer)))
 end

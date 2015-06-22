@@ -1,45 +1,46 @@
 local Serpent                   = require "serpent"
-local Proxy                     = require "layeredata"
-Proxy.interrupt_timed_automaton = require "formalisms.interrupt_timed_automaton"
-local layer                     = Proxy.new { 
+local Layer                     = require "layeredata"
+local interrupt_timed_automaton = require "formalisms.interrupt_timed_automaton"
+local layer                     = Layer.new { 
   name = "ita instance" 
 }
-local _                         = Proxy.placeholder
+local _                         = Layer.placeholder
+
+layer.__depends__ = {
+  interrupt_timed_automaton,
+}
 
 layer.model = {
-  __depends__ = {
-    Proxy.interrupt_timed_automaton,
-  },
   
   __refines__ = {
-    _.interrupt_timed_automaton_type,
+    _.__meta__.interrupt_timed_automaton_type,
   },
 
   symbols = {
     a = {
       __refines__ = {
-        _.alphabet_type.__meta__.symbol_type
+        _.__meta__.alphabet_type.__meta__.symbol_type
       },
       __value__ = "a",
     },
 
     a2 = {
       __refines__ = {
-        _.alphabet_type.__meta__.symbol_type
+        _.__meta__.alphabet_type.__meta__.symbol_type
       },
       __value__ = "a'",
     },
     
     b = {
       __refines__ = {
-        _.alphabet_type.__meta__.symbol_type
+        _.__meta__.alphabet_type.__meta__.symbol_type
       },
       __value__ = "b",
     },
 
     c = {
       __refines__ = {
-        _.alphabet_type.__meta__.symbol_type
+        _.__meta__.alphabet_type.__meta__.symbol_type
       },
       __value__ = "c",
     },
@@ -48,13 +49,13 @@ layer.model = {
   analogs = {
     x1 = {
       __refines__ = {
-        _.interrupt_timed_automaton_type.__meta__.analog_type
+        _.__meta__.interrupt_timed_automaton_type.__meta__.analog_type
       },
     },
     
     x2 = {
       __refines__ = {
-        _.interrupt_timed_automaton_type.__meta__.analog_type
+        _.__meta__.interrupt_timed_automaton_type.__meta__.analog_type
       },
     },
   },
@@ -62,14 +63,14 @@ layer.model = {
   levels = {
     l1 = {
       __refines__ = {
-        _.interrupt_timed_automaton_type.__meta__.level_type
+        _.__meta__.interrupt_timed_automaton_type.__meta__.level_type
       },
       __value__ = 1,
     },
     
     l2 = {
       __refines__ = {
-        _.interrupt_timed_automaton_type.__meta__.level_type
+        _.__meta__.interrupt_timed_automaton_type.__meta__.level_type
       },
       __value__ = 2,
     },
@@ -78,15 +79,15 @@ layer.model = {
   vertices = {
     q0 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
+        _.__meta__.hyper_multi_graph_type.__meta__.vertex_type
       },
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
+            _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
           },
           
-          __value__ = "q0",
+          id = "q0",
           
           level = {
             __value__ = _.model.levels.l1
@@ -97,18 +98,18 @@ layer.model = {
 
     q1 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
+        _.__meta__.hyper_multi_graph_type.__meta__.vertex_type
       },
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
+            _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
           },
           
-          __value__ = "q1",
+          id = "q1",
           
           level = {
-            __value__ = _.model.levels.l2
+           __value__ = _.model.levels.l2
           },
         },
       },
@@ -116,15 +117,15 @@ layer.model = {
 
     q2 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
+        _.__meta__.hyper_multi_graph_type.__meta__.vertex_type
       },
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
+            _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
           },
           
-          __value__ = "q2",
+          id = "q2",
           
           level = {
             __value__ = _.model.levels.l2
@@ -137,7 +138,7 @@ layer.model = {
   edges = {
     e1 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.edge_type
+        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
       },
       
       arrows = {
@@ -145,7 +146,7 @@ layer.model = {
           vertex = _.model.vertices.q0,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "input"
           },
@@ -154,7 +155,7 @@ layer.model = {
           vertex = _.model.vertices.q1,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "output"
           },
@@ -164,13 +165,13 @@ layer.model = {
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
+            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
           },
           __value__ = _.model.symbols.a,
           guards = {
             [1] = {
               __refines__ = {
-                _.interrupt_timed_automaton_type.__meta__.guard_type
+                _.__meta__.interrupt_timed_automaton_type.__meta__.guard_type
               },
               __value__ = "x1^2 <= x1 + 1"
             },
@@ -181,7 +182,7 @@ layer.model = {
     
     e2 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.edge_type
+        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
       },
       
       arrows = {
@@ -189,7 +190,7 @@ layer.model = {
           vertex = _.model.vertices.q0,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "input"
           },
@@ -198,7 +199,7 @@ layer.model = {
           vertex = _.model.vertices.q0,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "output"
           },
@@ -208,14 +209,14 @@ layer.model = {
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
+            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
           },
           __value__ = _.model.symbols.a2,
           
           guards = {
             [1] = {
               __refines__ = {
-                _.interrupt_timed_automaton_type.__meta__.guard_type
+                _.__meta__.interrupt_timed_automaton_type.__meta__.guard_type
               },
               __value__ = "x1^2 > x1 + 1"
             },
@@ -224,7 +225,7 @@ layer.model = {
           updates = {
             [1] = {
               __refines__ = {
-                _.interrupt_timed_automaton_type.__meta__.update_type
+                _.__meta__.interrupt_timed_automaton_type.__meta__.update_type
               },
               __value__ = "x1 = 0"
             },
@@ -235,7 +236,7 @@ layer.model = {
     
     e3 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.edge_type
+        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
       },
       
       arrows = {
@@ -243,7 +244,7 @@ layer.model = {
           vertex = _.model.vertices.q1,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "input"
           },
@@ -252,7 +253,7 @@ layer.model = {
           vertex = _.model.vertices.q2,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "output"
           },
@@ -262,14 +263,14 @@ layer.model = {
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
+            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
           },
           __value__ = _.model.symbols.b,
           
           guards = {
             [1] = {
               __refines__ = {
-                _.interrupt_timed_automaton_type.__meta__.guard_type
+                _.__meta__.interrupt_timed_automaton_type.__meta__.guard_type
               },
               __value__ = "(2x1 - 1) * x2^2 > 1"
             },
@@ -280,7 +281,7 @@ layer.model = {
     
     e1 = {
       __refines__ = {
-        _.hyper_multi_graph_type.__meta__.edge_type
+        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
       },
       
       arrows = {
@@ -288,7 +289,7 @@ layer.model = {
           vertex = _.model.vertices.q2,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "input"
           },          
@@ -297,7 +298,7 @@ layer.model = {
           vertex = _.model.vertices.q1,
           direction = {
             __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
+              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
             },
             __value__ = "output"
           },
@@ -307,14 +308,14 @@ layer.model = {
       labels = {
         [1] = {
           __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
+            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
           },
           __value__ = _.model.symbols.a,
           
           guards = {
             [1] = {
               __refines__ = {
-                _.interrupt_timed_automaton_type.__meta__.guard_type
+                _.__meta__.interrupt_timed_automaton_type.__meta__.guard_type
               },
               __value__ = "x2 <= 5 - x1^2"
             },
@@ -351,5 +352,9 @@ local function dump (x)
 end
 
 do
-  print(dump(Proxy.flatten(layer)))
+  ProFi = require 'ProFi'
+  ProFi:start()
+  dump(Layer.flatten(layer))
+  ProFi:stop()
+  ProFi:writeReport "profilage.txt"
 end

@@ -1,19 +1,21 @@
-local Proxy = require "layeredata"
-local layer = Proxy.new { 
+local Layer = require "layeredata"
+local layer = Layer.new { 
   name = "alphabet",
 }
-local _     = Proxy.placeholder
+local _     = Layer.placeholder
 
 -- 
-layer.alphabet_type = {
+layer.__meta__ = {
 
-  __meta__ = {
-    symbol_type = {},
-  },
-
-  symbols = {
+  alphabet_type = {
     __meta__ = {
-      content_type = _.alphabet_type.__meta__.symbol_type,
+      symbol_type = {},
+    },
+
+    symbols = {
+      __meta__ = {
+        content_type = _.__meta__.alphabet_type.__meta__.symbol_type,
+      },
     },
   },
 }
