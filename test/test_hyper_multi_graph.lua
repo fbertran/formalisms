@@ -57,6 +57,7 @@ layer.model = {
         },
       },
     },
+    e3 = {__value__ = 1}
   },
 }
 
@@ -71,5 +72,11 @@ local function dump (x)
 end
 
 do
-  print(dump(Layer.flatten(layer)))
+  local checks_edges = layer.model.__meta__.edge_type.__meta__.checks
+
+  for i = 1, Layer.size (checks_edges) do
+    checks_edges [i] [nil] (layer.model.edges)
+  end
+  
+  print()
 end
