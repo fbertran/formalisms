@@ -9,6 +9,23 @@ local layer                               = Layer.new {
 }
 local _                                   = Layer.placeholder
 
+-- Description of automaton
+-- ========================
+-- 
+-- An automaton is a 5-tuple (Q, Σ, δ, q0, F)
+--
+-- Q is a set of vertices called states.
+-- 
+-- Σ is a finite alphabet, describe [here](./Alphabet.html)
+--
+-- δ is a set of labelled edges called transition. this edges are labelled by a symbol of Σ.
+-- 
+-- q0 is the start state, q0 is in Q
+--
+-- F is a subset of Q, they are the accept states
+--
+-- For more information of automaton see [here](http://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-definitions.html)
+
 layer.__depends__ = {
   labelled_edges_hyper_multi_graph,
   labelled_vertices_hyper_multi_graph,

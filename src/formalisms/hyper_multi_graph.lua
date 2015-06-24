@@ -21,7 +21,7 @@ layer.__depends__ =  {
 layer.__meta__ = {
 
   hyper_multi_graph_type = {
-     --__id__ = "myid",
+     --__label__ = "myid",
     __meta__ = {
       vertex_type = {
         

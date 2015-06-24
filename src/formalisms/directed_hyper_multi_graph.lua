@@ -5,6 +5,13 @@ local layer             = Layer.new {
 }
 local _                 = Layer.placeholder
 
+-- Formalism for a Directed Hyper and Multi Graph
+-- ==============================================
+-- 
+-- A Directed Hyper and Multi Graph refine a Hyper and Multi Graph. It's a Hyper and Multi Graph with edges' ends are typed.
+-- 
+-- A definition of Directed Hyper Graph is given [here](http://link.springer.com/chapter/10.1007/3-540-45446-2_20)
+
 layer.__depends__ = {
   hyper_multi_graph,
 }
@@ -22,6 +29,7 @@ layer.__meta__ = {
           direction_type = {},
             
           arrow_type = {
+            -- Adding a direction in arrows
             direction = {
               __meta__ = {
                 content_type = _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type

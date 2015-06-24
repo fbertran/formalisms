@@ -4,7 +4,13 @@ local layer = Layer.new {
 }
 local _     = Layer.placeholder
 
--- 
+-- Alphabet
+-- ========
+--
+-- This formalism describe what is an Alphabet. 
+--
+-- An alphabet is an set of symbols. 
+ 
 layer.__meta__ = {
 
   alphabet_type = {

@@ -5,6 +5,13 @@ local layer             = Layer.new {
 }
 local _                 = Layer.placeholder
 
+-- Formalism of a Hyper and Multi Graph with labels on vertices
+-- ============================================================
+--
+-- For more information of Hyper and Multi Graph formalism, see [here](./hyper_multi_graph.html)
+--
+-- We only add in this formalism labels on vertices.
+
 layer.__depends__ = {
   hyper_multi_graph,
 }
