@@ -1,9 +1,26 @@
+-- Examples
+-- ========
+--
+--    > Layer = require "layeredata"
+--    > a = Layer.new { name = "a" }
+--    > b = Layer.new { name = "b" }
+--    > a.x = 1
+--    > a.y = 2
+--    > b.__depends__ = { a }
+--    > b.x = 3
+--    > b.z = 4
+--    > = a.x, a.y, a.z
+--    1, 2, nil
+--    > = b.x, b.y, b.z
+--    3, 2, 4
+
 local coromake = require "coroutine.make"
 local c3       = require "c3"
 local serpent  = require "serpent"
 
 local Layer              = {}
 local Proxy              = {}
+local Reference          = {}
 local IgnoreKeys         = {}
 IgnoreKeys.__mode        = "k"
 local IgnoreValues       = {}
@@ -12,27 +29,33 @@ IgnoreValues.__mode      = "v"
 Proxy.keys = {
   depends = "__depends__",
   refines = "__refines__",
-  value   = "__value__",
-  special = nil,
+}
+Proxy.specials = {
+  default = "__default__",
+  label   = "__label__",
+  meta    = "__meta__",
 }
 
+
 local function totypedstring (x)
+  return tostring (x)
+  --[[
   return serpent.line (x, {
     indent   = "  ",
     comment  = false,
     sortkeys = true,
     compact  = false,
   })
+  --]]
 end
 
-local pack   = table.pack   or function (...) return { ... } end
 local unpack = table.unpack or unpack
 
 function Layer.__new (t)
   assert (type (t) == "table")
   local layer = setmetatable ({
     __name    = t.name,
-    __data    = Layer.import (t.data),
+    __data    = Layer.import (t.data or {}),
     __root    = false,
     __proxies = setmetatable ({}, IgnoreValues),
   }, Layer)
@@ -45,14 +68,32 @@ function Layer.import (data)
   if type (data) ~= "table" then
     return data
   elseif getmetatable (data) == Proxy then
+    if #data.__keys == 0 then
+      return data
+    else
+      local reference = Reference.new (false)
+      local keys      = data.__keys
+      for i = 1, #keys do
+        reference = reference [keys [i]]
+      end
+      return reference
+    end
+  elseif getmetatable (data) == Reference then
     return data
   elseif data.__proxy then
-    return Proxy.__new (data)
+    assert (#data == 0)
+    return Proxy.layerof (data.__layer)
+  elseif data.__reference then
+    local reference = Reference.new (data.__from)
+    for i = 1, #data do
+      reference = reference [data [i]]
+    end
+    return reference
   else
     local updates = {}
     for key, value in pairs (data) do
       if type (key  ) == "table" then
-        updates [key] = Layer.import (key  )
+        updates [key] = Layer.import (key)
       end
       if type (value) == "table" then
         data    [key] = Layer.import (value)
@@ -65,50 +106,60 @@ function Layer.import (data)
   end
 end
 
+--    > = tostring (a)
+--    [[<"a">]]
+
 function Layer.__tostring (layer)
   assert (getmetatable (layer) == Layer)
   return "layer:" .. totypedstring (layer.__name)
 end
 
-local default_proxies = setmetatable ({}, IgnoreValues)
-
 function Proxy.__new (t)
-  if getmetatable (t) == Layer then
-    return setmetatable ({
-      __keys   = {},
-      __layer  = t,
-      __memo   = t.__proxies,
-      __parent = false,
-    }, Proxy)
-  elseif t.__proxy then
-    return setmetatable ({
-      __keys   = t,
-      __layer  = false,
-      __memo   = default_proxies,
-      __parent = false,
-    }, Proxy)
-  else
-    assert (false)
-  end
+  assert (getmetatable (t) == Layer)
+  return setmetatable ({
+    __keys   = {},
+    __layer  = t,
+    __memo   = t.__proxies,
+    __parent = false,
+  }, Proxy)
 end
-
-Proxy.placeholder = setmetatable ({
-  __keys   = {},
-  __layer  = false,
-  __memo   = default_proxies,
-  __parent = false,
-}, Proxy)
 
 function Proxy.__serialize (proxy)
   assert (getmetatable (proxy) == Proxy)
   return {
     __proxy = true,
-    __layer = proxy.__layer
-          and proxy.__layer.__name
-           or false,
+    __layer = proxy.__layer.__name,
     unpack (proxy.__keys),
   }
 end
+
+function Proxy.dump (proxy, serialize)
+  assert (getmetatable (proxy) == Proxy)
+  local Layer_serialize     = Layer    .__serialize
+  local Proxy_serialize     = Proxy    .__serialize
+  local Reference_serialize = Reference.__serialize
+  if not serialize then
+    Layer    .__serialize = nil
+    Proxy    .__serialize = nil
+    Reference.__serialize = nil
+  end
+  local result = serpent.dump (Proxy.export (proxy), {
+    indent   = "  ",
+    comment  = false,
+    sortkeys = true,
+    compact  = false,
+  })
+  if not serialize then
+    Layer    .__serialize = Layer_serialize
+    Proxy    .__serialize = Proxy_serialize
+    Reference.__serialize = Reference_serialize
+  end
+  return result
+end
+
+--    > a.i = {}
+--    > = tostring (a.i)
+--    [=[<"a"> ["i"]]=]
 
 function Proxy.__tostring (proxy)
   assert (getmetatable (proxy) == Proxy)
@@ -123,92 +174,72 @@ function Proxy.__tostring (proxy)
   return table.concat (result, " ")
 end
 
-function Proxy.__index (proxy, key)
+function Proxy.sub (proxy, key)
   assert (getmetatable (proxy) == Proxy)
-  if key == Proxy.keys.special or key == Proxy.keys.value then
-    return Proxy.value (proxy)
-  end
   local proxies = proxy.__memo
   local found   = proxies [key]
-  if found then
-    return found
-  end
-  local nkeys
-  if #proxy.__keys < 100 then
-    nkeys = pack (unpack (proxy.__keys))
-  else
-    nkeys = {}
+  if not found then
+    local nkeys = {}
     for i = 1, #proxy.__keys do
       nkeys [i] = proxy.__keys [i]
     end
+    nkeys [#nkeys+1] = key
+    found = setmetatable ({
+      __layer  = proxy.__layer,
+      __keys   = nkeys,
+      __memo   = setmetatable ({}, IgnoreValues),
+      __parent = proxy,
+    }, Proxy)
+    proxies [key] = found
   end
-  nkeys [#nkeys+1] = key
-  local result = setmetatable ({
-    __layer  = proxy.__layer,
-    __keys   = nkeys,
-    __memo   = setmetatable ({}, IgnoreValues),
-    __parent = proxy,
-  }, Proxy)
-  proxies [key] = result
-  return result
+  return found
+end
+
+function Proxy.__index (proxy, key)
+  assert (getmetatable (proxy) == Proxy)
+  proxy = Proxy.sub (proxy, key)
+  local _, c = Proxy.apply (proxy) (proxy)
+  if  type (c) == "table" and getmetatable (c) ~= Reference then
+    return proxy
+  else
+    return c
+  end
 end
 
 function Proxy.__newindex (proxy, key, value)
   assert (getmetatable (proxy) == Proxy)
   assert (type (key) ~= "table" or getmetatable (key) == Proxy)
   local layer = proxy.__layer
-  proxy = Proxy.dereference (proxy)
   key   = Layer.import (key  )
   value = Layer.import (value)
-  if type (layer.__data) ~= "table"
-  or getmetatable (layer.__data) == Proxy then
-    layer.__data = {
-      [Proxy.keys.value] = layer.__data,
-    }
-  end
   local current = layer.__data
   local keys    = proxy.__keys
   for i = 1, #keys do
-    local ikey = keys [i]
-    if type (current [ikey]) ~= "table"
-    or getmetatable (current [ikey]) == Proxy then
-      current [ikey] = {
-        [Proxy.keys.value] = current [ikey],
-      }
+    if current [keys [i]] == nil then
+      current [keys [i]] = {}
     end
-    current = current [ikey]
+    assert (type (current [keys [i]]) == "table"
+        and getmetatable (current [keys [i]]) ~= Reference)
+    current = current [keys [i]]
   end
-  if key == Proxy.keys.special then
-    current [Proxy.keys.value] = value
-  else
-    current [key] = value
-  end
+  current [key] = value
 end
 
-function Proxy.replacewith (proxy, x)
+function Proxy.replacewith (proxy, value)
   assert (getmetatable (proxy) == Proxy)
+  value = Layer.import (value)
   local layer = proxy.__layer
-  proxy = Proxy.dereference (proxy)
-  x     = Layer.import (x)
-  if type (layer.__data) ~= "table" then
-    layer.__data = {
-      [Proxy.keys.value] = layer.__data,
-    }
-  end
-  local keys    = proxy.__keys
+  local keys  = proxy.__keys
   if #keys == 0 then
-    layer.__data = x
+    assert (type (value) == "table")
+    layer.__data = value
   else
     local current = layer.__data
     for i = 1, #keys-1 do
-      if type (current [keys [i]]) ~= "table" then
-        current [keys [i]] = {
-          [Proxy.keys.value] = current [keys [i]],
-        }
-      end
       current = current [keys [i]]
+      assert (type (current) == "table" and getmetatable (current) ~= Reference)
     end
-    current [keys [#keys]] = x
+    current [keys [#keys]] = value
   end
 end
 
@@ -218,68 +249,10 @@ function Proxy.export (proxy)
   local keys     = proxy.__keys
   local current  = layer.__data
   for i = 1, #keys do
-    if type (current) ~= "table" then
-      return nil
-    end
     current = current [keys [i]]
+    assert (type (current) == "table" and getmetatable (current) ~= Reference)
   end
   return current
-end
-
-function Proxy.__call (proxy, n)
-  assert (getmetatable (proxy) == Proxy)
-  assert (n == nil or type (n) == "number")
-  for _ = 1, n or 1 do
-    proxy = proxy.__dereference
-  end
-  return proxy
-end
-
-function Proxy.is_reference (proxy)
-  assert (getmetatable (proxy) == Proxy)
-  local target = Proxy.value (proxy)
-  return getmetatable (target) == Proxy
-end
-
-function Proxy.instantiate (proxy, layer)
-  assert (getmetatable (proxy) == Proxy)
-  local keys   = proxy.__keys
-  local result = layer
-  for i = 1, #keys do
-    result = result [keys [i]]
-  end
-  return result
-end
-
-function Proxy.dereference (proxy)
-  assert (getmetatable (proxy) == Proxy)
-  local root = proxy.__layer.__root
-  repeat
-    local current = root
-    local keys    = proxy.__keys
-    local changed = false
-    for i = 1, #keys do
-      local key = keys [i]
-      if key == "__dereference" then
-        local p = Proxy.value (current)
-        if getmetatable (p) ~= Proxy then
-          error "not a reference"
-        end
-        changed = true
-        proxy   = root
-        for j = 1, #p.__keys do
-          proxy = proxy [p.__keys [j]]
-        end
-        for j = i+1, #keys do
-          proxy = proxy [keys [j]]
-        end
-        break
-      else
-        current = current [key]
-      end
-    end
-  until not changed
-  return proxy
 end
 
 function Proxy.is_prefix (lhs, rhs)
@@ -299,8 +272,6 @@ end
 function Proxy.__lt (lhs, rhs)
   assert (getmetatable (lhs) == Proxy)
   assert (getmetatable (rhs) == Proxy)
-  lhs = Proxy.instantiate (lhs, rhs.__layer.__root)
-  lhs = Proxy.dereference (lhs)
   local parents = Proxy.refines (rhs)
   for i = 1, #parents-1 do -- last parent is self
     if parents [i] == lhs then
@@ -322,9 +293,7 @@ Proxy.depends = c3.new {
   cache      = false,
   superclass = function (proxy)
     assert (getmetatable (proxy) == Proxy)
-    if type (proxy.__layer.__data) == "table" then
-      return proxy.__layer.__data [Proxy.keys.depends]
-    end
+    return proxy.__layer.__data [Proxy.keys.depends]
   end,
 }
 
@@ -332,15 +301,14 @@ Proxy.refines = c3.new {
   cache      = false,
   superclass = function (proxy)
     assert (getmetatable (proxy) == Proxy)
-    proxy = Proxy.dereference (proxy)
-    proxy = proxy [Proxy.keys.refines]
     local result  = {}
+    proxy = proxy [Proxy.keys.refines]
+    if not proxy then
+      return result
+    end
     for i = 1, Proxy.size (proxy) do
-      local p = proxy [i] [Proxy.keys.special]
-      assert (getmetatable (p) == Proxy)
-      p = Proxy.instantiate (p, proxy.__layer.__root)
-      p = Proxy.dereference (p)
-      result [i] = p
+      result [i] = proxy [i]
+      assert (getmetatable (result [i]) == Proxy)
     end
     return result
   end,
@@ -351,11 +319,8 @@ function Proxy.apply (p)
   local coroutine = coromake ()
   local seen      = {}
   local noback    = {}
-  local layer     = p.__layer.__root
   local function perform (proxy)
     assert (getmetatable (proxy) == Proxy)
-    proxy = Proxy.instantiate (proxy, layer)
-    proxy = Proxy.dereference (proxy)
     if seen [proxy] then
       return nil
     end
@@ -366,13 +331,21 @@ function Proxy.apply (p)
     for i = #layers, 1, -1 do
       local current = layers [i].__layer.__data
       for j = 1, #keys do
-        local key = keys [j]
-        if type (current) ~= "table"
-        or getmetatable (current) == Proxy then
+        current = current [keys [j]]
+        if getmetatable (current) == Reference then
+          local referenced = Reference.resolve (current, proxy)
+          if not referenced then
+            return
+          end
+          for k = j+1, #keys do
+            referenced = Proxy.sub (referenced, keys [k])
+          end
+          return perform (referenced)
+        end
+        if j ~= #keys and type (current) ~= "table" then
           current = nil
           break
         end
-        current = current [key]
       end
       if current ~= nil then
         coroutine.yield (proxy, current)
@@ -399,13 +372,23 @@ function Proxy.apply (p)
           local back = noback [refines [j]]
           noback [refines [j]] = true
           for k = i+1, #keys do
-            refined = refined [keys [k]]
+            refined = Proxy.sub (refined, keys [k])
           end
           perform (refined)
           noback [refines [j]] = back
         end
       end
       current = current.__parent
+    end
+    -- 4. Search default:
+    current = proxy.__parent
+    for i = #keys-2, 0, -1 do
+      current = current.__parent
+      local c = Proxy.sub (current, Proxy.specials.default)
+      for j = i+2, #keys do
+        c = Proxy.sub (c, keys [j])
+      end
+      perform (c)
     end
   end
   return coroutine.wrap (function ()
@@ -417,8 +400,7 @@ function Proxy.__len (proxy)
   assert (getmetatable (proxy) == Proxy)
   local result    = {}
   for _, t in Proxy.apply (proxy) do
-    if  type (t) == "table"
-    and getmetatable (t) ~= Proxy then
+    if  type (t) == "table" and getmetatable (t) ~= Reference then
       for k in pairs (t) do
         if type (k) == "number" then
           result [k] = true
@@ -436,11 +418,11 @@ function Proxy.__ipairs (proxy)
   local coroutine = coromake ()
   return coroutine.wrap (function ()
     for i = 1, math.huge do
-      local p = proxy [i]
-      if not Proxy.exists (p) then
+      local result = proxy [i]
+      if not result then
         break
       end
-      coroutine.yield (i, p)
+      coroutine.yield (i, result)
     end
   end)
 end
@@ -455,10 +437,12 @@ function Proxy.__pairs (proxy)
   for _, k in pairs (Proxy.keys) do
     special [k] = true
   end
+  for _, k in pairs (Proxy.specials) do
+    special [k] = true
+  end
   return coroutine.wrap (function ()
     for _, t in Proxy.apply (proxy) do
-      if  type (t) == "table"
-      and getmetatable (t) ~= Proxy then
+      if  type (t) == "table" and getmetatable (t) ~= Reference then
         for k in pairs (t) do
           if  not seen [k]
           and not special [k] then
@@ -473,24 +457,6 @@ end
 
 Proxy.pairs = Proxy.__pairs
 
-function Proxy.value (proxy)
-  assert (getmetatable (proxy) == Proxy)
-  for _, t in Proxy.apply (proxy) do
-    if getmetatable (t) == Proxy then
-      return Proxy.instantiate (t, proxy.__layer.__root)
-    elseif type (t) ~= "table" then
-      return t
-    elseif t [Proxy.keys.value] then
-      return t [Proxy.keys.value]
-    end
-  end
-end
-
-function Proxy.exists (proxy)
-  assert (getmetatable (proxy) == Proxy)
-  return Proxy.apply (proxy) (proxy) ~= nil
-end
-
 Proxy.new = Layer.__new
 
 function Proxy.flatten (proxy)
@@ -501,13 +467,10 @@ function Proxy.flatten (proxy)
   end
   local equivalents = {}
   local seen        = {}
-  local layer       = proxy.__layer.__root
   local function f (p)
     if getmetatable (p) ~= Proxy then
       return p
     end
-    p = Proxy.instantiate (p, layer)
-    p = Proxy.dereference (p)
     local result = {}
     if equivalents [p] then
       result = equivalents [p]
@@ -516,29 +479,20 @@ function Proxy.flatten (proxy)
     end
     for pp, t in Proxy.apply (p) do
       if not seen [pp] then
-        if  type (t) == "table"
-        and getmetatable (t) ~= Proxy then
+        if  type (t) == "table" and getmetatable (t) ~= Reference then
           local keys     = {}
           local previous = seen [pp]
           seen [pp] = true
           for k in pairs (t) do
             if  not keys    [k]
             and not special [k] then
-              result [f (k)] = f (p [k])
               keys [k] = true
+              result [f (k)] = f (p [k])
             end
           end
           seen [pp] = previous
         end
       end
-    end
-    result.__value__ = p.__value__
-    local only_value = result.__value__ ~= nil
-    for k in pairs (result) do
-      only_value = only_value and k == "__value__"
-    end
-    if only_value then
-      result = result.__value__
     end
     return result
   end
@@ -554,5 +508,91 @@ function Proxy.flatten (proxy)
   end
   return g (f (proxy))
 end
+
+Reference.memo = setmetatable ({}, IgnoreValues)
+
+function Reference.new (from)
+  from = from or false
+  local found = Reference.memo [from]
+  if found then
+    return found
+  end
+  local result = setmetatable ({
+    __from   = from,
+    __keys   = {},
+    __memo   = setmetatable ({}, IgnoreValues),
+    __parent = false,
+  }, Reference)
+  Reference.memo [from] = result
+  return result
+end
+
+function Reference.__index (reference, key)
+  assert (getmetatable (reference) == Reference)
+  local references = reference.__memo
+  local found      = references [key]
+  if not found then
+    local nkeys = {}
+    for i = 1, #reference.__keys do
+      nkeys [i] = reference.__keys [i]
+    end
+    nkeys [#nkeys+1] = key
+    found = setmetatable ({
+      __from   = reference.__from,
+      __keys   = nkeys,
+      __memo   = setmetatable ({}, IgnoreValues),
+      __parent = reference,
+    }, Reference)
+    references [key] = found
+  end
+  return found
+end
+
+function Reference.resolve (reference, proxy)
+  assert (getmetatable (reference) == Reference)
+  assert (getmetatable (proxy    ) == Proxy    )
+  if not reference.__from then -- absolute
+    local current = proxy.__layer.__root
+    local keys    = reference.__keys
+    for i = 1, #keys do
+      current = Proxy.sub (current, keys [i])
+    end
+    return current
+  else -- relative
+    local current = proxy.__parent
+    while current do
+      if current [Proxy.specials.label] == reference.__from then
+        local keys = reference.__keys
+        for i = 1, #keys do
+          current = Proxy.sub (current, keys [i])
+        end
+        return current
+      end
+      current = current.__parent
+    end
+    return nil
+  end
+end
+
+function Reference.__serialize (reference)
+  assert (getmetatable (reference) == Reference)
+  return {
+    __reference = true,
+    unpack (reference.__keys),
+  }
+end
+
+function Reference.__tostring (reference)
+  assert (getmetatable (reference) == Reference)
+  local result = {}
+  result [1] = "->"
+  local keys = reference.__keys
+  for i = 1, #keys do
+    result [i+1] = "[" .. totypedstring (keys [i]) .. "]"
+  end
+  return table.concat (result, " ")
+end
+
+Proxy.reference = Reference.new
 
 return Proxy
