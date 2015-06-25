@@ -36,17 +36,19 @@ Proxy.specials = {
   meta    = "__meta__",
 }
 
-
 local function totypedstring (x)
   return tostring (x)
-  --[[
-  return serpent.line (x, {
-    indent   = "  ",
-    comment  = false,
-    sortkeys = true,
-    compact  = false,
-  })
-  --]]
+end
+
+local function special_keys ()
+  local special = {}
+  for _, k in pairs (Proxy.keys) do
+    special [k] = true
+  end
+  for _, k in pairs (Proxy.specials) do
+    special [k] = true
+  end
+  return special
 end
 
 local unpack = table.unpack or unpack
@@ -106,9 +108,6 @@ function Layer.import (data)
   end
 end
 
---    > = tostring (a)
---    [[<"a">]]
-
 function Layer.__tostring (layer)
   assert (getmetatable (layer) == Layer)
   return "layer:" .. totypedstring (layer.__name)
@@ -157,10 +156,6 @@ function Proxy.dump (proxy, serialize)
   return result
 end
 
---    > a.i = {}
---    > = tostring (a.i)
---    [=[<"a"> ["i"]]=]
-
 function Proxy.__tostring (proxy)
   assert (getmetatable (proxy) == Proxy)
   local result = {}
@@ -197,10 +192,10 @@ end
 
 function Proxy.__index (proxy, key)
   assert (getmetatable (proxy) == Proxy)
-  proxy = Proxy.sub (proxy, key)
-  local _, c = Proxy.apply (proxy) (proxy)
+  local p = Proxy.sub (proxy, key)
+  local _, c = Proxy.apply (p) (p)
   if  type (c) == "table" and getmetatable (c) ~= Reference then
-    return proxy
+    return p
   else
     return c
   end
@@ -302,12 +297,12 @@ Proxy.refines = c3.new {
   superclass = function (proxy)
     assert (getmetatable (proxy) == Proxy)
     local result  = {}
-    proxy = proxy [Proxy.keys.refines]
-    if not proxy then
+    local refines = proxy [Proxy.keys.refines]
+    if not refines then
       return result
     end
-    for i = 1, Proxy.size (proxy) do
-      result [i] = proxy [i]
+    for i = 1, Proxy.size (refines) do
+      result [i] = refines [i]
       assert (getmetatable (result [i]) == Proxy)
     end
     return result
@@ -352,10 +347,7 @@ function Proxy.apply (p)
       end
     end
     -- 2. Do not search in parents within special keys:
-    local special = {}
-    for _, k in pairs (Proxy.keys) do
-      special [k] = true
-    end
+    local special = special_keys ()
     for i = 1, #keys do
       local key = keys [i]
       if special [key] then
@@ -559,12 +551,26 @@ function Reference.resolve (reference, proxy)
     end
     return current
   else -- relative
-    local current = proxy.__parent
+    local special = special_keys ()
+    local pkeys   = proxy.__keys
+    local begin   = 0
+    for i = 1, #pkeys do
+      local key = pkeys [i]
+      if special [key] then
+        break
+      else
+        begin = begin+1
+      end
+    end
+    local current = proxy
+    for _ = begin, #pkeys do
+      current = current.__parent
+    end
     while current do
       if current [Proxy.specials.label] == reference.__from then
-        local keys = reference.__keys
-        for i = 1, #keys do
-          current = Proxy.sub (current, keys [i])
+        local rkeys = reference.__keys
+        for i = 1, #rkeys do
+          current = Proxy.sub (current, rkeys [i])
         end
         return current
       end
@@ -585,10 +591,11 @@ end
 function Reference.__tostring (reference)
   assert (getmetatable (reference) == Reference)
   local result = {}
-  result [1] = "->"
+  result [1] = reference.__from
+  result [2] = "->"
   local keys = reference.__keys
   for i = 1, #keys do
-    result [i+1] = "[" .. totypedstring (keys [i]) .. "]"
+    result [i+2] = "[" .. totypedstring (keys [i]) .. "]"
   end
   return table.concat (result, " ")
 end
