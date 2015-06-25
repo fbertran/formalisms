@@ -1,9 +1,9 @@
 local Layer = require "layeredata"
-local default_checks = require "formalisms.checks"
+--local default_checks = require "formalisms.checks"
 local layer = Layer.new { 
   name = "hyper & multi graph",
 }
-local _     = Layer.placeholder
+local _     = Layer.reference "HMGT"
 
 -- Formalism for an Hyper and Multi Graph
 -- ======================================
@@ -15,16 +15,16 @@ local _     = Layer.placeholder
 -- For more information of Hyper and Multi Graph, see [here](https://en.wikipedia.org/?title=Hypergraph)
 
 layer.__depends__ =  {
-  default_checks,
+  --default_checks,
 }
+
+layer.__label__ = "HMGT"
 
 layer.__meta__ = {
 
   hyper_multi_graph_type = {
-     --__label__ = "myid",
     __meta__ = {
       vertex_type = {
-        
         key_type        = nil,
         content_type    = nil,
         key_container   = nil,
@@ -36,21 +36,24 @@ layer.__meta__ = {
           arrow_type = {
             vertex = {
               key_type        = nil,
-              content_type    = _.__meta__.hyper_multi_graph_type.__meta__.vertex_type, -- (_ "myid").__meta__.vertex_type,
+              content_type    = _.__meta__.hyper_multi_graph_type.__meta__.vertex_type,
               key_container   = nil,
               value_container = _.__meta__.hyper_multi_graph_type.vertices,
             },
           },
           
-          checks = { 
-            __refines__ = {
-              _.__checks__,
-            },
-          },
+--          checks = { 
+--            __refines__ = {
+--              _.__checks__,
+--            },
+--          },
         },
         arrows = {
           __meta__ = {
-            content_type = _.__meta__.hyper_multi_graph_type.__meta__.edge_type.arrow_type
+            content_type = _.__meta__.hyper_multi_graph_type.__meta__.edge_type.__meta__.arrow_type
+          },
+          __default__ = {
+            content_type = _.__meta__.hyper_multi_graph_type.__meta__.edge_type.__meta__.arrow_type
           },
         },
       },
