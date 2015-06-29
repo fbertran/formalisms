@@ -3,7 +3,7 @@ local hyper_multi_graph = require "formalisms.hyper_multi_graph"
 local layer             = Layer.new {
   name = "labelled vertices & hyper & multi graph", 
 }
-local _                 = Layer.placeholder
+local _                 = Layer.reference "LVHMGT"
 
 -- Formalism of a Hyper and Multi Graph with labels on vertices
 -- ============================================================
@@ -15,7 +15,9 @@ local _                 = Layer.placeholder
 layer.__depends__ = {
   hyper_multi_graph,
 }
-  
+
+layer.__label__ = "LVHMGT"
+
 layer.__meta__ = {
   labelled_vertices_hyper_multi_graph_type = {
     __refines__ = {
@@ -23,12 +25,16 @@ layer.__meta__ = {
     },
     
     __meta__ = { 
-      label_vertex_type = {},
+      label_vertex_type = {
+        __refines__ = {
+          _.__meta__.object_type.record_type,
+        },
+      },
       
       vertex_type = {
-        labels = {
-          __meta__ = {
-            content_type = _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
+        __meta__ = {
+          __tags__ = {
+            labels = _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type,
           },
         },
       },

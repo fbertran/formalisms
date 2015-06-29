@@ -3,7 +3,7 @@ local hyper_multi_graph = require "formalisms.hyper_multi_graph"
 local layer             = Layer.new {
   name = "directed hyper & multi graph", 
 }
-local _                 = Layer.placeholder
+local _                 = Layer.reference "DHMGT"
 
 -- Formalism for a Directed Hyper and Multi Graph
 -- ==============================================
@@ -16,8 +16,9 @@ layer.__depends__ = {
   hyper_multi_graph,
 }
 
-layer.__meta__ = {
+layer.__label__ = "DHMGT"
 
+layer.__meta__ = {
   directed_hyper_multi_graph_type = {
     __refines__ = {
       _.__meta__.hyper_multi_graph_type,
@@ -26,14 +27,15 @@ layer.__meta__ = {
     __meta__ = { 
       edge_type = {
         __meta__ = {
-          direction_type = {},
-            
+          direction_type = {
+            __refines__ = {
+              _.__meta__.object_type.collection_type
+            },
+          },
+                      
           arrow_type = {
-            -- Adding a direction in arrows
-            direction = {
-              __meta__ = {
-                content_type = _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-              },
+            __tags__ = {
+              direction = _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type,
             },
           },
         },

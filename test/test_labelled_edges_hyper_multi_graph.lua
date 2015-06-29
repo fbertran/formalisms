@@ -1,103 +1,60 @@
-local Serpent                    = require "serpent"
-local Proxy                      = require "layeredata"
-Proxy.directed_hyper_multi_graph = require "formalisms.labelled_edges_hyper_multi_graph"
-local layer                      = Proxy.new { 
+local Serpent                          = require "serpent"
+local Layer                            = require "layeredata"
+local labelled_edges_hyper_multi_graph = require "formalisms.labelled_edges_hyper_multi_graph"
+local layer                            = Layer.new { 
   name = "labelled edges & hyper & multi graph instance",
 }
-local _                               = Proxy.placeholder
+local _                                = Layer.reference "LEHMGT_model"
+
+layer.__depends__ = {
+  labelled_edges_hyper_multi_graph,
+}
+
+layer.__label__ = "LEHMGT_model"
 
 layer.model = {	
 
-  __depends__ = {
-    Proxy.labelled_edges_hyper_multi_graph,
-  },
-
   __refines__ = {
-    _.labelled_edges_hyper_multi_graph_type,
+    _.__meta__.labelled_edges_hyper_multi_graph_type,
   },
 
   vertices = {
-    n1 = {
-      __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
-      },
-    },
-
-    n2 = {
-      __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
-      },
-    },
-
-    n3 = {
-      __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
-      },
-    },
+    n1 = {},
+    n2 = {},
+    n3 = {},
   },
   
   edges = {
     e1 = {
-      __refines__ = {
-        _.labelled_edges_hyper_multi_graph_type.__meta__.edge_type
-      },
-    
       arrows = {
         [1] = {
           vertex = _.model.vertices.n1,
         },
-        
         [2] = {
           vertex = _.model.vertices.n2,
         },
-        
         [3] = {
           vertex =  _.model.vertices.n3,
         },
       },
       
-      labels = {
-        [1] = {
-          __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
-          },
-          
-          __value__ = "a",
-        },
+      labels = {        
+        name = "a",
       },
     },
     
-    e2 = {
-      __refines__ = {
-        _.labelled_edges_hyper_multi_graph_type.__meta__.edge_type
-      },
-    
+    e2 = {    
       arrows = {
         [1] = {
           vertex = _.model.vertices.n1,
         },
-        
         [2] = {
           vertex = _.model.vertices.n2,
         },
       },
       
-      labels = {
-        [1] = {
-          __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
-          },
-          
-          __value__ = "b",
-        },
-        
-        [2] = {
-          __refines__ = {
-            _.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
-          },
-          
-          __value__ = "c",
-        },
+      labels = {          
+        name = "b",
       },
     },
   },
@@ -114,5 +71,5 @@ local function dump (x)
 end
 
 do
-  print(dump(Proxy.flatten(layer)))
+  print(dump(Layer.flatten(layer)))
 end

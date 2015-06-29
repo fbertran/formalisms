@@ -1,103 +1,62 @@
 local Serpent                    = require "serpent"
-local Proxy                      = require "layeredata"
-Proxy.directed_hyper_multi_graph = require "formalisms.directed_hyper_multi_graph"
-local layer                      = Proxy.new { 
+local Layer                      = require "layeredata"
+local directed_hyper_multi_graph = require "formalisms.directed_hyper_multi_graph"
+local layer                      = Layer.new { 
   name = "directed hyper & multi graph instance",
 }
-local _                               = Proxy.placeholder
+local _                 = Layer.reference "DHMGT_model"
 
+layer.__depends__ = {
+  directed_hyper_multi_graph,
+}
+  
 layer.model = {	
-
-  __depends__ = {
-    Proxy.directed_hyper_multi_graph,
-  },
-
   __refines__ = {
-    _.directed_hyper_multi_graph_type,
+    _.__meta__.directed_hyper_multi_graph_type,
   },
 
   vertices = {
-    n1 = {
-      __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
-      },
-    },
-
-    n2 = {
-      __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
-      },
-    },
-
-    n3 = {
-      __refines__ = {
-        _.hyper_multi_graph_type.__meta__.vertex_type
-      },
-    },
+    n1 = {},
+    n2 = {},
+    n3 = {},
   },
   
   edges = {
     e1 = {
-      __refines__ = {
-        _.directed_hyper_multi_graph_type.__meta__.edge_type
-      },
-    
       arrows = {
         [1] = {
           vertex = _.model.vertices.n1,
           direction = {
-            __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "input"
+            [1] = "input",
           },
         },
-        
         [2] = {
           vertex = _.model.vertices.n2,
           direction = {
-            __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "output"
+            [1] = "output",
           },
-          
         },
         [3] = {
           vertex =  _.model.vertices.n3,
           direction = {
-            __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "output"
+            [1] = "output",
           },
         },
       },
     },
     
     e2 = {
-      __refines__ = {
-        _.directed_hyper_multi_graph_type.__meta__.edge_type
-      },
-    
       arrows = {
         [1] = {
           vertex = _.model.vertices.n1,
           direction = {
-            __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "input"
+            [1] = "input",
           },
         },
-        
         [2] = {
           vertex = _.model.vertices.n2,
           direction = {
-            __refines__ = {
-              _.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "output"
+            [1] = "output",
           },
         },
       },
@@ -116,5 +75,5 @@ local function dump (x)
 end
 
 do
-  print(dump(Proxy.flatten(layer)))
+  print(dump(Layer.flatten(layer)))
 end

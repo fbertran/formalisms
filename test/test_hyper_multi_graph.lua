@@ -14,7 +14,7 @@ layer.__label__ = "HMGT_model"
 
 layer.model = {
   __refines__ = {
-    hyper_multi_graph.__meta__.hyper_multi_graph_type,
+    _.__meta__.hyper_multi_graph_type,
   },
 
   vertices = {
@@ -30,10 +30,10 @@ layer.model = {
           vertex = _.model.vertices.n1,
         },
         [2] = {
-          vertex =  _.model.vertices.n2,
+          vertex = _.model.vertices.n2,
         },
         [3] = {
-          vertex =  _.model.vertices.n3,
+          vertex = _.model.vertices.n3,
         },
       },
     },
