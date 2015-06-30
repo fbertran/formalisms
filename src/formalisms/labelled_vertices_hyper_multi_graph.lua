@@ -4,6 +4,7 @@ local layer             = Layer.new {
   name = "labelled vertices & hyper & multi graph", 
 }
 local _                 = Layer.reference "LVHMGT"
+local root              = Layer.reference "root"
 
 -- Formalism of a Hyper and Multi Graph with labels on vertices
 -- ============================================================
@@ -16,25 +17,25 @@ layer.__depends__ = {
   hyper_multi_graph,
 }
 
-layer.__label__ = "LVHMGT"
-
 layer.__meta__ = {
   labelled_vertices_hyper_multi_graph_type = {
+    __label__ = "LVHMGT",
+    
     __refines__ = {
-      _.__meta__.hyper_multi_graph_type,
+      root.__meta__.hyper_multi_graph_type,
     },
     
     __meta__ = { 
       label_vertex_type = {
         __refines__ = {
-          _.__meta__.object_type.record_type,
+          root.__meta__.object_type.record_type,
         },
       },
       
       vertex_type = {
         __meta__ = {
           __tags__ = {
-            labels = _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type,
+            labels = _.__meta__.label_vertex_type,
           },
         },
       },

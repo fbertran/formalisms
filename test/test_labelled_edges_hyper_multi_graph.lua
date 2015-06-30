@@ -5,17 +5,17 @@ local layer                            = Layer.new {
   name = "labelled edges & hyper & multi graph instance",
 }
 local _                                = Layer.reference "LEHMGT_model"
+local root                             = Layer.reference "root"
 
 layer.__depends__ = {
   labelled_edges_hyper_multi_graph,
 }
 
-layer.__label__ = "LEHMGT_model"
-
 layer.model = {	
+  __label__ = "LEHMGT_model",
 
   __refines__ = {
-    _.__meta__.labelled_edges_hyper_multi_graph_type,
+    root.__meta__.labelled_edges_hyper_multi_graph_type,
   },
 
   vertices = {
@@ -28,13 +28,13 @@ layer.model = {
     e1 = {
       arrows = {
         [1] = {
-          vertex = _.model.vertices.n1,
+          vertex = _.vertices.n1,
         },
         [2] = {
-          vertex = _.model.vertices.n2,
+          vertex = _.vertices.n2,
         },
         [3] = {
-          vertex =  _.model.vertices.n3,
+          vertex =  _.vertices.n3,
         },
       },
       
@@ -46,10 +46,10 @@ layer.model = {
     e2 = {    
       arrows = {
         [1] = {
-          vertex = _.model.vertices.n1,
+          vertex = _.vertices.n1,
         },
         [2] = {
-          vertex = _.model.vertices.n2,
+          vertex = _.vertices.n2,
         },
       },
       
