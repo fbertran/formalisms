@@ -35,7 +35,7 @@ layer.__meta__ = {
       },
 
     },
-    
+
     record = {
       __meta__ = {
         __tags__ = {},
@@ -48,5 +48,4 @@ layer.__meta__ = {
     },
   },
 }
-
 return layer

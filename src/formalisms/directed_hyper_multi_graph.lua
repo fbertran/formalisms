@@ -9,11 +9,11 @@ local root              = Layer.reference "root"
 -- Formalism for a Directed Hyper and Multi Graph
 -- ==============================================
 --
--- A Directed Hyper and Multi Graph refine a Hyper and Multi Graph. It's a Hyper and Multi Graph with edges' ends are typed.
+-- A Directed Hyper and Multi Graph refine a Hyper and Multi Graph. It's a Hyper and Multi Graph where edges' ends are typed.
 --
 -- A definition of Directed Hyper Graph is given [here](http://link.springer.com/chapter/10.1007/3-540-45446-2_20)
 
-layer.__depends__ = {
+layer.__depends__ = {	
   hyper_multi_graph,
 }
 
