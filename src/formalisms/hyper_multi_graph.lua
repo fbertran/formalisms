@@ -28,6 +28,10 @@ layer.__meta__ = {
   hyper_multi_graph_type = {
     __label__ = "HMGT",
 
+    __refines__ = {
+      root.__meta__.object_type.record,
+    },
+
     __meta__ = {
       vertex_type = {
         __refines__ = {
@@ -43,7 +47,7 @@ layer.__meta__ = {
         __meta__ = {
           arrow_type = {
             __refines__ = {
-              root.__meta__.object_type.collection,
+              root.__meta__.object_type.record,
             },
             __meta__ = {
               __tags__ = {
@@ -53,9 +57,26 @@ layer.__meta__ = {
           },
 
           __tags__ = {
-            arrows = _.__meta__.edge_type.__meta__.arrow_type,
+            arrows = root.__meta__.object_type.collection,
           },
         },
+
+        arrows = {
+          __refines__ = {
+            root.__meta__.object_type.collection,
+          },
+          __meta__ = {
+            __value_type__ = _.__meta__.edge_type.__meta__.arrow_type,
+          },
+          __default__ = {
+            __value_type__ = _.__meta__.edge_type.__meta__.arrow_type,
+          },
+        },
+      },
+
+      __tags__ = {
+        vertices = root.__meta__.object_type.collection,
+        edges = root.__meta__.object_type.collection,
       },
     },
 

@@ -21,21 +21,22 @@ layer.__meta__ = {
         __value_container__ = nil,
       },
 
-      __default__ = {
-        __key_type__        = nil,
-        __key_container__   = nil,
-        __value_type__      = nil,
-        __value_container__ = nil,
-      },
-
       __checks__ = {
         function (element)
           -- TODO : checks if element respect the key_type, ...
         end
       },
-
     },
-    
+
+    element = {
+      __meta__ = {
+        __key_type__        = nil,
+        __key_container__   = nil,
+        __value_type__      = nil,
+        __value_container__ = nil,
+      },
+    },
+
     record = {
       __meta__ = {
         __tags__ = {},

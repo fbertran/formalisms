@@ -26,17 +26,23 @@ layer.__meta__ = {
     },
 
     __meta__ = {
+      direction_type = {
+        __refines__ = {
+          root.__meta__.object_type.record,
+        },
+        __meta__ = {
+          
+        }
+
+      },
       edge_type = {
         __meta__ = {
-          direction_type = {
-            __refines__ = {
-              root.__meta__.object_type.collection_type
-            },
-          },
 
           arrow_type = {
-            __tags__ = {
-              direction = _.__meta__.edge_type.__meta__.direction_type,
+            __meta__ = {
+              __tags__ = {
+                direction = _.__meta__.edge_type.__meta__.direction_type,
+              },
             },
           },
         },
