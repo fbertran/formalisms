@@ -1,7 +1,7 @@
 local Layer             = require "layeredata"
 local hyper_multi_graph = require "formalisms.hyper_multi_graph"
 local layer             = Layer.new {
-  name = "labelled vertices & hyper & multi graph", 
+  name = "labelled vertices & hyper & multi graph",
 }
 local _                 = Layer.reference "LVHMGT"
 local root              = Layer.reference "root"
@@ -20,22 +20,26 @@ layer.__depends__ = {
 layer.__meta__ = {
   labelled_vertices_hyper_multi_graph_type = {
     __label__ = "LVHMGT",
-    
+
     __refines__ = {
       root.__meta__.hyper_multi_graph_type,
     },
-    
-    __meta__ = { 
-      label_vertex_type = {
-        __refines__ = {
-          root.__meta__.object_type.record_type,
-        },
-      },
-      
+
+    __meta__ = {
+      label_vertex_type = {},
+
       vertex_type = {
         __meta__ = {
-          __tags__ = {
-            labels = _.__meta__.label_vertex_type,
+            labels = {
+              __refines__ = {
+                root.__meta__.collection,
+              },
+              __meta__ = {
+                __value_type__ = _.__meta__.label_vertex_type,
+              },
+              __default__ = {
+                _.__meta__.label_vertex_type,
+              },
           },
         },
       },

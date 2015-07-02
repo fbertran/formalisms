@@ -13,7 +13,7 @@ local root              = Layer.reference "root"
 --
 -- A definition of Directed Hyper Graph is given [here](http://link.springer.com/chapter/10.1007/3-540-45446-2_20)
 
-layer.__depends__ = {	
+layer.__depends__ = {
   hyper_multi_graph,
 }
 
@@ -26,18 +26,22 @@ layer.__meta__ = {
     },
 
     __meta__ = {
+      direction_type = {},
+
       edge_type = {
         __meta__ = {
-          direction_type = {
-            __refines__ = {
-              root.__meta__.object_type.collection_type
-            },
-          },
-
           arrow_type = {
-            __tags__ = {
-              direction = _.__meta__.edge_type.__meta__.direction_type,
-            },
+            directions = {
+              __refines__ = {
+                root.__meta__.collection,
+              },
+              __meta__ = {
+                __value_type__ = _.__meta__.direction_type,
+              },
+              __default__ = {
+                _.__meta__.direction_type,
+              },
+            }
           },
         },
       },

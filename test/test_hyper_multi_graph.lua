@@ -48,5 +48,5 @@ do
 --    checks_edges [i] [nil] (layer.model.edges)
 --  end
 --
-  print(Layer.dump(Layer.flatten(layer)))
+  print(Layer.dump(Layer.flatten(layer), true))
 end
