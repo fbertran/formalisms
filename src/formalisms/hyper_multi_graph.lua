@@ -80,8 +80,10 @@ layer.__meta__ = {
       __meta__ = {
         __value_type__ = _.__meta__.edge_type,
       },
-      __default__ = {
-        _.__meta__.edge_type,
+      __default__ = { --?? TODO ticket pas clair
+        __refines__ = {
+          _.__meta__.edge_type,
+        }
       },
     },
   },

@@ -31,17 +31,16 @@ layer.__meta__ = {
       edge_type = {
         __meta__ = {
           arrow_type = {
-            directions = {
-              __refines__ = {
-                root.__meta__.collection,
+            __meta__ = {
+              __tags__ = {
+                input = {
+                  __value_type__ = "boolean",
+                },
+                output = {
+                  __value_type__ = "boolean",
+                },
               },
-              __meta__ = {
-                __value_type__ = _.__meta__.direction_type,
-              },
-              __default__ = {
-                _.__meta__.direction_type,
-              },
-            }
+            },
           },
         },
       },

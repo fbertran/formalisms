@@ -25,14 +25,10 @@ layer.__meta__ = {
         -- check if all the keys have the great type, all the values have the great type and so on...
       end,
     },
-    test = true,
   },
   record = {
     __meta__ = {
-      __tags__ = {
-        __value_type__      = nil,
-        __value_container__ = nil,
-      },
+      __tags__ = {},
     },
     __checks__ = {
       function ()
@@ -40,7 +36,6 @@ layer.__meta__ = {
         -- check if the record contains all the keys in tags and values have the great type
       end,
     },
-    test = false
   },
 }
 return layer

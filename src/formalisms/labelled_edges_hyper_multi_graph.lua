@@ -26,21 +26,12 @@ layer.__meta__ = {
     },
 
     __meta__ = {
-      label_edge_type = {},
-
       edge_type = {
         __refines__ = {
           root.__meta__.record,
         },
-        __meta__ = {
-          __tags__ = {
-            label = {
-              __value_type__ = _.__meta__.label_edge_type,
-            },
-          },
-        },
       },
-    },
+    }, -- TODO Ticket export import YAML 
   },
 }
 

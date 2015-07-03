@@ -26,18 +26,9 @@ layer.__meta__ = {
     },
 
     __meta__ = {
-      label_vertex_type = {},
-
       vertex_type = {
         __refines__ = {
           root.__meta__.record,
-        },
-        __meta__ = {
-          __tags__ = {
-            label = {
-              __value_type__ = _.__meta__.label_vertex_type,
-            }
-          },
         },
       },
     },
