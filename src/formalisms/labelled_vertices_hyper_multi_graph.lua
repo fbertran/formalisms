@@ -29,17 +29,14 @@ layer.__meta__ = {
       label_vertex_type = {},
 
       vertex_type = {
+        __refines__ = {
+          root.__meta__.record,
+        },
         __meta__ = {
-            labels = {
-              __refines__ = {
-                root.__meta__.collection,
-              },
-              __meta__ = {
-                __value_type__ = _.__meta__.label_vertex_type,
-              },
-              __default__ = {
-                _.__meta__.label_vertex_type,
-              },
+          __tags__ = {
+            label = {
+              __value_type__ = _.__meta__.label_vertex_type,
+            }
           },
         },
       },

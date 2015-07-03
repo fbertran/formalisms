@@ -13,7 +13,7 @@ local root   = Layer.reference "root"
 --
 -- An alphabet is a set of symbols.
 
- layer.__label__ = "root"
+layer.__label__ = "root"
 
 layer.__depends__ =  {
   object,

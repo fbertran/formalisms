@@ -1,9 +1,10 @@
 local Layer     = require "layeredata"
 local automaton = require "formalisms.automaton"
 local layer     = Layer.new {
-  name = "interrupt timed automaton", 
+  name = "interrupt timed automaton",
 }
-local _         = Layer.placeholder
+local _      = Layer.reference "ITA"
+local root   = Layer.reference "root"
 
 -- Formalism of Interrupt Timed Automaton
 -- ======================================
@@ -20,7 +21,7 @@ local _         = Layer.placeholder
 --      * a guard, it's a conjunction of polynomial constraints
 --      * a symbol of Σ
 --      * an update, it's the new valuation of a clock calculate by a polynomial of the others.
--- 
+--
 --For more information of Interrupt timed automaton see [here](http://arxiv.org/abs/1504.04541)
 
 
@@ -31,59 +32,50 @@ layer.__depends__ = {
 layer.__meta__ = {
 
   interrupt_timed_automaton_type = {
+    __label__ = "ITA",
+
     __refines__ = {
-        _.__meta__.automaton_type
+        root.__meta__.automaton_type
     },
-    
+
     __meta__ = {
       analog_type = {},
-      
-      level_type = {
-        __value__ = {
-          content_type = "number",
-        },
-        checks = {
-          function ()
-            -- TODO check if #analogs == #levels
-          end,
-        },
-      },
-      
+
+      level_type = {},
+
       guard_type = {
         -- polynomial_type
       },
-      
+
       update_type = {
         -- polynomial_type
-      },    
-      
+      },
+
       label_vertex_type = {
-        level = {
-          __value__ = {
-            content_type = _.__meta__.interrupt_timed_automaton_type.__meta__.level_type,
-            value_container = _.__meta__.interrupt_timed_automaton_type.levels,
+        __meta__ = {
+          __tags__ = {
+            level = {
+              __value_type__ = _.__meta__.level_type,
+              __value_container__ = _.levels,
+            },
           },
         },
-        checks = {
-          function () 
-            -- TODO check if level contains only one element
-          end,
-        },
       },
-      
+
       label_edge_type = {
-        guards = {
-          __meta__ = {
-            content_type = _.__meta__.hybrid_automaton_type.guard_type,
-          },
-        },
-        updates = {
-          __meta__ = {
-            content_type = _.__meta__.hybrid_automaton_type.update_type,
+        __meta__ = {
+          __tags__ = {
+            guard = {
+              __value_type__ = nil --conjunction poly compare with 0,
+            },
+
+            update = {
+              __value_type__ = nil --conjunction poly compare with 0,
+            },
           },
         },
       },
-      
+
       analogs_init_type = {
         __value__ = {
           value_type    = "number",
@@ -91,7 +83,7 @@ layer.__meta__ = {
           key_container = _.__meta__.interrupt_timed_automaton_type.analogs,
         },
       },
-    
+
       initial_state_type = {
         analogs_init = {
           __meta__ = {
@@ -99,19 +91,37 @@ layer.__meta__ = {
               _.__meta__.interrupt_timed_automaton_type.__meta__.analogs_init_type
             },
           },
-        }, 
+        },
       },
     },
-    
+    __checks__ = {
+      function ()
+        -- TODO
+        -- check if #analogs == #levels
+      end,
+    },
+
     analogs = {
+      __refines__ = {
+        root.__meta__.collection,
+      },
       __meta__ = {
-        content_type = _.__meta__.hybrid_automaton_type.__meta__.analog_type,
+        __value_type__ = _.__meta__.analog_type,
+      },
+      __default__ = {
+        _.__meta__.analog_type,
       },
     },
-    
+
     levels = {
+      __refines__ = {
+        root.__meta__.collection,
+      },
       __meta__ = {
-        content_type = _.__meta__.interrupt_timed_automaton_type.__meta__.level_type,
+        __value_type__ = _.__meta__.level_type,
+      },
+      __default__ = {
+        _.__meta__.level_type,
       },
     },
   },

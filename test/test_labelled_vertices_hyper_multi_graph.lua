@@ -19,13 +19,13 @@ layer.model = {
 
   vertices = {
     n1 = {
-      labels = { name = "n1" },
+      label = { name = "n1" },
     },
     n2 = {
-      labels = { name = "n2" },
+      label = { name = "n2" },
     },
     n3 = {
-      labels = { name = "n3" },
+      label = { name = "n3" },
     },
   },
 

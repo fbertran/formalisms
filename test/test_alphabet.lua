@@ -1,50 +1,29 @@
-local Serpent  = require "serpent"
-local Proxy    = require "layeredata"
-Proxy.alphabet = require "formalisms.alphabet"
-local layer    = Proxy.new { 
-  name = "alphabet instance" 
+local Layer    = require "layeredata"
+local alphabet = require "formalisms.alphabet"
+local layer    = Layer.new {
+  name = "alphabet instance"
 }
-local _        = Proxy.placeholder
+local _        = Layer.reference "alphabet_model"
+local root     = Layer.reference "root"
+
+layer.__depends__ = {
+  alphabet,
+}
 
 layer.model = {
-  __depends__ = {
-    Proxy.alphabet,
-  },
-  
+  __label__ = "alphabet_model",
+
   __refines__ = {
-    _.alphabet_type,
+    root.__meta__.alphabet_type,
   },
 
   symbols = {
-    a = {
-      __refines__ = {
-        _.alphabet_type.__meta__.symbol_type
-      },
-    },
-
-    b = {
-      __refines__ = {
-        _.alphabet_type.__meta__.symbol_type
-      },
-    },
-
-    c = {
-      __refines__ = {
-        _.alphabet_type.__meta__.symbol_type
-      },
-    },
+    a = {},
+    b = {},
+    c = {},
   },
 }
 
-local function dump (x)
-  return Serpent.dump (x, {
-    indent   = "  ",
-    comment  = false,
-    sortkeys = true,
-    compact  = false,
-  })
-end
-
 do
-  print(dump(Proxy.flatten(layer)))
+  print(Layer.dump(Layer.flatten(layer), true))
 end

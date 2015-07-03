@@ -29,16 +29,13 @@ layer.__meta__ = {
       label_edge_type = {},
 
       edge_type = {
+        __refines__ = {
+          root.__meta__.record,
+        },
         __meta__ = {
-          labels = {
-            __refines__ = {
-              root.__meta__.collection,
-            },
-            __meta__ = {
+          __tags__ = {
+            label = {
               __value_type__ = _.__meta__.label_edge_type,
-            },
-            __default__ = {
-              _.__meta__.label_edge_type,
             },
           },
         },
