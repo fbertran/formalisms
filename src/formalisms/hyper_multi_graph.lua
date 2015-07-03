@@ -15,13 +15,11 @@ local root  = Layer.reference "root"
 -- An Hyper and Multi Graph is a set V of vertices and a set E of edges. Each edge is a subset of V. In this formalism some edges may be identical.
 --
 -- For more information of Hyper and Multi Graph, see [here](https://en.wikipedia.org/?title=Hypergraph)
-
+layer.__label__ = "root"
 layer.__depends__ =  {
   object,
   --default_checks,
 }
-
-layer.__label__ = "root"
 
 layer.__meta__ = {
 
@@ -33,31 +31,34 @@ layer.__meta__ = {
     },
 
     __meta__ = {
-      vertex_type = {
-        __refines__ = {
-          root.__meta__.object_type.record,
-        },
-      },
+      vertex_type = {},
 
       edge_type = {
-        __refines__ = {
-          root.__meta__.object_type.record,
-        },
-
         __meta__ = {
           arrow_type = {
             __refines__ = {
-              root.__meta__.object_type.record,
+              root.__meta__.record,
             },
+
             __meta__ = {
               __tags__ = {
-                vertex = _.vertices,
+                vertex = {
+                  __value_type__ = _.__meta__.vertex_type,
+                  __value_container__ = _.vertices,
+                },
               },
             },
           },
-
-          __tags__ = {
-            arrows = root.__meta__.object_type.collection,
+        },
+        arrows = {
+          __refines__ = {
+            root.__meta__.collection,
+          },
+          __meta__ = {
+            __value_type__ = _.__meta__.edge_type.__meta__.arrow_type,
+          },
+          __default__ = {
+            _.__meta__.edge_type.__meta__.arrow_type,
           },
         },
 
@@ -82,25 +83,27 @@ layer.__meta__ = {
 
     vertices = {
       __refines__ = {
-        root.__meta__.object_type.collection,
+        root.__meta__.collection,
       },
       __meta__ = {
         __value_type__ = _.__meta__.vertex_type,
       },
       __default__ = {
-        __value_type__ = _.__meta__.vertex_type,
+        _.__meta__.vertex_type,
       },
     },
 
     edges = {
       __refines__ = {
-        root.__meta__.object_type.collection,
+        root.__meta__.collection,
       },
       __meta__ = {
         __value_type__ = _.__meta__.edge_type,
       },
-      __default__ = {
-        __value_type__ = _.__meta__.edge_type,
+      __default__ = { --?? TODO ticket pas clair
+        __refines__ = {
+          _.__meta__.edge_type,
+        }
       },
     },
   },

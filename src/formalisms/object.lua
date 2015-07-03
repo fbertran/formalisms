@@ -1,53 +1,41 @@
 local Layer = require "layeredata"
-
 local layer = Layer.new {
-  name = "object",
+  name = "container",
 }
 
--- object formalism
+-- container formalism
 -- ================
 --
--- We describe here object class
---
--- this class describe two prototypes, collections and records
+-- a container is a table where:
+-- * keys and values are typed or contained in another container.
+-- * keys can be explicit and values
 
 layer.__meta__ = {
-  object_type = {
-    collection = {
-      __meta__ = {
-        __key_type__        = nil,
-        __key_container__   = nil,
-        __value_type__      = nil,
-        __value_container__ = nil,
-      },
-
-      __checks__ = {
-        function (element)
-          -- TODO : checks if element respect the key_type, ...
-        end
-      },
+  collection = {
+    __meta__ = {
+      __key_type__        = nil,
+      __key_container__   = nil,
+      __value_type__      = nil,
+      __value_container__ = nil,
     },
 
-    element = {
-      __meta__ = {
-        __key_type__        = nil,
-        __key_container__   = nil,
-        __value_type__      = nil,
-        __value_container__ = nil,
-      },
+    __checks__ = {
+      function ()
+        -- TODO
+        -- check if all the keys have the great type, all the values have the great type and so on...
+      end,
     },
-
-    record = {
-      __meta__ = {
-        __tags__ = {},
-        __checks__ = {
-          function (element)
-            -- TODO : checks if element contains the elements in tags
-          end
-        },
-      },
+  },
+  record = {
+    __meta__ = {
+      __tags__ = {},
+    },
+    __checks__ = {
+      function ()
+        -- TODO
+        -- check if the record contains all the keys in tags and values have the great type
+      end,
     },
   },
 }
-
 return layer

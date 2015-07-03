@@ -1,262 +1,112 @@
-local Serpent   = require "serpent"
 local Layer     = require "layeredata"
 local automaton = require "formalisms.automaton"
-local layer     = Layer.new { 
-  name = "automaton instance" 
+local layer     = Layer.new {
+  name = "automaton instance"
 }
-local _         = Layer.placeholder
+local _         = Layer.reference "automaton_model"
+local root      = Layer.reference "root"
 
 layer.__depends__ = {
-  automaton
+  automaton,
 }
 
-layer.model = {  
+layer.model = {
+  __label__ = "automaton_model",
+
   __refines__ = {
-    _.__meta__.automaton_type,
+    root.__meta__.automaton_type,
   },
 
   symbols = {
-    a = {
-      __refines__ = {
-        _.__meta__.alphabet_type.__meta__.symbol_type
-      },
-      __value__ = "a",
-    },
-
-    a2 = {
-      __refines__ = {
-        _.__meta__.alphabet_type.__meta__.symbol_type
-      },
-      __value__ = "a'",
-    },
-    
-    b = {
-      __refines__ = {
-        _.__meta__.alphabet_type.__meta__.symbol_type
-      },
-      __value__ = "b",
-    },
-
-    c = {
-      __refines__ = {
-        _.__meta__.alphabet_type.__meta__.symbol_type
-      },
-      __value__ = "c",
-    },
+    a  = {},
+    a2 = {},
+    b  = {},
+    c  = {},
   },
-  
+
   vertices = {
     q0 = {
-      __refines__ = {
-        _.__meta__.hyper_multi_graph_type.__meta__.vertex_type
-      },
-      labels = {
-        [1] = {
-          __refines__ = {
-            _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
-          },
-          
-          id = "q0",
-        },
-      },
+      label = { id = "q0" },
     },
-
     q1 = {
-      __refines__ = {
-        _.__meta__.hyper_multi_graph_type.__meta__.vertex_type
-      },
-      labels = {
-        [1] = {
-          __refines__ = {
-            _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
-          },
-          
-          id = "q1",
-        },
-      },
+      label = { id = "q1" },
     },
-
     q2 = {
-      __refines__ = {
-        _.__meta__.hyper_multi_graph_type.__meta__.vertex_type
-      },
-      labels = {
-        [1] = {
-          __refines__ = {
-            _.__meta__.labelled_vertices_hyper_multi_graph_type.__meta__.label_vertex_type
-          },
-          
-          id = "q2",
-        },
-      },
+      label = { id = "q2" },
     },
   },
-  
+
   edges = {
     e1 = {
-      __refines__ = {
-        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
-      },
-      
       arrows = {
-        [1] = {
-          vertex = _.model.vertices.q0,
-          direction = {
-            __refines__ = {
-              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "input"
-          },
+        {
+          vertex = _.vertices.q0,
+          direction = { "input" },
         },
-        [2] = {
-          vertex = _.model.vertices.q1,
-          direction = {
-            __refines__ = {
-              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "output"
-          },
+        {
+          vertex = _.vertices.q1,
+          direction = { "output" },
         },
       },
-      
-      labels = {
-        [1] = {
-          __refines__ = {
-            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
-          },
-          __value__ = _.model.symbols.a,
-        },
-      },
+
+      label = { letter = _.symbols.a },
     },
-    
+
     e2 = {
-      __refines__ = {
-        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
-      },
-      
       arrows = {
-        [1] = {
-          vertex = _.model.vertices.q0,
-          direction = {
-            __refines__ = {
-              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "input"
-          },
+        {
+          vertex = _.vertices.q0,
+          direction = { "input" },
         },
-        [2] = {
-          vertex = _.model.vertices.q0,
-          direction = {
-            __refines__ = {
-              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "output"
-          },
+        {
+          vertex = _.vertices.q0,
+          direction = { "output" },
         },
       },
-      
-      labels = {
-        [1] = {
-          __refines__ = {
-            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
-          },
-          __value__ = _.model.symbols.a2,
-        },
-      },
+
+      label = { letter = _.symbols.a2 },
     },
-    
+
     e3 = {
-      __refines__ = {
-        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
-      },
-      
       arrows = {
-        [1] = {
-          vertex = _.model.vertices.q1,
-          direction = {
-            __refines__ = {
-              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "input"
-          },
+        {
+          vertex = _.vertices.q1,
+          direction = { "input" },
         },
-        [2] = {
-          vertex = _.model.vertices.q2,
-          direction = {
-            __refines__ = {
-              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "output"
-          },
+        {
+          vertex = _.vertices.q2,
+          direction = { "output" },
         },
       },
-      
-      labels = {
-        [1] = {
-          __refines__ = {
-            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
-          },
-          __value__ = _.model.symbols.b,
-        },
-      },
+
+      label = { letter = _.symbols.b },
     },
-    
-    e1 = {
-      __refines__ = {
-        _.__meta__.hyper_multi_graph_type.__meta__.edge_type
-      },
-      
+
+    e4 = {
       arrows = {
-        [1] = {
-          vertex = _.model.vertices.q2,
-          direction = {
-            __refines__ = {
-              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "input"
-          },          
+        {
+          vertex = _.vertices.q2,
+          direction = { "input" },
         },
-        [2] = {
-          vertex = _.model.vertices.q1,
-          direction = {
-            __refines__ = {
-              _.__meta__.directed_hyper_multi_graph_type.__meta__.edge_type.__meta__.direction_type
-            },
-            __value__ = "output"
-          },
+        {
+          vertex = _.vertices.q1,
+          direction = { "output" },
         },
       },
-      
-      labels = {
-        [1] = {
-          __refines__ = {
-            _.__meta__.labelled_edges_hyper_multi_graph_type.__meta__.label_edge_type
-          },
-          __value__ = _.model.symbols.a,
-        },
-      },
+
+      label = { letter = _.symbols.c },
     },
   },
-  
+
   initials_states = {
-    [1] = _.model.vertices.q0
+    { vertex = _.vertices.q0 },
   },
-  
+
   accept_states = {
-    [1] = _.model.vertices.q2
+    { vertex = _.vertices.q2 },
   },
 }
 
-
-local function dump (x)
-  return Serpent.dump (x, {
-    indent   = "  ",
-    comment  = false,
-    sortkeys = true,
-    compact  = false,
-  })
-end
-
 do
-  print(dump(Layer.flatten(layer)))
+  print(Layer.dump(Layer.flatten(layer), true))
 end
