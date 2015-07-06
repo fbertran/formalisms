@@ -49,24 +49,16 @@ layer.__meta__ = {
     },
 
     __meta__ = {
-      label_edge_type = {
-        __refines__ = {
-          root.__meta__.record,
-        },
-        __meta__ = {
-          __tags__ = {
-            letter = {
-              __value_type__      = root.__meta__.alphabet_type.__meta__.symbol_type,
-              __value_container__ = root.__meta__.alphabet_type.symbols,
-            },
+      edge_type = {
+        __tags__ = {
+          letter = {
+            __value_type__      = root.__meta__.alphabet_type.__meta__.symbol_type,
+            __value_container__ = root.__meta__.alphabet_type.symbols,
           },
         },
       },
 
-      label_vertex_type = {
-        __refines__ = {
-          root.__meta__.record,
-        },
+      vertex_type  = {
         __meta__ = {
           __tags__ = {
             id = {},

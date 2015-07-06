@@ -25,15 +25,9 @@ layer.model = {
   },
 
   vertices = {
-    q0 = {
-      label = { id = "q0" },
-    },
-    q1 = {
-      label = { id = "q1" },
-    },
-    q2 = {
-      label = { id = "q2" },
-    },
+    q0 = { id = "q0" },
+    q1 = { id = "q1" },
+    q2 = { id = "q2" },
   },
 
   edges = {
@@ -41,41 +35,39 @@ layer.model = {
       arrows = {
         {
           vertex = _.vertices.q0,
-          direction = { "input" },
+          input  = true,
         },
         {
           vertex = _.vertices.q1,
-          direction = { "output" },
+          output = true,
         },
       },
-
-      label = { letter = _.symbols.a },
+      letter = _.symbols.a,
     },
 
     e2 = {
       arrows = {
         {
           vertex = _.vertices.q0,
-          direction = { "input" },
+          input  = true,
         },
         {
           vertex = _.vertices.q0,
-          direction = { "output" },
+          output = true,
         },
       },
-
-      label = { letter = _.symbols.a2 },
+      letter = _.symbols.a2,
     },
 
     e3 = {
       arrows = {
         {
           vertex = _.vertices.q1,
-          direction = { "input" },
+          input  = true,
         },
         {
           vertex = _.vertices.q2,
-          direction = { "output" },
+          output = true,
         },
       },
 
@@ -86,15 +78,14 @@ layer.model = {
       arrows = {
         {
           vertex = _.vertices.q2,
-          direction = { "input" },
+          input  = true,
         },
         {
           vertex = _.vertices.q1,
-          direction = { "output" },
+          output = true,
         },
       },
-
-      label = { letter = _.symbols.c },
+      letter = _.symbols.c,
     },
   },
 
