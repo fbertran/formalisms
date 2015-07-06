@@ -39,6 +39,8 @@ layer.__meta__ = {
                 },
               },
             },
+            input = false,
+            output = false,
           },
         },
       },

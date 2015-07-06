@@ -27,15 +27,15 @@ layer.model = {
       arrows = {
         {
           vertex = _.vertices.n1,
-          directions = { "input" },
+          input = true,
         },
         {
           vertex = _.vertices.n2,
-          directions = { "output" },
+          output = true,
         },
         {
           vertex =  _.vertices.n3,
-          directions = { "output" },
+          output = true,
         },
       },
     },
@@ -44,11 +44,11 @@ layer.model = {
       arrows = {
         {
           vertex = _.vertices.n1,
-          direction = { "input" },
+          input = true,
         },
         {
           vertex = _.vertices.n2,
-          direction = { "output" },
+          output = true,
         },
       },
     },
