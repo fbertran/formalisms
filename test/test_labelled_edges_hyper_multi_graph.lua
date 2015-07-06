@@ -4,7 +4,7 @@ local layer                            = Layer.new {
   name = "labelled edges & hyper & multi graph instance",
 }
 local _                                = Layer.reference "LEHMGT_model"
-local root                             = Layer.reference "root"
+local root                             = Layer.reference (false)
 
 layer.__depends__ = {
   labelled_edges_hyper_multi_graph,

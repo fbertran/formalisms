@@ -4,7 +4,7 @@ local layer             = Layer.new {
   name = "labelled edges & hyper & multi graph",
 }
 local _                 = Layer.reference "LEHMGT"
-local root              = Layer.reference "root"
+local root              = Layer.reference (false)
 
 -- Formalism of a Hyper and Multi Graph with labels on edges
 -- =========================================================
@@ -31,7 +31,7 @@ layer.__meta__ = {
           root.__meta__.record,
         },
       },
-    }, -- TODO Ticket export import YAML 
+    },
   },
 }
 

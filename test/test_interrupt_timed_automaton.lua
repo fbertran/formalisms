@@ -4,7 +4,7 @@ local layer                     = Layer.new {
   name = "ita instance"
 }
 local _         = Layer.reference "ITA_model"
-local root      = Layer.reference "root"
+local root      = Layer.reference (false)
 
 layer.__depends__ = {
   interrupt_timed_automaton,

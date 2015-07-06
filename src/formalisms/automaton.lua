@@ -8,7 +8,7 @@ local layer                               = Layer.new {
   name = "automaton",
 }
 local _      = Layer.reference "automaton"
-local root   = Layer.reference "root"
+local root   = Layer.reference (false)
 
 -- Description of automaton
 -- ========================

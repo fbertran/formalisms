@@ -4,7 +4,7 @@ local layer             = Layer.new {
   name = "directed hyper & multi graph",
 }
 local _                 = Layer.reference "DHMGT"
-local root              = Layer.reference "root"
+local root              = Layer.reference (false)
 
 -- Formalism for a Directed Hyper and Multi Graph
 -- ==============================================

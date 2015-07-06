@@ -4,7 +4,7 @@ local layer     = Layer.new {
   name = "automaton instance"
 }
 local _         = Layer.reference "automaton_model"
-local root      = Layer.reference "root"
+local root      = Layer.reference (false)
 
 layer.__depends__ = {
   automaton,

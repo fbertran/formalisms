@@ -4,7 +4,7 @@ local layer             = Layer.new {
   name = "multi graph",
 }
 local _                 = Layer.reference "MGT"
-local root              = Layer.reference "root"
+local root              = Layer.reference (false)
 
 -- Formalism of a Multi Graph
 -- ===========================

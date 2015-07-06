@@ -4,7 +4,7 @@ local layer             = Layer.new {
   name = "hyper graph",
 }
 local _                 = Layer.reference "HGT"
-local root              = Layer.reference "root"
+local root              = Layer.reference (false)
 
 -- Formalism of a Hyper Graph
 -- ===========================

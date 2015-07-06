@@ -4,7 +4,7 @@ local layer     = Layer.new {
   name = "interrupt timed automaton",
 }
 local _      = Layer.reference "ITA"
-local root   = Layer.reference "root"
+local root   = Layer.reference (false)
 
 -- Formalism of Interrupt Timed Automaton
 -- ======================================

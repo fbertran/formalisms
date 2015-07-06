@@ -5,7 +5,7 @@ local layer = Layer.new {
   name = "hyper & multi graph",
 }
 local _     = Layer.reference "HMGT"
-local root  = Layer.reference "root"
+local root  = Layer.reference (false)
 
 -- Formalism of Hyper and Multi Graph
 -- ==================================
@@ -15,7 +15,6 @@ local root  = Layer.reference "root"
 -- An Hyper and Multi Graph is a set V of vertices and a set E of edges. Each edge is a subset of V. In this formalism some edges may be identical.
 --
 -- For more information of Hyper and Multi Graph, see [here](https://en.wikipedia.org/?title=Hypergraph)
-layer.__label__ = "root"
 layer.__depends__ =  {
   object,
   --default_checks,
@@ -61,23 +60,6 @@ layer.__meta__ = {
             _.__meta__.edge_type.__meta__.arrow_type,
           },
         },
-
-        arrows = {
-          __refines__ = {
-            root.__meta__.object_type.collection,
-          },
-          __meta__ = {
-            __value_type__ = _.__meta__.edge_type.__meta__.arrow_type,
-          },
-          __default__ = {
-            __value_type__ = _.__meta__.edge_type.__meta__.arrow_type,
-          },
-        },
-      },
-
-      __tags__ = {
-        vertices = root.__meta__.object_type.collection,
-        edges = root.__meta__.object_type.collection,
       },
     },
 

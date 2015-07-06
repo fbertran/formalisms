@@ -4,7 +4,7 @@ local layer  = Layer.new {
   name = "alphabet",
 }
 local _      = Layer.reference "alphabet"
-local root   = Layer.reference "root"
+local root   = Layer.reference (false)
 
 -- Alphabet
 -- ========
@@ -12,8 +12,6 @@ local root   = Layer.reference "root"
 -- This formalism describe what is an Alphabet.
 --
 -- An alphabet is a set of symbols.
-
-layer.__label__ = "root"
 
 layer.__depends__ =  {
   object,

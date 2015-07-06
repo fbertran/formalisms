@@ -4,7 +4,7 @@ local layer             = Layer.new {
   name = "labelled vertices & hyper & multi graph",
 }
 local _                 = Layer.reference "LVHMGT"
-local root              = Layer.reference "root"
+local root              = Layer.reference (false)
 
 -- Formalism of a Hyper and Multi Graph with labels on vertices
 -- ============================================================

@@ -4,7 +4,7 @@ local layer             = Layer.new {
   name = "hyper & multi graph instance"
 }
 local _                 = Layer.reference "HMGT_model"
-local root              = Layer.reference "root"
+local root              = Layer.reference (false)
 
 layer.__depends__ = {
   hyper_multi_graph,
@@ -48,5 +48,5 @@ do
 --    checks_edges [i] [nil] (layer.model.edges)
 --  end
 --
-  print(Layer.dump(Layer.flatten(layer)))
+  print(Layer.dump(Layer.flatten(layer), true))
 end

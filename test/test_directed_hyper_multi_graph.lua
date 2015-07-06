@@ -4,7 +4,7 @@ local layer                      = Layer.new {
   name = "directed hyper & multi graph instance",
 }
 local _                 = Layer.reference "DHMGT_model"
-local root              = Layer.reference "root"
+local root              = Layer.reference (false)
 
 layer.__depends__ = {
   directed_hyper_multi_graph,

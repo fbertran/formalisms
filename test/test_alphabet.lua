@@ -4,7 +4,7 @@ local layer    = Layer.new {
   name = "alphabet instance"
 }
 local _        = Layer.reference "alphabet_model"
-local root     = Layer.reference "root"
+local root     = Layer.reference (false)
 
 layer.__depends__ = {
   alphabet,
