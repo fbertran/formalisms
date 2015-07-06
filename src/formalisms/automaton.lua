@@ -111,7 +111,9 @@ layer.__meta__ = {
         __value_type__ = _.__meta__.initial_state_type,
       },
       __default__ = {
-        _.__meta__.initial_state_type,
+        __refines__ = {
+          _.__meta__.initial_state_type,
+        },
       },
     },
 
@@ -123,7 +125,9 @@ layer.__meta__ = {
         __value_type__ = _.__meta__.initial_state_type,
       },
       __default__ = {
-        _.__meta__.initial_state_type,
+        __refines__ = {
+          _.__meta__.initial_state_type,
+        },
       },
     },
   },

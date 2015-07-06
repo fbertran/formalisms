@@ -52,7 +52,9 @@ layer.__meta__ = {
             __value_type__ = _.__meta__.edge_type.__meta__.arrow_type,
           },
           __default__ = {
-            _.__meta__.edge_type.__meta__.arrow_type,
+            __refines__ = {
+              _.__meta__.edge_type.__meta__.arrow_type,
+            },
           },
         },
       },
@@ -66,7 +68,9 @@ layer.__meta__ = {
         __value_type__ = _.__meta__.vertex_type,
       },
       __default__ = {
-        _.__meta__.vertex_type,
+        __refines__ = {
+          _.__meta__.vertex_type,
+        },
       },
     },
 
@@ -77,7 +81,7 @@ layer.__meta__ = {
       __meta__ = {
         __value_type__ = _.__meta__.edge_type,
       },
-      __default__ = { 
+      __default__ = {
         __refines__ = {
           _.__meta__.edge_type,
         }

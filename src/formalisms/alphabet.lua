@@ -34,7 +34,9 @@ layer.__meta__ = {
         __value_type__ = _.__meta__.symbol_type,
       },
       __default__ = {
-        _.__meta__.symbol_type,
+        __refines__ = {
+          _.__meta__.symbol_type,
+        },
       }
     },
   },
