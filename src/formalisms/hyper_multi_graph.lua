@@ -24,11 +24,6 @@ layer.__meta__ = {
 
   hyper_multi_graph_type = {
     __label__ = "HMGT",
-
-    __refines__ = {
-      root.__meta__.object_type.record,
-    },
-
     __meta__ = {
       vertex_type = {},
 
@@ -82,7 +77,7 @@ layer.__meta__ = {
       __meta__ = {
         __value_type__ = _.__meta__.edge_type,
       },
-      __default__ = { --?? TODO ticket pas clair
+      __default__ = { 
         __refines__ = {
           _.__meta__.edge_type,
         }
