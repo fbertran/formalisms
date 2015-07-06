@@ -39,66 +39,83 @@ layer.__meta__ = {
     },
 
     __meta__ = {
-      analog_type = {},
-
-      level_type = {},
-
-      guard_type = {
-        -- polynomial_type
-      },
-
-      update_type = {
-        -- polynomial_type
-      },
-
-      label_vertex_type = {
+      analog_type = {
+        __refines__ = {
+          root.__meta__.record,
+        },
         __meta__ = {
           __tags__ = {
-            level = {
-              __value_type__ = _.__meta__.level_type,
+            active_level = {
+              __value_type__      = _.__meta__.level_type,
               __value_container__ = _.levels,
             },
           },
         },
       },
 
-      label_edge_type = {
+      level_type = {},
+
+      guard_type = {
+        __refines__ = {
+          root.__meta__.record,
+        },
+        __meta__ = {
+          __tags__ = {
+            -- polynomial compare with 0
+          },
+        },
+        -- default : nil
+      },
+
+      update_type = {
+        __refines__ = {
+          root.__meta__.record,
+        },
+        __meta__ = {
+          __tags__ = {
+            -- analog = polynomial compare with 0
+          },
+        },
+        -- default : nil
+      },
+
+      edge_type = {
         __meta__ = {
           __tags__ = {
             guard = {
-              __value_type__ = nil --conjunction poly compare with 0,
+              __value_type__ = nil,
             },
-
             update = {
-              __value_type__ = nil --conjunction poly compare with 0,
+              __value_type__ = nil,
             },
           },
         },
       },
 
-      analogs_init_type = {
-        __value__ = {
-          value_type    = "number",
-          key_type      = _.__meta__.interrupt_timed_automaton_type.__meta__.analog_type,
-          key_container = _.__meta__.interrupt_timed_automaton_type.analogs,
+      vertex_type  = {
+        __meta__ = {
+          __tags__ = {
+            level = {
+              __value_type__      = _.__meta__.level_type,
+              __value_container__ = _.levels,
+            },
+          },
         },
       },
 
       initial_state_type = {
         analogs_init = {
+          __refines__ = {
+            root.__meta__.collection,
+          },
+
           __meta__ = {
-            content_type = {
-              _.__meta__.interrupt_timed_automaton_type.__meta__.analogs_init_type
-            },
+            __value_type__    = "number",
+            __key_type__      = _.__meta__.analog_type,
+            __key_container__ = _.analogs,
           },
         },
       },
-    },
-    __checks__ = {
-      function ()
-        -- TODO
-        -- check if #analogs == #levels
-      end,
     },
 
     analogs = {
@@ -109,7 +126,9 @@ layer.__meta__ = {
         __value_type__ = _.__meta__.analog_type,
       },
       __default__ = {
-        _.__meta__.analog_type,
+        __refines__ = {
+          _.__meta__.analog_type,
+        },
       },
     },
 
@@ -121,7 +140,9 @@ layer.__meta__ = {
         __value_type__ = _.__meta__.level_type,
       },
       __default__ = {
-        _.__meta__.level_type,
+        __refines__ = {
+          _.__meta__.level_type,
+        },
       },
     },
   },

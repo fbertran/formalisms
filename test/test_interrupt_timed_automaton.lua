@@ -25,8 +25,8 @@ layer.model = {
   },
 
   analogs = {
-    x1 = {},
-    x2 = {},
+    x1 = { active_level = _.levels.l1 },
+    x2 = { active_level = _.levels.l2 },
   },
 
   levels = {
@@ -36,24 +36,18 @@ layer.model = {
 
   vertices = {
     q0 = {
-      label = {
-        id = "q0",
-        level = _.levels.l1,
-      },
+      id = "q0",
+      level = _.levels.l1,
     },
 
     q1 = {
-      label = {
-        id = "q1",
-        level = _.levels.l2,
-      },
+      id = "q1",
+      level = _.levels.l2,
     },
 
     q2 = {
-      label = {
-        id = "q2",
-        level = _.levels.l2,
-      },
+      id = "q2",
+      level = _.levels.l2,
     },
   },
 
@@ -62,88 +56,77 @@ layer.model = {
       arrows = {
         {
           vertex = _.vertices.q0,
-          direction = { "input" },
+          input  = true,
         },
         {
           vertex = _.vertices.q1,
-          direction = { "output" },
+          output = true,
         },
       },
-
-      label = {
-        letter = _.symbols.a,
-        guards = "x1^2 <= x1 + 1",
-      },
+      letter = _.symbols.a,
+      guards = "x1^2 <= x1 + 1",
     },
 
     e2 = {
       arrows = {
         {
           vertex = _.vertices.q0,
-          direction = { "input" },
+          input  = true,
         },
         {
           vertex = _.vertices.q0,
-          direction = { "output" },
+          output = true,
         },
       },
+      letter = _.symbols.a2,
+      guards = "x1^2 > x1 + 1",
+      updates = "x1 = 0",
 
-      label = {
-        letter = _.symbols.a2,
-        guards = "x1^2 > x1 + 1",
-        updates = "x1 = 0",
-      },
     },
 
     e3 = {
       arrows = {
         {
           vertex = _.vertices.q1,
-          direction = { "input" },
+          input  = true,
         },
         {
           vertex = _.vertices.q2,
-          direction = { "output" },
+          output = true,
         },
       },
-
-      label = {
-        letter = _.symbols.b,
-        guards = "(2x1 - 1) * x2^2 > 1",
-      },
+      letter = _.symbols.b,
+      guards = "(2x1 - 1) * x2^2 > 1",
     },
 
     e4 = {
       arrows = {
         {
           vertex = _.vertices.q2,
-          direction = { "input" },
+          input  = true,
         },
         {
           vertex = _.vertices.q1,
-          direction = { "output" },
+          output = true,
         },
       },
-
-      label = {
-        letter = _.symbols.c,
-        guards = "x2 <= 5 - x1^2",
-      },
+      letter = _.symbols.c,
+      guards = "x2 <= 5 - x1^2",
     },
   },
 
   initials_states = {
     {
-      vertex = _.model.vertices.q0,
+      vertex = _.vertices.q0,
       analogs_init = {
-        x1 = 0,
-        x2 = 0,
+        [_.analogs.x1] = 0,
+        [_.analogs.x2] = 0,
       },
     },
   },
 
   accept_states = {
-    { vertex = _.model.vertices.q2 },
+    { vertex = _.vertices.q2 },
   },
 }
 
