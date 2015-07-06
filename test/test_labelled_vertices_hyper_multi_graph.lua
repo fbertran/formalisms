@@ -25,7 +25,7 @@ layer.model = {
       name = "n2",
     },
     n3 = {
-      name = "n3", --TODO ticket affectation avec référence 
+      name = "n3", --TODO ticket affectation avec référence
     },
   },
 
@@ -48,5 +48,5 @@ layer.model = {
 }
 
 do
-  print(Layer.dump(Layer.flatten(layer), true))
+  print(Layer.dump(Layer.flatten(layer)))
 end

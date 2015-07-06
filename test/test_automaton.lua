@@ -108,5 +108,5 @@ layer.model = {
 }
 
 do
-  print(Layer.dump(Layer.flatten(layer), true))
+  print(Layer.dump(Layer.flatten(layer)))
 end

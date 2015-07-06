@@ -42,11 +42,5 @@ layer.model = {
 }
 
 do
---  local checks_edges = _.__meta__.edge_type.__meta__.checks
-
---  for i = 1, Layer.size (checks_edges) do
---    checks_edges [i] [nil] (layer.model.edges)
---  end
---
-  print(Layer.dump(Layer.flatten(layer), true))
+  print(Layer.dump(Layer.flatten(layer)))
 end
