@@ -19,13 +19,13 @@ layer.model = {
 
   vertices = {
     n1 = {
-      name = "n1",
+      label = "n1",
     },
     n2 = {
-      name = "n2",
+      label = "n2",
     },
     n3 = {
-      name = "n3", --TODO ticket affectation avec référence
+      label = "n3",
     },
   },
 

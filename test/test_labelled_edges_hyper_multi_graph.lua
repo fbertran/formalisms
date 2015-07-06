@@ -31,7 +31,7 @@ layer.model = {
         { vertex = _.vertices.n3 },
       },
 
-      label = { name = "a" },
+      label = "a",
     },
 
     e2 = {
@@ -40,7 +40,7 @@ layer.model = {
         { vertex = _.vertices.n2 },
       },
 
-      label = { name = "b" },
+      label = "b",
     },
   },
 }
