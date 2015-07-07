@@ -1,10 +1,11 @@
-local Layer     = require "layeredata"
-local automaton = require "formalisms.automaton"
-local layer     = Layer.new {
+local Layer      = require "layeredata"
+local automaton  = require "formalisms.automaton"
+local polynomial = require "formalisms.polynomial"
+local layer      = Layer.new {
   name = "interrupt timed automaton",
 }
-local _      = Layer.reference "ITA"
-local root   = Layer.reference (false)
+local _          = Layer.reference "ITA"
+local root       = Layer.reference (false)
 
 -- Formalism of Interrupt Timed Automaton
 -- ======================================
@@ -26,19 +27,20 @@ local root   = Layer.reference (false)
 
 
 layer.__depends__ = {
-  automaton
+  automaton,
+  polynomial,
 }
 
 layer.__meta__ = {
 
   interrupt_timed_automaton_type = {
-    __label__ = "ITA",
+    __label__   = "ITA",
 
     __refines__ = {
         root.__meta__.automaton_type
     },
 
-    __meta__ = {
+    __meta__    = {
       analog_type = {
         __refines__ = {
           root.__meta__.record,
@@ -61,33 +63,48 @@ layer.__meta__ = {
         },
         __meta__ = {
           __tags__ = {
-            -- polynomial compare with 0
+            comparison = {
+              __value_type__      = "string",
+              __value_container__ = {"<", "<=", "=", ">=", ">"},
+            },
           },
         },
-        -- default : nil
+        polynomial = {
+          __refines__ = {
+            root.__meta__.collection,
+          },
+          __meta__    = {
+            __value_type__ = root.__meta__.polynomial_type,
+          },
+          __default__ = {
+            __refines__ = {
+              root.__meta__.polynomial_type,
+            },
+          },
+        },
       },
 
       update_type = {
         __refines__ = {
-          root.__meta__.record,
+          root.__meta__.collection,
         },
         __meta__ = {
-          __tags__ = {
-            -- analog = polynomial compare with 0
-          },
+          __value_type__    = root.__meta__.polynomial_type,
+          __key_type__      = _.__meta__.analog_type,
+          __key_container__ = _.analogs,
         },
-        -- default : nil
       },
 
       edge_type = {
-        __meta__ = {
-          __tags__ = {
-            guard = {
-              __value_type__ = nil,
-            },
-            update = {
-              __value_type__ = nil,
-            },
+        update = {
+          __refines__ = {
+            _.__meta__.update_type,
+          },
+        },
+
+        guard = {
+          __refines__ = {
+            _.__meta__.guard_type
           },
         },
       },
