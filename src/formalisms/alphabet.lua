@@ -1,5 +1,5 @@
 local Layer  = require "layeredata"
-local object = require "formalisms.object"
+local collection = require "formalisms.collection"
 local layer  = Layer.new {
   name = "alphabet",
 }
@@ -14,7 +14,7 @@ local root   = Layer.reference (false)
 -- An alphabet is a set of symbols.
 
 layer.__depends__ =  {
-  object,
+  collection,
 }
 
 layer.__meta__ = {

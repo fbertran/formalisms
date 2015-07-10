@@ -1,13 +1,15 @@
-local Layer = require "layeredata"
-local object = require "formalisms.object"
-local layer = Layer.new {
+local Layer      = require "layeredata"
+local collection = require "formalisms.collection"
+local record     = require "formalisms.record"
+local layer      = Layer.new {
   name = "Polynomial",
 }
-local _     = Layer.reference "polynomial"
-local root  = Layer.reference (false)
+local _          = Layer.reference "polynomial"
+local root       = Layer.reference (false)
 
 layer.__depends__ = {
-  object,
+  collection,
+  record,
 }
 
 layer.__meta__ = {
@@ -33,9 +35,9 @@ layer.__meta__ = {
             root.__meta__.collection,
           },
           __meta__ = {
-            __key_type__ = _.__meta__.variable_type,
+            __key_type__      = _.__meta__.variable_type,
             __key_container__ = _.variables,
-            __value_type__ = "number",
+            __value_type__    = "number",
           },
         },
       },
