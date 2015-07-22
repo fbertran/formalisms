@@ -16,20 +16,41 @@ local layer = Layer.new {
 
 
 layer.__meta__ = {
-  collection = {
-    __meta__ = {
-      __key_type__        = nil,
-      __key_container__   = nil,
-      __value_type__      = nil,
-      __value_container__ = nil,
-    },
+  __key_type__        = nil,
+  __key_container__   = nil,
+  __value_type__      = nil,
+  __value_container__ = nil,
+}
 
-    __checks__ = {
-      function ()
-        -- TODO b
-        -- check if all the keys have the great type, all the values have the great type and so on...
-      end,
-    },
-  },
+layer.__checks__ = {
+-- check_element = function (proxy)
+--   -- test si tout est nil
+--   local message = ""
+--   local meta = proxy.__meta__
+--   for key, value in Layer.pairs(meta) do
+--     if(key ~= "__meta__" or key ~= "__checks__") then
+--     
+--       if( value["__value_type__"]      ~= nil or
+--           value["__value_container__"] ~= nil ) then
+--         
+--         if (proxy[tag] == nil) then
+--           message = message .. "Key '" .. tostring(tag) .. "' is missing. "
+--           
+--         elseif (value["__value_type__"] ~= nil and
+--                 type(proxy[tag]) ~= type(value["__value_type__"])) then
+--           message = message .. "Type of " .. tostring(tag) .. "'s value is wrong. "
+--         
+--         elseif(value["__value_container__"] ~= nil) then
+--           for k, v in Layer.pairs(value["__value_container__"]) do
+--             print(k, v)
+--           end
+--         end
+--       end
+--     end
+--   end
+--   if (message ~= "") then
+--     return "check_tags", message
+--   end
+-- end
 }
 return layer

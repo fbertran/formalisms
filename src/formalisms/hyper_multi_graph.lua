@@ -5,7 +5,6 @@ local layer      = Layer.new {
   name = "hyper & multi graph",
 }
 local _          = Layer.reference "HMGT"
-local root       = Layer.reference (false)
 
 -- Formalism of Hyper and Multi Graph
 -- ==================================
@@ -16,78 +15,73 @@ local root       = Layer.reference (false)
 --
 -- For more information of Hyper and Multi Graph, see [here](https://en.wikipedia.org/?title=Hypergraph)
 
-layer.__refines__ =  {
-  record,
-  collection,
+-- layer.__refines__ =  {
+--   record,
+--   collection,
+-- }
+
+layer.__label__ = "HMGT"
+layer.__meta__ = {
+  vertex_type = {},
+
+  edge_type = {
+    __meta__ = {
+      arrow_type = {
+        __refines__ = {
+          record,
+        },
+
+        __meta__ = {
+          __tags__ = {
+            vertex = {
+              __value_type__ = _.__meta__.vertex_type,
+              __value_container__ = _.vertices,
+            },
+          },
+        },
+      },
+    },
+    arrows = {
+      __refines__ = {
+        collection,
+      },
+      __meta__ = {
+        __value_type__ = _.__meta__.edge_type.__meta__.arrow_type,
+      },
+      __default__ = {
+        __refines__ = {
+          _.__meta__.edge_type.__meta__.arrow_type,
+        },
+      },
+    },
+  },
 }
 
-layer.__meta__ = {
-
-  hyper_multi_graph_type = {
-    __label__ = "HMGT",
-    __meta__ = {
-      vertex_type = {},
-
-      edge_type = {
-        __meta__ = {
-          arrow_type = {
-            __refines__ = {
-              root.__meta__.record,
-            },
-
-            __meta__ = {
-              __tags__ = {
-                vertex = {
-                  __value_type__ = _.__meta__.vertex_type,
-                  __value_container__ = _.vertices,
-                },
-              },
-            },
-          },
-        },
-        arrows = {
-          __refines__ = {
-            root.__meta__.collection,
-          },
-          __meta__ = {
-            __value_type__ = _.__meta__.edge_type.__meta__.arrow_type,
-          },
-          __default__ = {
-            __refines__ = {
-              _.__meta__.edge_type.__meta__.arrow_type,
-            },
-          },
-        },
-      },
+layer.vertices = {
+  __refines__ = {
+    collection,
+  },
+  __meta__ = {
+    __value_type__ = _.__meta__.vertex_type,
+  },
+  __default__ = {
+    __refines__ = {
+      _.__meta__.vertex_type,
     },
+  },
+}
 
-    vertices = {
-      __refines__ = {
-        root.__meta__.collection,
-      },
-      __meta__ = {
-        __value_type__ = _.__meta__.vertex_type,
-      },
-      __default__ = {
-        __refines__ = {
-          _.__meta__.vertex_type,
-        },
-      },
-    },
-
-    edges = {
-      __refines__ = {
-        root.__meta__.collection,
-      },
-      __meta__ = {
-        __value_type__ = _.__meta__.edge_type,
-      },
-      __default__ = {
-        __refines__ = {
-          _.__meta__.edge_type,
-        }
-      },
-    },
+layer.edges = {
+  __refines__ = {
+    collection,
+  },
+  __meta__ = {
+    __value_type__ = _.__meta__.edge_type,
+  },
+  __default__ = {
+    __refines__ = {
+      _.__meta__.edge_type,
+    }
   },
 }
 
