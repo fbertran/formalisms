@@ -42,5 +42,9 @@ layer.model = {
 }
 
 do
+  ProFi = require "ProFi"
+                ProFi:start()
   print(Layer.dump(Layer.flatten(layer)))
+  ProFi:stop()
+                ProFi:writeReport "report.txt"
 end
