@@ -16,7 +16,7 @@ local root       = Layer.reference (false)
 --
 -- For more information of Hyper and Multi Graph, see [here](https://en.wikipedia.org/?title=Hypergraph)
 
-layer.__depends__ =  {
+layer.__refines__ =  {
   record,
   collection,
 }

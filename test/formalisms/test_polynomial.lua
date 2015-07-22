@@ -17,7 +17,7 @@ layer.model = {
     root.__meta__.polynomial_type,
   },
 
-  variables= {
+  variables = {
     x1 = {},
     x2 = {},
   },
@@ -43,5 +43,5 @@ layer.model = {
 }
 
 do
-  print(Layer.dump(Layer.flatten(layer)))
+  Layer.flatten(layer)
 end

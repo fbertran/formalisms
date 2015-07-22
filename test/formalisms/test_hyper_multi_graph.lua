@@ -6,7 +6,7 @@ local layer             = Layer.new {
 local _                 = Layer.reference "HMGT_model"
 local root              = Layer.reference (false)
 
-layer.__depends__ = {
+layer.__refines__ = {
   hyper_multi_graph,
 }
 

@@ -8,6 +8,7 @@ local root      = Layer.reference (false)
 
 layer.__depends__ = {
   automaton,
+  -- TODO issue error Layer.flatten(automaton),
 }
 
 layer.model = {
@@ -99,5 +100,10 @@ layer.model = {
 }
 
 do
-  print(Layer.dump(Layer.flatten(layer)))
+local  ProFi = require "ProFi"
+               ProFi:start()
+               print(Layer.dump(Layer.flatten(layer)))
+               ProFi:stop()
+               ProFi:writeReport "report.txt"
+  
 end
