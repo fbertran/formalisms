@@ -20,7 +20,8 @@ local _          = Layer.reference "HMGT"
 --   collection,
 -- }
 
-layer.__label__ = "HMGT"
+layer.__labels__ = { HMGT = true }
+
 layer.__meta__ = {
   vertex_type = {},
 
@@ -32,10 +33,10 @@ layer.__meta__ = {
         },
 
         __meta__ = {
-          __tags__ = {
+          tags = {
             vertex = {
-              __value_type__ = _.__meta__.vertex_type,
-              __value_container__ = _.vertices,
+              value_type      = _.__meta__.vertex_type,
+              value_container = _.vertices,
             },
           },
         },
@@ -46,7 +47,7 @@ layer.__meta__ = {
         collection,
       },
       __meta__ = {
-        __value_type__ = _.__meta__.edge_type.__meta__.arrow_type,
+        value_type = _.__meta__.edge_type.__meta__.arrow_type,
       },
       __default__ = {
         __refines__ = {
@@ -62,7 +63,7 @@ layer.vertices = {
     collection,
   },
   __meta__ = {
-    __value_type__ = _.__meta__.vertex_type,
+    value_type = _.__meta__.vertex_type,
   },
   __default__ = {
     __refines__ = {
@@ -76,7 +77,7 @@ layer.edges = {
     collection,
   },
   __meta__ = {
-    __value_type__ = _.__meta__.edge_type,
+    value_type = _.__meta__.edge_type,
   },
   __default__ = {
     __refines__ = {

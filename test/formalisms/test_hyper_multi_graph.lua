@@ -3,14 +3,13 @@ local hyper_multi_graph = require "formalisms.hyper_multi_graph"
 local layer             = Layer.new {
   name = "hyper & multi graph instance"
 }
-local _                 = Layer.reference "HMGT"
+local _                 = Layer.reference "HMGT_model"
 
 layer.__refines__ = {
   hyper_multi_graph,
 }
 
-layer.__label__ = "HMGT"
-
+layer.__labels__ = { HMGT_model = true }
 
 layer.vertices = {
   n1 = {},
@@ -21,7 +20,7 @@ layer.vertices = {
 layer.edges = {
   e1 = {
     arrows = {
-      { vertex = _.vertices.n1 },
+      { }, --vertex = _.vertices.n1 },
       { vertex = _.vertices.n2 },
       { vertex = _.vertices.n3 },
     },
@@ -36,5 +35,5 @@ layer.edges = {
 }
 
 do
-  print(Layer.dump(Layer.flatten(layer)))
+  print(Layer.toyaml(Layer.flatten(layer)))
 end
