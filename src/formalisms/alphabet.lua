@@ -4,7 +4,6 @@ local layer  = Layer.new {
   name = "alphabet",
 }
 local _      = Layer.reference "alphabet"
-local root   = Layer.reference (false)
 
 -- Alphabet
 -- ========
@@ -13,33 +12,24 @@ local root   = Layer.reference (false)
 --
 -- An alphabet is a set of symbols.
 
-layer.__depends__ =  {
-  collection,
-}
+layer.__labels__ = { alphabet = true }
 
 layer.__meta__ = {
+  symbol_type = {},
+}
 
-  alphabet_type = {
-    __label__ = "alphabet",
-
-    __meta__ = {
-      symbol_type = {},
-    },
-
-    symbols = {
-      __refines__ = {
-        root.__meta__.collection,
-      },
-      __meta__ = {
-        __value_type__ = _.__meta__.symbol_type,
-      },
-      __default__ = {
-        __refines__ = {
-          _.__meta__.symbol_type,
-        },
-      }
-    },
+layer.symbols = {
+  __refines__ = {
+    collection,
   },
+  __meta__ = {
+    __value_type__ = _.__meta__.symbol_type,
+  },
+  __default__ = {
+    __refines__ = {
+      _.__meta__.symbol_type,
+    },
+  }
 }
 
 return layer

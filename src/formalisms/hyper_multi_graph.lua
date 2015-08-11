@@ -15,11 +15,6 @@ local _          = Layer.reference "HMGT"
 --
 -- For more information of Hyper and Multi Graph, see [here](https://en.wikipedia.org/?title=Hypergraph)
 
--- layer.__refines__ =  {
---   record,
---   collection,
--- }
-
 layer.__labels__ = { HMGT = true }
 
 layer.__meta__ = {

@@ -2,8 +2,6 @@ local Layer = require "layeredata"
 local layer = Layer.new {
   name = "collection",
 }
-local model = Layer.new{ name = "test" }
-
 
 -- collection formalism
 -- ================
@@ -16,9 +14,6 @@ local model = Layer.new{ name = "test" }
 -- * `value_type`      : type of values
 -- * `value_container` : all values must reference an element of this container
 
-local root = Layer.reference(false)
-
-
 layer.__meta__ = {
   key_type        = nil,
   key_container   = nil,
@@ -27,68 +22,103 @@ layer.__meta__ = {
 }
 
 layer.__checks__ = {
-  -- check_element = function (proxy)
-  --   local meta = proxy.__meta__
-  --   -- if(#meta == 0) then
-  --   --   return
-  --   -- end
-  --   
-  --   local message = ""
-  --   for key, value in Layer.pairs(proxy) do
-  --     if string.match(key, '^__.+__$') == nil then
-  --        print(key, value)
-  --       if type(meta["value_type"]) == "string"  then
-  --         if type(value) ~= meta["value_type"]  then
-  --           return "check_element", tostring(key) .. " value : wrong type."
-  --         end
-  --         
-  --       elseif type(meta["value_type"]) == "table" 
-  --       and     value                   >= meta["value_type"] 
-  --       then  
-  --         print(type(meta["value_type"]))
-  --       end
-  --     end
-  --   end
-  --   -- for key, value in Layer.pairs(meta) do
-  --   --   if(key ~= "__meta__" or key ~= "__checks__") then
-  --   --   
-  --   --     if( value["value_type"]      ~= nil or
-  --   --         value["value_container"] ~= nil ) then
-  --   --       
-  --   --       if (proxy[tag] == nil) then
-  --   --         message = message .. "Key '" .. tostring(tag) .. "' is missing. "
-  --   --         
-  --   --       elseif (value["value_type"] ~= nil and
-  --   --               type(proxy[tag]) ~= type(value["value_type"])) then
-  --   --         message = message .. "Type of " .. tostring(tag) .. "'s value is wrong. "
-  --   --       
-  --   --       elseif(value["value_container"] ~= nil) then
-  --   --         for k, v in Layer.pairs(value["value_container"]) do
-  --   --           print(k, v)
-  --   --         end
-  --   --       end
-  --   --     end
-  --   --   end
-  --   -- end
-  --   if (message ~= "") then
-  --     return "check_tags", message
-  --   end
-  -- end
+  check_collection = function (proxy)
+    
+    local meta = proxy.__meta__
+    do
+      local exist = false 
+      for _ in Layer.pairs(meta) do 
+        exist = true
+        break
+      end
+      if not exist then
+        return
+      end
+    end
+    local message = ""
+    for key, value in Layer.contents(proxy) do
+      -- check if all values in this collection are references to an element of the container `value_container`
+      if type(meta["value_container"]) == "table" then
+        local exist = false
+        for k, _ in Layer.contents(meta["value_container"]) do
+          if value == k then
+            exist = true
+            break
+          end
+        end
+        if not exist then
+          message = message .. tostring(key) .. " value : does not exist. "
+        end
+      
+      -- check if all values type are correct
+      elseif meta["value_type"] ~= nil then
+        if type(meta["value_type"]) == "string" then
+          if type(value) ~= meta["value_type"] then
+            message = message .. tostring(key) .. " value : incompatible type. Waiting " .. meta["value_type"] .. ", found " .. type(value) .. ". "
+          end
+        
+        else --if Layer.is_reference(value["value_type"]) then
+          if type(value) ~= "table" then 
+            message = message .. tostring(key) .. " value : incompatible types. Waiting " .. tostring(meta["value_type"]) .. ", found " .. type(value) .. ". "
+          else
+            local exist = false
+            for _, ref in Layer.ipairs(value.__refines__) do
+              print(ref)
+              if ref == meta["value_type"] then 
+                exist = true
+                break
+              end
+            end
+            if not exist then
+              message = message .. tostring(key) .. " value : incompatible type. Waiting " .. tostring(meta["value_type"]) .. ", found " .. tostring(value) .. ". "
+            end
+          end
+        end
+      end
+      
+      -- check if all keys in this collection reference an element of the container `key_container`
+      if type(meta["key_container"]) == "table" then
+        local exist = false
+        for k, _ in Layer.contents(value["key_container"]) do
+          if key == k then
+            exist = true
+            break
+          end
+        end
+        if not exist then
+          message = message .. tostring(key) .. " value : does not exist. "
+        end
+          
+      -- check if all keys type are correct
+      elseif meta["key_type"] ~= nil then
+        if type(meta["key_type"]) == "string" then
+          if type(key) ~= meta["key_type"] then
+            message = message .. "key " .. tostring(key) .. " : incompatible type. Waiting " .. meta["key_type"] .. ", found " .. type(key) .. ". "
+          end
+        
+        else --if Layer.is_reference(meta["value_type"]) then
+          if type(key) ~= "table" then 
+            message = message .. "key " .. tostring(key) .. " : incompatible types. Waiting " .. tostring(meta["key_type"]) .. ", found " .. type(key) .. ". "
+          else
+            local exist = false
+            for _, ref in Layer.ipairs(key.__refines__) do
+              if ref == meta["key_type"] then 
+                exist = true
+                break
+              end
+            end
+            if not exist then
+              message = message .. "key " .. tostring(key) .. " : incompatible type. Waiting " .. tostring(meta["key_type"]) .. ", found " .. tostring(key) .. ". "
+            end
+          end
+        end
+      end
+    end
+      
+    if message ~= "" then
+      return "check_collection", message
+    end
+  end
 }
-
--- 
--- model.a = {
---   __refines__ = {
---     layer
---   },
---   b = {
---     __refines__ = {
---       root.a.__meta__.x
---     }
---   },
--- }
--- 
--- print (Layer.toyaml(Layer.flatten(model)))
--- 
 
 return layer

@@ -1,4 +1,6 @@
 local Layer      = require "layeredata"
+local record     = require "formalisms.record"
+local collection = require "formalisms.collection"
 local automaton  = require "formalisms.automaton"
 local polynomial = require "formalisms.polynomial"
 local layer      = Layer.new {
@@ -26,141 +28,131 @@ local root       = Layer.reference (false)
 --For more information of Interrupt timed automaton see [here](http://arxiv.org/abs/1504.04541)
 
 
-layer.__depends__ = {
+layer.__refines__ = {
   automaton,
-  polynomial,
 }
 
+layer.__labels__ = { ITA = true }
+
 layer.__meta__ = {
-
-  interrupt_timed_automaton_type = {
-    __label__   = "ITA",
-
+  analog_type = {
     __refines__ = {
-        root.__meta__.automaton_type
+      record,
     },
-
-    __meta__    = {
-      analog_type = {
-        __refines__ = {
-          root.__meta__.record,
-        },
-        __meta__ = {
-          __tags__ = {
-            active_level = {
-              __value_type__      = _.__meta__.level_type,
-              __value_container__ = _.levels,
-            },
-          },
-        },
-      },
-
-      level_type = {},
-
-      guard_type = {
-        __refines__ = {
-          root.__meta__.record,
-        },
-        __meta__ = {
-          __tags__ = {
-            comparison = {
-              __value_type__      = "string",
-              __value_container__ = {"<", "<=", "=", ">=", ">"},
-            },
-          },
-        },
-        polynomial = {
-          __refines__ = {
-            root.__meta__.collection,
-          },
-          __meta__    = {
-            __value_type__ = root.__meta__.polynomial_type,
-          },
-          __default__ = {
-            __refines__ = {
-              root.__meta__.polynomial_type,
-            },
-          },
-        },
-      },
-
-      update_type = {
-        __refines__ = {
-          root.__meta__.collection,
-        },
-        __meta__ = {
-          __value_type__    = root.__meta__.polynomial_type,
-          __key_type__      = _.__meta__.analog_type,
-          __key_container__ = _.analogs,
-        },
-      },
-
-      edge_type = {
-        update = {
-          __refines__ = {
-            _.__meta__.update_type,
-          },
-        },
-
-        guard = {
-          __refines__ = {
-            _.__meta__.guard_type
-          },
-        },
-      },
-
-      vertex_type  = {
-        __meta__ = {
-          __tags__ = {
-            level = {
-              __value_type__      = _.__meta__.level_type,
-              __value_container__ = _.levels,
-            },
-          },
-        },
-      },
-
-      initial_state_type = {
-        analogs_init = {
-          __refines__ = {
-            root.__meta__.collection,
-          },
-
-          __meta__ = {
-            __value_type__    = "number",
-            __key_type__      = _.__meta__.analog_type,
-            __key_container__ = _.analogs,
-          },
+    __meta__ = {
+      __tags__ = {
+        active_level = {
+          __value_type__      = _.__meta__.level_type,
+          __value_container__ = _.levels,
         },
       },
     },
+  },
 
-    analogs = {
+  level_type = {},
+
+  guard_type = {
+    __refines__ = {
+      record,
+    },
+    __meta__ = {
+      __tags__ = {
+        comparison = {
+          __value_type__      = "string",
+          __value_container__ = {"<", "<=", "=", ">=", ">"},
+        },
+      },
+    },
+    polynomial = {
       __refines__ = {
-        root.__meta__.collection,
+        collection,
       },
-      __meta__ = {
-        __value_type__ = _.__meta__.analog_type,
+      __meta__    = {
+        __value_type__ = _.__meta__.polynomial_type,
       },
       __default__ = {
         __refines__ = {
-          _.__meta__.analog_type,
+          _.__meta__.polynomial_type,
         },
       },
     },
+  },
 
-    levels = {
+  update_type = {
+    __refines__ = {
+      collection,
+    },
+    __meta__ = {
+      __value_type__    = _.__meta__.polynomial_type,
+      __key_type__      = _.__meta__.analog_type,
+      __key_container__ = _.analogs,
+    },
+  },
+
+  edge_type = {
+    update = {
       __refines__ = {
-        root.__meta__.collection,
+        _.__meta__.update_type,
       },
-      __meta__ = {
-        __value_type__ = _.__meta__.level_type,
+    },
+
+    guard = {
+      __refines__ = {
+        _.__meta__.guard_type
       },
-      __default__ = {
-        __refines__ = {
-          _.__meta__.level_type,
+    },
+  },
+
+  vertex_type  = {
+    __meta__ = {
+      __tags__ = {
+        level = {
+          __value_type__      = _.__meta__.level_type,
+          __value_container__ = _.levels,
         },
       },
+    },
+  },
+
+  initial_state_type = {
+    analogs_init = {
+      __refines__ = {
+        collection,
+      },
+
+      __meta__ = {
+        __value_type__    = "number",
+        __key_type__      = _.__meta__.analog_type,
+        __key_container__ = _.analogs,
+      },
+    },
+  },
+}
+
+layer.analogs = {
+  __refines__ = {
+    collection,
+  },
+  __meta__ = {
+    __value_type__ = _.__meta__.analog_type,
+  },
+  __default__ = {
+    __refines__ = {
+      _.__meta__.analog_type,
+    },
+  },
+}
+
+layer.levels = {
+  __refines__ = {
+    collection,
+  },
+  __meta__ = {
+    __value_type__ = _.__meta__.level_type,
+  },
+  __default__ = {
+    __refines__ = {
+      _.__meta__.level_type,
     },
   },
 }

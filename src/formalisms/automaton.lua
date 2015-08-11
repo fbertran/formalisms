@@ -1,4 +1,6 @@
 local Layer                               = require "layeredata"
+local record                              = require "formalisms.record"
+local collection                          = require "formalisms.collection"
 local labelled_edges_hyper_multi_graph    = require "formalisms.labelled_edges_hyper_multi_graph"
 local labelled_vertices_hyper_multi_graph = require "formalisms.labelled_vertices_hyper_multi_graph"
 local directed_hyper_multi_graph          = require "formalisms.directed_hyper_multi_graph"
@@ -8,7 +10,6 @@ local layer                               = Layer.new {
   name = "automaton",
 }
 local _      = Layer.reference "automaton"
-local root   = Layer.reference (false)
 
 -- Description of automaton
 -- ========================
@@ -27,7 +28,7 @@ local root   = Layer.reference (false)
 --
 -- For more information of automaton see [here](http://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-definitions.html)
 
-layer.__depends__ = {
+layer.__refines__ = {
   labelled_edges_hyper_multi_graph,
   labelled_vertices_hyper_multi_graph,
   directed_hyper_multi_graph,
@@ -35,92 +36,79 @@ layer.__depends__ = {
   alphabet,
 }
 
+layer.__labels__ = { automaton = true }
+
 layer.__meta__ = {
-
-  automaton_type = {
-    __label__ = "automaton",
-
-    __refines__ = {
-      root.__meta__.labelled_edges_hyper_multi_graph_type,
-      root.__meta__.labelled_vertices_hyper_multi_graph_type,
-      root.__meta__.directed_hyper_multi_graph_type,
-      root.__meta__.multi_graph_type,
-      root.__meta__.alphabet_type,
+  edge_type = {
+    __tags__ = {
+      letter = {
+        __value_type__      = _.__meta__.symbol_type,
+        __value_container__ = _.symbols,
+      },
     },
-
+  },
+  
+  vertex_type  = {
     __meta__ = {
-      edge_type = {
-        __tags__ = {
-          letter = {
-            __value_type__      = root.__meta__.alphabet_type.__meta__.symbol_type,
-            __value_container__ = root.__meta__.alphabet_type.symbols,
-          },
-        },
+      __tags__ = {
+        id = {},
       },
+    },
+  },
 
-      vertex_type  = {
-        __meta__ = {
-          __tags__ = {
-            id = {},
-          },
-        },
-      },
-
-      initial_state_type = {
-        __refines__ = {
-          root.__meta__.record,
-        },
-        __meta__ = {
-          tags = {
-            vertex = {
-              __value_type__ = _.__meta__.vertex_type,
-              __value_container__ = _.vertices,
-            },
-          },
-        },
-      },
-
-      accept_state_type = {
-        __refines__ = {
-          root.__meta__.record,
-        },
-        __meta__ = {
-          tags = {
-            vertex = {
-              __value_type__ = _.__meta__.vertex_type,
-              __value_container__ = _.vertices,
-            },
-          },
+  initial_state_type = {
+    __refines__ = {
+      record,
+    },
+    __meta__ = {
+      tags = {
+        vertex = {
+          __value_type__ = _.__meta__.vertex_type,
+          __value_container__ = _.vertices,
         },
       },
     },
+  },
 
-    initials_states = {
-      __refines__ = {
-        root.__meta__.collection,
-      },
-      __meta__ = {
-        __value_type__ = _.__meta__.initial_state_type,
-      },
-      __default__ = {
-        __refines__ = {
-          _.__meta__.initial_state_type,
+  accept_state_type = {
+    __refines__ = {
+      record,
+    },
+    __meta__ = {
+      tags = {
+        vertex = {
+          __value_type__ = _.__meta__.vertex_type,
+          __value_container__ = _.vertices,
         },
       },
     },
+  },
+}
 
-    accept_states = {
-      __refines__ = {
-        root.__meta__.collection,
-      },
-      __meta__ = {
-        __value_type__ = _.__meta__.initial_state_type,
-      },
-      __default__ = {
-        __refines__ = {
-          _.__meta__.initial_state_type,
-        },
-      },
+layer.initials_states = {
+  __refines__ = {
+    collection,
+  },
+  __meta__ = {
+    __value_type__ = _.__meta__.initial_state_type,
+  },
+  __default__ = {
+    __refines__ = {
+      _.__meta__.initial_state_type,
+    },
+  },
+}
+
+layer.accept_states = {
+  __refines__ = {
+    collection,
+  },
+  __meta__ = {
+    __value_type__ = _.__meta__.accept_state_type,
+  },
+  __default__ = {
+    __refines__ = {
+      _.__meta__.accept_state_type,
     },
   },
 }

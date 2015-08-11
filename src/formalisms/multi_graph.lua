@@ -3,8 +3,6 @@ local hyper_multi_graph = require "formalisms.hyper_multi_graph"
 local layer             = Layer.new {
   name = "multi graph",
 }
-local _                 = Layer.reference "MGT"
-local root              = Layer.reference (false)
 
 -- Formalism of a Multi Graph
 -- ===========================
@@ -19,27 +17,18 @@ local root              = Layer.reference (false)
 --
 -- For more information see [here](https://en.wikipedia.org/wiki/Multigraph)
 
-layer.__depends__ = {
-  hyper_multi_graph,
+layer.__refines__ = {
+  hyper_multi_graph
 }
 
 layer.__meta__ = {
-
-  multi_graph_type = {
-    __refines__ = {
-      root.__meta__.hyper_multi_graph_type,
-    },
-
-    __meta__ = {
-      edge_type = {
-        arrows = {
-          __checks__ = {
-            function ()
-              -- TODO
-              -- check arity (size of arrows must equals 2)
-            end,
-          },
-        },
+  edge_type = {
+    arrows = {
+      __checks__ = {
+        function ()
+          -- TODO
+          -- check arity (size of arrows must equals 2)
+        end,
       },
     },
   },

@@ -3,8 +3,6 @@ local hyper_multi_graph = require "formalisms.hyper_multi_graph"
 local layer             = Layer.new {
   name = "hyper graph",
 }
-local _                 = Layer.reference "HGT"
-local root              = Layer.reference (false)
 
 -- Formalism of a Hyper Graph
 -- ===========================
@@ -17,25 +15,17 @@ local root              = Layer.reference (false)
 --
 -- For more information see [here](https://en.wikipedia.org/wiki/Hypergraph)
 
-layer.__depends__ = {
-  hyper_multi_graph,
+layer.__refines__ = {
+  hyper_multi_graph
 }
 
 layer.__meta__ = {
-
-  hyper_graph_type = {
-    __label__ = "HGT",
-
-    __refines__ = {
-      root.__meta__.hyper_multi_graph_type,
-    },
-    edges = {
-      __checks__ = {
-        function ()
-          -- TODO
-          -- check identical edges in collection edges
-        end,
-      },
+  edges = {
+    __checks__ = {
+      function ()
+        -- TODO
+        -- check identical edges
+      end,
     },
   },
 }
