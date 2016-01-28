@@ -17,14 +17,14 @@ local layer             = Layer.new {
 --
 -- For more information see [here](https://en.wikipedia.org/wiki/Multigraph)
 
-layer.__refines__ = {
+layer[Layer.key.refines] = {
   hyper_multi_graph
 }
 
-layer.__meta__ = {
+layer[Layer.key.meta] = {
   edge_type = {
     arrows = {
-      __checks__ = {
+      [Layer.key.checks] = {
         function ()
           -- TODO
           -- check arity (size of arrows must equals 2)

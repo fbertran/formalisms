@@ -6,27 +6,27 @@ local layer      = Layer.new {
 }
 local _          = Layer.reference "polynomial"
 
-layer.__labels__ = { polynomial = true }
+layer[Layer.key.labels] = { polynomial = true }
 
-layer.__meta__ = {
+layer[Layer.key.meta] = {
   variable_type = {},
 
   monomial_type = {
-    __refines__ = {
+    [Layer.key.refines] = {
       record
     },
-    __meta__ = {
+    [Layer.key.meta] = {
       __tags__ = {
         coefficient = {
           __value_type__ = "number",
         },
       },
       exponents = {
-        __refines__ = {
+        [Layer.key.refines] = {
           collection,
         },
-        __meta__ = {
-          __key_type__      = _.__meta__.variable_type,
+        [Layer.key.meta] = {
+          __key_type__      = _ [Layer.key.meta].variable_type,
           __key_container__ = _.variables,
           __value_type__    = "number",
         },
@@ -36,29 +36,29 @@ layer.__meta__ = {
 }
     
 layer.variables = {
-  __refines__ = {
+  [Layer.key.refines] = {
     collection,
   },
-  __meta__ = {
-    __value_type__ = _.__meta__.variable_type,
+  [Layer.key.meta] = {
+    __value_type__ = _ [Layer.key.meta].variable_type,
   },
-  __default__ = {
-    __refines__ = {
-      _.__meta__.variable_type,
+  [Layer.key.default] = {
+    [Layer.key.refines] = {
+      _ [Layer.key.meta].variable_type,
     },
   },
 }
     
 layer.monomials = {
-  __refines__ = {
+  [Layer.key.refines] = {
     collection,
   },
-  __meta__ = {
-    __value_type__ = _.__meta__.monomial_type,
+  [Layer.key.meta] = {
+    __value_type__ = _ [Layer.key.meta].monomial_type,
   },
-  __default__ = {
-    __refines__ = {
-      _.__meta__.monomial_type,
+  [Layer.key.default] = {
+    [Layer.key.refines] = {
+      _ [Layer.key.meta].monomial_type,
     },
   },
 }

@@ -12,22 +12,22 @@ local _      = Layer.reference "alphabet"
 --
 -- An alphabet is a set of symbols.
 
-layer.__labels__ = { alphabet = true }
+layer[Layer.key.labels] = { alphabet = true }
 
-layer.__meta__ = {
+layer[Layer.key.meta] = {
   symbol_type = {},
 }
 
 layer.symbols = {
-  __refines__ = {
+  [Layer.key.refines] = {
     collection,
   },
-  __meta__ = {
-    __value_type__ = _.__meta__.symbol_type,
+  [Layer.key.meta] = {
+    __value_type__ = _ [Layer.key.meta].symbol_type,
   },
-  __default__ = {
-    __refines__ = {
-      _.__meta__.symbol_type,
+  [Layer.key.default] = {
+    [Layer.key.refines] = {
+      _ [Layer.key.meta].symbol_type,
     },
   }
 }

@@ -15,22 +15,22 @@ local _          = Layer.reference "HMGT"
 --
 -- For more information of Hyper and Multi Graph, see [here](https://en.wikipedia.org/?title=Hypergraph)
 
-layer.__labels__ = { HMGT = true }
+layer[Layer.key.labels] = { HMGT = true }
 
-layer.__meta__ = {
+layer[Layer.key.meta] = {
   vertex_type = {},
 
   edge_type = {
-    __meta__ = {
+    [Layer.key.meta] = {
       arrow_type = {
-        __refines__ = {
+        [Layer.key.refines] = {
           record,
         },
 
-        __meta__ = {
+        [Layer.key.meta] = {
           tags = {
             vertex = {
-              value_type      = _.__meta__.vertex_type,
+              value_type      = _ [Layer.key.meta].vertex_type,
               value_container = _.vertices,
             },
           },
@@ -38,15 +38,15 @@ layer.__meta__ = {
       },
     },
     arrows = {
-      __refines__ = {
+      [Layer.key.refines] = {
         collection,
       },
-      __meta__ = {
-        value_type = _.__meta__.edge_type.__meta__.arrow_type,
+      [Layer.key.meta] = {
+        value_type = _ [Layer.key.meta].edge_type[Layer.key.meta].arrow_type,
       },
-      __default__ = {
-        __refines__ = {
-          _.__meta__.edge_type.__meta__.arrow_type,
+      [Layer.key.default] = {
+        [Layer.key.refines] = {
+          _ [Layer.key.meta].edge_type[Layer.key.meta].arrow_type,
         },
       },
     },
@@ -54,29 +54,29 @@ layer.__meta__ = {
 }
 
 layer.vertices = {
-  __refines__ = {
+  [Layer.key.refines] = {
     collection,
   },
-  __meta__ = {
-    value_type = _.__meta__.vertex_type,
+  [Layer.key.meta] = {
+    value_type = _ [Layer.key.meta].vertex_type,
   },
-  __default__ = {
-    __refines__ = {
-      _.__meta__.vertex_type,
+  [Layer.key.default] = {
+    [Layer.key.refines] = {
+      _ [Layer.key.meta].vertex_type,
     },
   },
 }
 
 layer.edges = {
-  __refines__ = {
+  [Layer.key.refines] = {
     collection,
   },
-  __meta__ = {
-    value_type = _.__meta__.edge_type,
+  [Layer.key.meta] = {
+    value_type = _ [Layer.key.meta].edge_type,
   },
-  __default__ = {
-    __refines__ = {
-      _.__meta__.edge_type,
+  [Layer.key.default] = {
+    [Layer.key.refines] = {
+      _ [Layer.key.meta].edge_type,
     }
   },
 }

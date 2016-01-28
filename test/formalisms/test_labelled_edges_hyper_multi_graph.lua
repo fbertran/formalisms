@@ -13,8 +13,8 @@ layer.__depends__ = {
 layer.model = {
   __label__ = "LEHMGT_model",
 
-  __refines__ = {
-    root.__meta__.labelled_edges_hyper_multi_graph_type,
+  [Layer.key.refines] = {
+    root[Layer.key.meta].labelled_edges_hyper_multi_graph_type,
   },
 
   vertices = {

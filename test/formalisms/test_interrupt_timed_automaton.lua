@@ -13,8 +13,8 @@ layer.__depends__ = {
 layer.model = {
   __label__ = "ITA_model",
 
-  __refines__ = {
-    root.__meta__.interrupt_timed_automaton_type,
+  [Layer.key.refines] = {
+    root[Layer.key.meta].interrupt_timed_automaton_type,
   },
 
   symbols = {

@@ -11,8 +11,8 @@ layer.__depends__ = {
 }
 
 layer.model = {
-  __refines__ = {
-    root.__meta__.directed_hyper_multi_graph_type,
+  [Layer.key.refines] = {
+    root[Layer.key.meta].directed_hyper_multi_graph_type,
   },
   __label__ = "DHMGT_model",
 

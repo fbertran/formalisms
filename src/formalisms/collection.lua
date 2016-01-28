@@ -14,17 +14,17 @@ local layer = Layer.new {
 -- * `value_type`      : type of values
 -- * `value_container` : all values must reference an element of this container
 
-layer.__meta__ = {
+layer[Layer.key.meta] = {
   key_type        = nil,
   key_container   = nil,
   value_type      = nil,
   value_container = nil,
 }
 
-layer.__checks__ = {
+layer[Layer.key.checks] = {
   check_collection = function (proxy)
     
-    local meta = proxy.__meta__
+    local meta = proxy[Layer.key.meta]
     do
       local exist = false 
       for _ in Layer.pairs(meta) do 
@@ -62,7 +62,7 @@ layer.__checks__ = {
             message = message .. tostring(key) .. " value : incompatible types. Waiting " .. tostring(meta["value_type"]) .. ", found " .. type(value) .. ". "
           else
             local exist = false
-            for _, ref in Layer.ipairs(value.__refines__) do
+            for _, ref in Layer.ipairs(value[Layer.key.refines]) do
               print(ref)
               if ref == meta["value_type"] then 
                 exist = true
@@ -101,7 +101,7 @@ layer.__checks__ = {
             message = message .. "key " .. tostring(key) .. " : incompatible types. Waiting " .. tostring(meta["key_type"]) .. ", found " .. type(key) .. ". "
           else
             local exist = false
-            for _, ref in Layer.ipairs(key.__refines__) do
+            for _, ref in Layer.ipairs(key[Layer.key.refines]) do
               if ref == meta["key_type"] then 
                 exist = true
                 break

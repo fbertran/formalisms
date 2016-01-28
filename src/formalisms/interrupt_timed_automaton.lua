@@ -28,21 +28,21 @@ local root       = Layer.reference (false)
 --For more information of Interrupt timed automaton see [here](http://arxiv.org/abs/1504.04541)
 
 
-layer.__refines__ = {
+layer[Layer.key.refines] = {
   automaton,
 }
 
-layer.__labels__ = { ITA = true }
+layer[Layer.key.labels] = { ITA = true }
 
-layer.__meta__ = {
+layer[Layer.key.meta] = {
   analog_type = {
-    __refines__ = {
+    [Layer.key.refines] = {
       record,
     },
-    __meta__ = {
+    [Layer.key.meta] = {
       __tags__ = {
         active_level = {
-          __value_type__      = _.__meta__.level_type,
+          __value_type__      = _ [Layer.key.meta].level_type,
           __value_container__ = _.levels,
         },
       },
@@ -52,10 +52,10 @@ layer.__meta__ = {
   level_type = {},
 
   guard_type = {
-    __refines__ = {
+    [Layer.key.refines] = {
       record,
     },
-    __meta__ = {
+    [Layer.key.meta] = {
       __tags__ = {
         comparison = {
           __value_type__      = "string",
@@ -64,50 +64,50 @@ layer.__meta__ = {
       },
     },
     polynomial = {
-      __refines__ = {
+      [Layer.key.refines] = {
         collection,
       },
-      __meta__    = {
-        __value_type__ = _.__meta__.polynomial_type,
+      [Layer.key.meta]    = {
+        __value_type__ = _ [Layer.key.meta].polynomial_type,
       },
-      __default__ = {
-        __refines__ = {
-          _.__meta__.polynomial_type,
+      [Layer.key.default] = {
+        [Layer.key.refines] = {
+          _ [Layer.key.meta].polynomial_type,
         },
       },
     },
   },
 
   update_type = {
-    __refines__ = {
+    [Layer.key.refines] = {
       collection,
     },
-    __meta__ = {
-      __value_type__    = _.__meta__.polynomial_type,
-      __key_type__      = _.__meta__.analog_type,
+    [Layer.key.meta] = {
+      __value_type__    = _ [Layer.key.meta].polynomial_type,
+      __key_type__      = _ [Layer.key.meta].analog_type,
       __key_container__ = _.analogs,
     },
   },
 
   edge_type = {
     update = {
-      __refines__ = {
-        _.__meta__.update_type,
+      [Layer.key.refines] = {
+        _ [Layer.key.meta].update_type,
       },
     },
 
     guard = {
-      __refines__ = {
-        _.__meta__.guard_type
+      [Layer.key.refines] = {
+        _ [Layer.key.meta].guard_type
       },
     },
   },
 
   vertex_type  = {
-    __meta__ = {
+    [Layer.key.meta] = {
       __tags__ = {
         level = {
-          __value_type__      = _.__meta__.level_type,
+          __value_type__      = _ [Layer.key.meta].level_type,
           __value_container__ = _.levels,
         },
       },
@@ -116,13 +116,13 @@ layer.__meta__ = {
 
   initial_state_type = {
     analogs_init = {
-      __refines__ = {
+      [Layer.key.refines] = {
         collection,
       },
 
-      __meta__ = {
+      [Layer.key.meta] = {
         __value_type__    = "number",
-        __key_type__      = _.__meta__.analog_type,
+        __key_type__      = _ [Layer.key.meta].analog_type,
         __key_container__ = _.analogs,
       },
     },
@@ -130,29 +130,29 @@ layer.__meta__ = {
 }
 
 layer.analogs = {
-  __refines__ = {
+  [Layer.key.refines] = {
     collection,
   },
-  __meta__ = {
-    __value_type__ = _.__meta__.analog_type,
+  [Layer.key.meta] = {
+    __value_type__ = _ [Layer.key.meta].analog_type,
   },
-  __default__ = {
-    __refines__ = {
-      _.__meta__.analog_type,
+  [Layer.key.default] = {
+    [Layer.key.refines] = {
+      _ [Layer.key.meta].analog_type,
     },
   },
 }
 
 layer.levels = {
-  __refines__ = {
+  [Layer.key.refines] = {
     collection,
   },
-  __meta__ = {
-    __value_type__ = _.__meta__.level_type,
+  [Layer.key.meta] = {
+    __value_type__ = _ [Layer.key.meta].level_type,
   },
-  __default__ = {
-    __refines__ = {
-      _.__meta__.level_type,
+  [Layer.key.default] = {
+    [Layer.key.refines] = {
+      _ [Layer.key.meta].level_type,
     },
   },
 }

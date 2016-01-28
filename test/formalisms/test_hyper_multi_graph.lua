@@ -5,11 +5,11 @@ local layer             = Layer.new {
 }
 local _                 = Layer.reference "HMGT_model"
 
-layer.__refines__ = {
+layer[Layer.key.refines] = {
   hyper_multi_graph,
 }
 
-layer.__labels__ = { HMGT_model = true }
+layer[Layer.key.labels] = { HMGT_model = true }
 
 layer.vertices = {
   n1 = {},

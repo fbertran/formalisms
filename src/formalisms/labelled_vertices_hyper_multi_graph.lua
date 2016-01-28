@@ -12,13 +12,13 @@ local layer             = Layer.new {
 --
 -- We only add in this formalism labels on vertices.
 
-layer.__refines__ = {
+layer[Layer.key.refines] = {
   hyper_multi_graph
 }
 
-layer.__meta__ = {
+layer[Layer.key.meta] = {
   vertex_type = {
-    __refines__ = {
+    [Layer.key.refines] = {
       record,
     },
   },

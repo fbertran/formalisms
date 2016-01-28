@@ -13,8 +13,8 @@ layer.__depends__ = {
 layer.model = {
   __label__   = "polynomial_model",
 
-  __refines__ = {
-    root.__meta__.polynomial_type,
+  [Layer.key.refines] = {
+    root[Layer.key.meta].polynomial_type,
   },
 
   variables = {

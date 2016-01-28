@@ -11,15 +11,15 @@ local layer             = Layer.new {
 --
 -- A definition of Directed Hyper Graph is given [here](http://link.springer.com/chapter/10.1007/3-540-45446-2_20)
 
-layer.__refines__ = {
+layer[Layer.key.refines] = {
   hyper_multi_graph
 }
 
-layer.__meta__ = {
+layer[Layer.key.meta] = {
   edge_type = {
-    __meta__ = {
+    [Layer.key.meta] = {
       arrow_type = {
-        __meta__ = {
+        [Layer.key.meta] = {
           __tags__ = {
             input = {
               __value_type__ = "boolean",

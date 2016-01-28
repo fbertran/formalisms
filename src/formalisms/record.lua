@@ -9,7 +9,7 @@ local layer = Layer.new {
 -- a record is a table where some keys are obligated.
 -- To do that we introduce the special key `tags`.
 
-layer.__meta__ = {
+layer[Layer.key.meta] = {
   tags = {
     -- If you want a key `name` in your record you wrote this :
     --  name = {
@@ -20,10 +20,10 @@ layer.__meta__ = {
   },
 }
     
-layer.__checks__ = {
+layer[Layer.key.checks] = {
   check_tags = function (proxy)
     local message = ""
-    local tags = proxy.__meta__.tags
+    local tags = proxy[Layer.key.meta].tags
     for tag, value in Layer.pairs(tags) do
       if value["value_type"] ~= nil or value["value_container"] ~= nil then
         if proxy[tag] == nil then
@@ -53,7 +53,7 @@ layer.__checks__ = {
               message = message .. tostring(tag) .. " value : incompatible types. Waiting " .. tostring(value["value_type"]) .. ", found " .. type(proxy[tag]) .. ". "
             else
               local exist = false
-              for _, ref in Layer.ipairs(proxy[tag].__refines__) do
+              for _, ref in Layer.ipairs(proxy[tag][Layer.key.refines]) do
                 if ref == value["value_type"] then 
                   exist = true
                   break

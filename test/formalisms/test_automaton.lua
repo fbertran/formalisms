@@ -14,8 +14,8 @@ layer.__depends__ = {
 layer.model = {
   __label__ = "automaton_model",
 
-  __refines__ = {
-    root.__meta__.automaton_type,
+  [Layer.key.refines] = {
+    root[Layer.key.meta].automaton_type,
   },
 
   symbols = {
