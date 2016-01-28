@@ -20,7 +20,7 @@ install:
   - luarocks make rockspec/*-master-1.rockspec
 
 script:
-  - luacheck --std max+busted src/*.lua test/*.lua
+  - luacheck --std max+busted src/ test/
   - busted --verbose --coverage --pattern=".test.lua" --recursive src/
 
 after_success:
