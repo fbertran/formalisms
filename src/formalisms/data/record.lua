@@ -1,76 +1,64 @@
-local Layer = require "layeredata"
-local layer = Layer.new {
+local Layer  = require "layeredata"
+local record = Layer.new {
   name = "record",
 }
 
--- record formalism
--- ================
+-- Record
+-- ======
 --
--- a record is a table where some keys are obligated.
--- To do that we introduce the special key `tags`.
+-- A record is a table where some keys are mandatory.
+-- To create a new record type, refine this formalism and add the fields
+-- descriptions in its `[meta].record` table.
+--
+-- `[meta].record` is a mapping from keys to their require value type,
+-- that can be either the string representation of the Lua type name
+-- (for instance "boolean", "number", "string"), or a proxy of the expected
+-- parent type (for instance `record`).
 
-layer[Layer.key.meta] = {
-  tags = {
-    -- If you want a key `name` in your record you wrote this :
-    --  name = {
-    --     value_type      = "string", 
-    --     value_container = nil,
-    --   },  
-    -- in `tags`.
-  },
+record [Layer.key.meta] = {
+  record = {},
 }
-    
-layer[Layer.key.checks] = {
-  check_tags = function (proxy)
-    local message = ""
-    local tags = proxy[Layer.key.meta].tags
-    for tag, value in Layer.pairs(tags) do
-      if value["value_type"] ~= nil or value["value_container"] ~= nil then
-        if proxy[tag] == nil then
-          message = message .. "key " .. tostring(tag) .. " : missing. "
-          
-        elseif value["value_container"] ~= nil then
-          local exist = false
-          for k, _ in Layer.contents(value["value_container"]) do
-            print (value["value_container"],k)
-            if value == k then
-              exist = true
-              break
-            end
-          end
-          if not exist then
-            message = message .. tostring(tag) .. " value : does not exist. "
-          end
-        
-        else
-          if type(value["value_type"]) == "string" then
-            if type(proxy[tag]) ~= value["value_type"] then
-              message = message .. tostring(tag) .. " value : incompatible type. Waiting " .. value["value_type"] .. ", found " .. type(proxy[tag]) .. ". "
-            end
-          
-          else --if Layer.is_reference(value["value_type"]) then
-            if type(proxy[tag]) ~= "table" then 
-              message = message .. tostring(tag) .. " value : incompatible types. Waiting " .. tostring(value["value_type"]) .. ", found " .. type(proxy[tag]) .. ". "
-            else
-              local exist = false
-              for _, ref in Layer.ipairs(proxy[tag][Layer.key.refines]) do
-                if ref == value["value_type"] then 
-                  exist = true
-                  break
-                end
-              end
-              if not exist then
-                message = message .. tostring(tag) .. " value : incompatible type. Waiting " .. tostring(value["value_type"]) .. ", found " .. tostring(proxy[tag]) .. ". "
-              end
-            end
-          end
-        end
+
+record [Layer.key.checks] = {}
+
+record [Layer.key.checks].value_type = function (proxy)
+  for key, description in pairs (proxy [Layer.key.meta].record) do
+    local value = proxy [key]
+    if value == nil then
+      Layer.coroutine.yield ("record:value_type:missing", {
+        proxy    = proxy,
+        key      = key,
+        expected = type (description.value_type),
+      })
+    elseif type (description.value_type) == "string" then
+      if type (value) ~= description.value_type then
+        Layer.coroutine.yield ("record:value_type:illegal", {
+          proxy    = proxy,
+          key      = key,
+          expected = type (description.value_type),
+          used     = type (value),
+        })
       end
+    elseif type (description.value_type) == "table" then
+      if getmetatable (value) ~= Layer.Proxy then
+        Layer.coroutine.yield ("record:value_type:illegal", {
+          proxy    = proxy,
+          key      = key,
+          expected = description.value_type,
+          used     = type (value),
+        })
+      elseif not (description.value_type <= value) then
+        Layer.coroutine.yield ("record:value_type:illegal", {
+          proxy    = proxy,
+          key      = key,
+          expected = description.value_type,
+          used     = value,
+        })
+      end
+    else
+      assert (false)
     end
-    
-    if message ~= "" then
-      return "check_tags", message
-    end
-  end,
-}
-return layer
+  end
+end
+
+return record
