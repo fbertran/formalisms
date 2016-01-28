@@ -2,12 +2,12 @@ local Layer      = require "layeredata"
 local record     = require "formalisms.record"
 local collection = require "formalisms.collection"
 local automaton  = require "formalisms.automaton"
-local polynomial = require "formalisms.polynomial"
+--local polynomial = require "formalisms.polynomial"
 local layer      = Layer.new {
   name = "interrupt timed automaton",
 }
 local _          = Layer.reference "ITA"
-local root       = Layer.reference (false)
+--local root       = Layer.reference (false)
 
 -- Formalism of Interrupt Timed Automaton
 -- ======================================
