@@ -5,10 +5,10 @@ local struct2   = Layer.new { name = "model"}
 local _ = Layer.reference "structure"
 local root = Layer.reference (false)
 
-struct.__meta__ = {
+struct[Layer.key.meta] = {
   structure_type = {
     __label__ = "structure",
-    __meta__ = {
+    [Layer.key.meta] = {
       A_type = {
         name = "A",
       },
@@ -17,9 +17,9 @@ struct.__meta__ = {
       },
     },
     collection = {
-      __default__ = {
-        __refines__ = {
-          _.__meta__.A_type,
+      [Layer.key.default] = {
+        [Layer.key.refines] = {
+          _ [Layer.key.meta].A_type,
         },
       },
       element1 = {
@@ -33,18 +33,18 @@ struct.__meta__ = {
       -- name = "B"
 
       element3 = {
-        label = _.__meta__.A_type.name,
+        label = _ [Layer.key.meta].A_type.name,
       },
       -- name = "A" and label = a reference to name.
 
       element4 = {
-        [_.__meta__.A_type.name] = 4
+        [_ [Layer.key.meta].A_type.name] = 4
       },
       -- name = "A" and a reference to name = 4.
 
       element5 = {
-        __refines__ = {
-          _.__meta__.B_type
+        [Layer.key.refines] = {
+          _ [Layer.key.meta].B_type
         },
       },
       -- id = "B" and not name = "A"
@@ -60,20 +60,20 @@ struct2.__depends__ = {
 }
 
 local m = Layer.reference "model"
-struct2.__meta__ = {
+struct2[Layer.key.meta] = {
   __label__   = "model",
-  __refines__ = {
-    root.__meta__.structure_type,
+  [Layer.key.refines] = {
+    root[Layer.key.meta].structure_type,
   },
-  __meta__ = {
+  [Layer.key.meta] = {
     B_type = {
       label = false,
     },
   },
   collection = {
     element6 = {
-      __refines__ = {
-        m.__meta__.B_type,
+      [Layer.key.refines] = {
+        m[Layer.key.meta].B_type,
       }
     }
     -- id = "B" and label = false
