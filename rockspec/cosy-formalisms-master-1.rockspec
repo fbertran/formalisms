@@ -20,7 +20,6 @@ dependencies = {
 build = {
   type    = "builtin",
   modules = {
-    ["cosy.formalism"                     ] = "src/cosy/formalism/init.lua",
     ["cosy.formalism.data.record"         ] = "src/cosy/formalism/data/record.lua",
     ["cosy.formalism.data.collection"     ] = "src/cosy/formalism/data/collection.lua",
     ["cosy.formalism.data.check_container"] = "src/cosy/formalism/data/check_container.lua",
