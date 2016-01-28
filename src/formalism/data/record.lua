@@ -3,6 +3,8 @@ local record = Layer.new {
   name = "record",
 }
 
+local check_type = require "formalism.data.check_type"
+
 -- Record
 -- ======
 --
@@ -21,43 +23,13 @@ record [Layer.key.meta] = {
 
 record [Layer.key.checks] = {}
 
-record [Layer.key.checks].value_type = function (proxy)
+record [Layer.key.checks] ["formalism:data:record:value_type"] = function (proxy)
   for key, description in pairs (proxy [Layer.key.meta].record) do
-    local value = proxy [key]
-    if value == nil then
-      Layer.coroutine.yield ("record:value_type:missing", {
-        proxy    = proxy,
-        key      = key,
-        expected = type (description.value_type),
-      })
-    elseif type (description.value_type) == "string" then
-      if type (value) ~= description.value_type then
-        Layer.coroutine.yield ("record:value_type:illegal", {
-          proxy    = proxy,
-          key      = key,
-          expected = type (description.value_type),
-          used     = type (value),
-        })
-      end
-    elseif type (description.value_type) == "table" then
-      if getmetatable (value) ~= Layer.Proxy then
-        Layer.coroutine.yield ("record:value_type:illegal", {
-          proxy    = proxy,
-          key      = key,
-          expected = description.value_type,
-          used     = type (value),
-        })
-      elseif not (description.value_type <= value) then
-        Layer.coroutine.yield ("record:value_type:illegal", {
-          proxy    = proxy,
-          key      = key,
-          expected = description.value_type,
-          used     = value,
-        })
-      end
-    else
-      assert (false)
-    end
+    check_type (proxy [key], description.value_type,{
+      proxy  = proxy,
+      key    = key,
+      prefix = "record:value_type",
+    })
   end
 end
 
