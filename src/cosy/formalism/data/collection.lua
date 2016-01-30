@@ -22,6 +22,9 @@ collection [Layer.key.meta] = {
 collection [Layer.key.checks] = {}
 
 collection [Layer.key.checks] ["collection.key_type"] = function (proxy)
+  if Layer.Proxy.has_meta (proxy) then
+    return
+  end
   if not proxy [Layer.key.meta].collection.key_type then
     return
   end
@@ -35,6 +38,9 @@ collection [Layer.key.checks] ["collection.key_type"] = function (proxy)
 end
 
 collection [Layer.key.checks] ["collection.value_type"] = function (proxy)
+  if Layer.Proxy.has_meta (proxy) then
+    return
+  end
   if not proxy [Layer.key.meta].collection.value_type then
     return
   end
@@ -48,6 +54,9 @@ collection [Layer.key.checks] ["collection.value_type"] = function (proxy)
 end
 
 collection [Layer.key.checks] ["collection.key_container"] = function (proxy)
+  if Layer.Proxy.has_meta (proxy) then
+    return
+  end
   if not proxy [Layer.key.meta].collection.key_container then
     return
   end
@@ -61,6 +70,9 @@ collection [Layer.key.checks] ["collection.key_container"] = function (proxy)
 end
 
 collection [Layer.key.checks] ["collection.value_container"] = function (proxy)
+  if Layer.Proxy.has_meta (proxy) then
+    return
+  end
   if not proxy [Layer.key.meta].collection.value_container then
     return
   end

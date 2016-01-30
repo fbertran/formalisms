@@ -24,6 +24,9 @@ record [Layer.key.meta] = {
 record [Layer.key.checks] = {}
 
 record [Layer.key.checks] ["formalism:data:record:value_type"] = function (proxy)
+  if Layer.Proxy.has_meta (proxy) then
+    return
+  end
   for key, description in pairs (proxy [Layer.key.meta].record) do
     check_type (proxy [key], description.value_type,{
       proxy  = proxy,
