@@ -3,8 +3,8 @@ local collection = Layer.new {
   name = "collection",
 }
 
-local check_type      = require "formalism.data.check_type"
-local check_container = require "formalism.data.check_container"
+local check_type      = require "cosy.formalism.data.check_type"
+local check_container = require "cosy.formalism.data.check_container"
 
 -- Collection
 -- ==========

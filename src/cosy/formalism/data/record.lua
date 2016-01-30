@@ -3,7 +3,7 @@ local record = Layer.new {
   name = "record",
 }
 
-local check_type = require "formalism.data.check_type"
+local check_type = require "cosy.formalism.data.check_type"
 
 -- Record
 -- ======
