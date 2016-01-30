@@ -31,7 +31,7 @@ record [Layer.key.checks] ["formalism:data:record:value_type"] = function (proxy
     check_type (proxy [key], description.value_type,{
       proxy  = proxy,
       key    = key,
-      prefix = "record:value_type",
+      prefix = "formalism:data:record:value_type",
     })
   end
 end
