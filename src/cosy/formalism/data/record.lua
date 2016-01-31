@@ -31,19 +31,21 @@ record [Layer.key.checks] ["formalism:data:record:value_type"] = function (proxy
     return
   end
   for key, description in pairs (proxy [Layer.key.meta].record) do
-    if  type (description.value_type) ~= "string"
-    and getmetatable (description.value_type) ~= Layer.Proxy then
-      Layer.coroutine.yield ("formalism:data:record:value_type:invalid", {
-        proxy = proxy,
-        key   = key,
-        used  = description.value_type,
-      })
-    else
-      check_type (proxy [key], description.value_type, {
-        proxy  = proxy,
-        key    = key,
-        prefix = "formalism:data:record:value_type",
-      })
+    if description.value_container ~= nil then
+      if  type (description.value_type) ~= "string"
+      and getmetatable (description.value_type) ~= Layer.Proxy then
+        Layer.coroutine.yield ("formalism:data:record:value_type:invalid", {
+          proxy = proxy,
+          key   = key,
+          used  = description.value_type,
+        })
+      else
+        check_type (proxy [key], description.value_type, {
+          proxy  = proxy,
+          key    = key,
+          prefix = "formalism:data:record:value_type",
+        })
+      end
     end
   end
 end
@@ -53,18 +55,20 @@ record [Layer.key.checks] ["formalism:data:record:value_container"] = function (
     return
   end
   for key, description in pairs (proxy [Layer.key.meta].record) do
-    if  getmetatable (description.value_container) ~= Layer.Proxy then
-      Layer.coroutine.yield ("formalism:data:record:value_container:invalid", {
-        proxy = proxy,
-        key   = key,
-        used  = description.value_container,
-      })
-    else
-      check_container (proxy [key], description.value_container, {
-        proxy  = proxy,
-        key    = key,
-        prefix = "formalism:data:record:value_container",
-      })
+    if description.value_container ~= nil then
+      if  getmetatable (description.value_container) ~= Layer.Proxy then
+        Layer.coroutine.yield ("formalism:data:record:value_container:invalid", {
+          proxy = proxy,
+          key   = key,
+          used  = description.value_container,
+        })
+      else
+        check_container (proxy [key], description.value_container, {
+          proxy  = proxy,
+          key    = key,
+          prefix = "formalism:data:record:value_container",
+        })
+      end
     end
   end
 end
