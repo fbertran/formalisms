@@ -28,21 +28,32 @@ collection [Layer.key.checks] ["collection.key_type"] = function (proxy)
   if not proxy [Layer.key.meta].collection.key_type then
     return
   end
-  if type (proxy [Layer.key.meta].collection.key_type) ~= "string" then
-    Layer.coroutine.yield ("formalism:data:collection:key_type:not-primitive", {
-      proxy = proxy,
-      used  = type (proxy [Layer.key.meta].collection.key_type),
-    })
-    return
-  end
-  for key, _ in pairs (proxy) do
-    if getmetatable (key) ~= Layer.Key then
-      check_type (key, proxy [Layer.key.meta].collection.key_type, {
-        proxy  = proxy,
-        key    = key,
-        prefix = "formalism:data:collection:key_type",
-      })
+  if type (proxy [Layer.key.meta].collection.key_type) == "string" then
+    for key, _ in pairs (proxy) do
+      if getmetatable (key) ~= Layer.Key then
+        check_type (key, proxy [Layer.key.meta].collection.key_type, {
+          proxy  = proxy,
+          key    = key,
+          prefix = "formalism:data:collection:key_type",
+        })
+      end
     end
+  elseif getmetatable (proxy [Layer.key.meta].collection.key_type) == Layer.Proxy then
+    for key, _ in pairs (proxy) do
+      if getmetatable (key) ~= Layer.Key then
+        local resolved = Layer.Reference.resolve (key, proxy)
+        check_type (resolved, proxy [Layer.key.meta].collection.key_type, {
+          proxy  = proxy,
+          key    = key,
+          prefix = "formalism:data:collection:key_type",
+        })
+      end
+    end
+  else
+    Layer.coroutine.yield ("formalism:data:collection:key_type:invalid", {
+      proxy = proxy,
+      used  = proxy [Layer.key.meta].collection.key_type,
+    })
   end
 end
 
