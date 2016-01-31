@@ -29,11 +29,20 @@ record [Layer.key.checks] ["formalism:data:record:value_type"] = function (proxy
     return
   end
   for key, description in pairs (proxy [Layer.key.meta].record) do
-    check_type (proxy [key], description.value_type,{
-      proxy  = proxy,
-      key    = key,
-      prefix = "formalism:data:record:value_type",
-    })
+    if  type (description.value_type) ~= "string"
+    and getmetatable (description.value_type) ~= Layer.Proxy then
+      Layer.coroutine.yield ("formalism:data:record:value_type:invalid", {
+        proxy = proxy,
+        key   = key,
+        used  = description.value_type,
+      })
+    else
+      check_type (proxy [key], description.value_type, {
+        proxy  = proxy,
+        key    = key,
+        prefix = "formalism:data:record:value_type",
+      })
+    end
   end
 end
 
