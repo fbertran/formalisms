@@ -31,7 +31,7 @@ record [Layer.key.checks] ["formalism:data:record:value_type"] = function (proxy
     return
   end
   for key, description in pairs (proxy [Layer.key.meta].record) do
-    if description.value_container ~= nil then
+    if description.value_type ~= nil then
       if  type (description.value_type) ~= "string"
       and getmetatable (description.value_type) ~= Layer.Proxy then
         Layer.coroutine.yield ("formalism:data:record:value_type:invalid", {
