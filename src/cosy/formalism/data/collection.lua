@@ -9,6 +9,19 @@ local check_container = require "cosy.formalism.data.check_container"
 -- Collection
 -- ==========
 --
+-- A collection is a set, map or sequence of elements where keys or values
+-- always have the same type.
+--
+-- To create a new collection type, refine this formalism and add the fields
+-- descriptions in its `[meta].collection` table.
+--
+-- `[meta].collection` can define a `key_type` field, with either the string
+-- representation of the Lua type name (for instance "boolean", "number",
+-- "string"), or a reference to the expected parent type.
+--
+-- `[meta].collection` can define a `value_type` field, with either the string
+-- representation of the Lua type name (for instance "boolean", "number",
+-- "string"), or a reference to the expected parent type.
 
 collection [Layer.key.meta] = {
   collection = {
