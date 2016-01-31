@@ -64,14 +64,22 @@ collection [Layer.key.checks] ["collection.value_type"] = function (proxy)
   if not proxy [Layer.key.meta].collection.value_type then
     return
   end
-  for key, value in pairs (proxy) do
-    if getmetatable (key) ~= Layer.Key then
-      check_type (value, proxy [Layer.key.meta].collection.key_type, {
-        proxy  = proxy,
-        key    = key,
-        prefix = "formalism:data:collection:value_type",
-      })
+  if type (proxy [Layer.key.meta].collection.value_type) == "string"
+  or getmetatable (proxy [Layer.key.meta].collection.value_type) == Layer.Proxy then
+    for key, value in pairs (proxy) do
+      if getmetatable (key) ~= Layer.Key then
+        check_type (value, proxy [Layer.key.meta].collection.value_type, {
+          proxy  = proxy,
+          key    = key,
+          prefix = "formalism:data:collection:value_type",
+        })
+      end
     end
+  else
+    Layer.coroutine.yield ("formalism:data:collection:value_type:invalid", {
+      proxy = proxy,
+      used  = proxy [Layer.key.meta].collection.value_type,
+    })
   end
 end
 
