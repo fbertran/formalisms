@@ -177,4 +177,23 @@ describe ("Formalism data.record", function ()
     assert.is_nil (layer [Layer.key.messages])
   end)
 
+  it ("forbids non types for value_type", function ()
+    local Record = require "cosy.formalism.data.record"
+    local layer  = Layer.new {
+      name = "layer",
+      data = {
+        [Layer.key.refines] = { Record },
+        [Layer.key.meta   ] = {
+          record = {
+            key = { value_type = true },
+          },
+        },
+        key = true,
+      },
+    }
+    Layer.Proxy.check (layer)
+    local messages = layer [Layer.key.messages]
+    assert.is_not_nil (messages ["formalism:data:record:value_type:invalid"])
+  end)
+
 end)
