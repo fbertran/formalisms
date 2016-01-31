@@ -9,7 +9,7 @@ describe ("Formalism data.record", function ()
     local _ = require "cosy.formalism.data.record"
   end)
 
-  it ("detects missing key", function ()
+  it ("detects missing key (primitive)", function ()
     local Record = require "cosy.formalism.data.record"
     local layer  = Layer.new {
       name = "layer",
@@ -27,23 +27,24 @@ describe ("Formalism data.record", function ()
     assert.is_not_nil (messages ["formalism:data:record:value_type:missing"])
   end)
 
-  it ("detects wrongly typed key/value", function ()
+  it ("detects missing key (proxy)", function ()
     local Record = require "cosy.formalism.data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
+        t = {},
+        [Layer.key.labels ] = { layer = true },
         [Layer.key.refines] = { Record },
         [Layer.key.meta   ] = {
           record = {
-            key = { value_type = "string" },
+            key = { value_type = Layer.reference "layer".t },
           },
         },
-        key = 1,
       },
     }
     Layer.Proxy.check (layer)
     local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["formalism:data:record:value_type:illegal"])
+    assert.is_not_nil (messages ["formalism:data:record:value_type:missing"])
   end)
 
   it ("detects wrongly typed key/value (primitive)", function ()
@@ -90,10 +91,11 @@ describe ("Formalism data.record", function ()
       data = {
         type1 = {},
         type2 = {},
+        [Layer.key.labels ] = { layer = true },
         [Layer.key.refines] = { Record },
         [Layer.key.meta   ] = {
           record = {
-            key = { value_type = Layer.reference (false).type1 },
+            key = { value_type = Layer.reference "layer".type1 },
           },
         },
       },
@@ -133,11 +135,11 @@ describe ("Formalism data.record", function ()
       data = {
         type1 = {},
         type2 = {},
-        [Layer.key.labels ] = { myrecord = true },
+        [Layer.key.labels ] = { record = true },
         [Layer.key.refines] = { Record },
         [Layer.key.meta   ] = {
           record = {
-            key = { value_type = Layer.reference "myrecord".type1 },
+            key = { value_type = Layer.reference "record".type1 },
           },
         },
       },
@@ -145,10 +147,10 @@ describe ("Formalism data.record", function ()
     local layer = Layer.new {
       name = "layer",
       data = {
-        [Layer.key.labels ] = { mylayer = true },
+        [Layer.key.labels ] = { layer = true },
         [Layer.key.refines] = { record },
         key = {
-          [Layer.key.refines] = { Layer.reference "mylayer".type1 },
+          [Layer.key.refines] = { Layer.reference "layer".type1 },
         },
       }
     }
