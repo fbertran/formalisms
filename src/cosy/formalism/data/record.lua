@@ -3,7 +3,8 @@ local record = Layer.new {
   name = "record",
 }
 
-local check_type = require "cosy.formalism.data.check_type"
+local check_type      = require "cosy.formalism.data.check_type"
+local check_container = require "cosy.formalism.data.check_container"
 
 -- Record
 -- ======
@@ -42,6 +43,27 @@ record [Layer.key.checks] ["formalism:data:record:value_type"] = function (proxy
         proxy  = proxy,
         key    = key,
         prefix = "formalism:data:record:value_type",
+      })
+    end
+  end
+end
+
+record [Layer.key.checks] ["formalism:data:record:value_container"] = function (proxy)
+  if Layer.Proxy.has_meta (proxy) then
+    return
+  end
+  for key, description in pairs (proxy [Layer.key.meta].record) do
+    if  getmetatable (description.value_container) ~= Layer.Proxy then
+      Layer.coroutine.yield ("formalism:data:record:value_container:invalid", {
+        proxy = proxy,
+        key   = key,
+        used  = description.value_container,
+      })
+    else
+      check_container (proxy [key], description.value_container, {
+        proxy  = proxy,
+        key    = key,
+        prefix = "formalism:data:record:value_container",
       })
     end
   end
