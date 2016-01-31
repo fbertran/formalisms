@@ -128,7 +128,7 @@ describe ("Formalism data.record", function ()
     end
   end)
 
-  it ("detects correctly typed key/value (proxy) #current", function ()
+  it ("detects correctly typed key/value (proxy)", function ()
     local Record = require "cosy.formalism.data.record"
     local record = Layer.new {
       name = "record",
