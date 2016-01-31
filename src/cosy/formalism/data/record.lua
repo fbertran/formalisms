@@ -10,12 +10,13 @@ local check_type = require "cosy.formalism.data.check_type"
 --
 -- A record is a table where some keys are mandatory, and their corresponding
 -- values are typed.
+--
 -- To create a new record type, refine this formalism and add the fields
 -- descriptions in its `[meta].record` table.
 --
 -- `[meta].record` is a mapping from keys to their require value type,
 -- that can be either the string representation of the Lua type name
--- (for instance "boolean", "number", "string"), or a proxy of the expected
+-- (for instance "boolean", "number", "string"), or a reference to the expected
 -- parent type.
 
 record [Layer.key.meta] = {
