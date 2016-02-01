@@ -42,6 +42,7 @@ local arrow_type  = {
       value_container = _.vertices,
     },
   },
+  vertex = nil,
 }
 
 -- Edges have no label in base graph.
