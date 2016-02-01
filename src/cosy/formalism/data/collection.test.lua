@@ -1,4 +1,4 @@
--- These lines are required to correctly run tests:
+-- These lines are required to correctly run tests.
 require "busted.runner" ()
 
 local Layer = require "layeredata"
@@ -7,6 +7,82 @@ describe ("Formalism data.collection", function ()
 
   it ("can be loaded", function ()
     local _ = require "cosy.formalism.data.collection"
+  end)
+
+  describe ("with size information", function ()
+
+    it ("forbids a size less than the minimum", function ()
+      local Collection = require "cosy.formalism.data.collection"
+      local layer      = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { Collection },
+          [Layer.key.meta   ] = {
+            collection = {
+              minimum = 1,
+            },
+          },
+        },
+      }
+      Layer.Proxy.check (layer)
+      local messages = layer [Layer.key.messages]
+      assert.is_not_nil (messages ["cosy.formalism.data.collection.size.illegal"])
+    end)
+
+    it ("allows any size if there is no minimum", function ()
+      local Collection = require "cosy.formalism.data.collection"
+      local layer      = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { Collection },
+          [Layer.key.meta   ] = {
+            collection = {
+            },
+          },
+        },
+      }
+      Layer.Proxy.check (layer)
+      assert.is_nil (layer [Layer.key.messages])
+    end)
+
+    it ("forbids a size greater than the maximum", function ()
+      local Collection = require "cosy.formalism.data.collection"
+      local layer      = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { Collection },
+          [Layer.key.meta   ] = {
+            collection = {
+              maximum = 1,
+            },
+          },
+          a = true,
+          b = true,
+        },
+      }
+      Layer.Proxy.check (layer)
+      local messages = layer [Layer.key.messages]
+      assert.is_not_nil (messages ["cosy.formalism.data.collection.size.illegal"])
+    end)
+
+    it ("allows any size if there is no maximum", function ()
+      local Collection = require "cosy.formalism.data.collection"
+      local layer      = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { Collection },
+          [Layer.key.meta   ] = {
+            collection = {
+            },
+          },
+          a = true,
+          b = true,
+        },
+      }
+      Layer.Proxy.check (layer)
+      assert.is_nil (layer [Layer.key.messages])
+    end)
+
   end)
 
   describe ("with key_type", function ()
@@ -19,7 +95,7 @@ describe ("Formalism data.collection", function ()
           [Layer.key.refines] = { Collection },
           [Layer.key.meta   ] = {
             collection = {
-              key_type = "string" ,
+              key_type = "string",
             },
           },
         },
@@ -63,7 +139,7 @@ describe ("Formalism data.collection", function ()
       }
       Layer.Proxy.check (layer)
       local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["formalism:data:collection:key_type:illegal"])
+      assert.is_not_nil (messages ["cosy.formalism.data.collection.key_type.illegal"])
     end)
 
     it ("detects correctly typed key (primitive)", function ()
@@ -102,7 +178,7 @@ describe ("Formalism data.collection", function ()
       }
       Layer.Proxy.check (layer)
       local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["formalism:data:collection:key_type:illegal"])
+      assert.is_not_nil (messages ["cosy.formalism.data.collection.key_type.illegal"])
     end)
 
     it ("detects correctly typed key (reference)", function ()
@@ -142,7 +218,7 @@ describe ("Formalism data.collection", function ()
       }
       Layer.Proxy.check (layer)
       local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["formalism:data:collection:key_type:missing"])
+      assert.is_not_nil (messages ["cosy.formalism.data.collection.key_type.missing"])
     end)
 
     it ("forbids other types for key_type", function ()
@@ -160,7 +236,7 @@ describe ("Formalism data.collection", function ()
       }
       Layer.Proxy.check (layer)
       local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["formalism:data:collection:key_type:invalid"])
+      assert.is_not_nil (messages ["cosy.formalism.data.collection.key_type.invalid"])
     end)
 
   end)
@@ -219,7 +295,7 @@ describe ("Formalism data.collection", function ()
       }
       Layer.Proxy.check (layer)
       local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["formalism:data:collection:value_type:illegal"])
+      assert.is_not_nil (messages ["cosy.formalism.data.collection.value_type.illegal"])
     end)
 
     it ("detects correctly typed value (primitive)", function ()
@@ -260,7 +336,7 @@ describe ("Formalism data.collection", function ()
       }
       Layer.Proxy.check (layer)
       local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["formalism:data:collection:value_type:illegal"])
+      assert.is_not_nil (messages ["cosy.formalism.data.collection.value_type.illegal"])
     end)
 
     it ("detects correctly typed value (proxy) #current", function ()
@@ -319,7 +395,7 @@ describe ("Formalism data.collection", function ()
       }
       Layer.Proxy.check (layer)
       local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["formalism:data:collection:value_type:invalid"])
+      assert.is_not_nil (messages ["cosy.formalism.data.collection.value_type.invalid"])
     end)
 
   end)

@@ -1,4 +1,4 @@
--- These lines are required to correctly run tests:
+-- These lines are required to correctly run tests.
 require "busted.runner" ()
 
 local Layer = require "layeredata"
@@ -24,7 +24,7 @@ describe ("Formalism data.record", function ()
     }
     Layer.Proxy.check (layer)
     local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["formalism:data:record:value_type:missing"])
+    assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.missing"])
   end)
 
   it ("detects missing key (proxy)", function ()
@@ -44,7 +44,7 @@ describe ("Formalism data.record", function ()
     }
     Layer.Proxy.check (layer)
     local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["formalism:data:record:value_type:missing"])
+    assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.missing"])
   end)
 
   it ("detects wrongly typed key/value (primitive)", function ()
@@ -63,7 +63,7 @@ describe ("Formalism data.record", function ()
     }
     Layer.Proxy.check (layer)
     local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["formalism:data:record:value_type:illegal"])
+    assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.illegal"])
   end)
 
   it ("detects correctly typed key/value (primitive)", function ()
@@ -119,12 +119,12 @@ describe ("Formalism data.record", function ()
     do
       Layer.Proxy.check (l1)
       local messages = l1 [Layer.key.messages]
-      assert.is_not_nil (messages ["formalism:data:record:value_type:illegal"])
+      assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.illegal"])
     end
     do
       Layer.Proxy.check (l2)
       local messages = l2 [Layer.key.messages]
-      assert.is_not_nil (messages ["formalism:data:record:value_type:illegal"])
+      assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.illegal"])
     end
   end)
 
@@ -193,7 +193,7 @@ describe ("Formalism data.record", function ()
     }
     Layer.Proxy.check (layer)
     local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["formalism:data:record:value_type:invalid"])
+    assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.invalid"])
   end)
 
 end)

@@ -2,7 +2,7 @@ local Layer = require "layeredata"
 
 return function (value, oftype, where)
   if value == nil then
-    Layer.coroutine.yield (where.prefix .. ":missing", {
+    Layer.coroutine.yield (where.prefix .. ".missing", {
       proxy    = where.proxy,
       key      = where.key,
       expected = getmetatable (oftype) == Layer.Proxy
@@ -11,7 +11,7 @@ return function (value, oftype, where)
     })
   elseif type (oftype) == "string" then
     if type (value) ~= oftype then
-      Layer.coroutine.yield (where.prefix .. ":illegal", {
+      Layer.coroutine.yield (where.prefix .. ".illegal", {
         proxy    = where.proxy,
         key      = where.key,
         expected = type (oftype),
@@ -20,14 +20,14 @@ return function (value, oftype, where)
     end
   elseif getmetatable (oftype) == Layer.Proxy then
     if getmetatable (value) ~= Layer.Proxy then
-      Layer.coroutine.yield (where.prefix .. ":illegal", {
+      Layer.coroutine.yield (where.prefix .. ".illegal", {
         proxy    = where.proxy,
         key      = where.key,
         expected = oftype,
         used     = type (value),
       })
     elseif not (oftype <= value) then
-      Layer.coroutine.yield (where.prefix .. ":illegal", {
+      Layer.coroutine.yield (where.prefix .. ".illegal", {
         proxy    = where.proxy,
         key      = where.key,
         expected = oftype,

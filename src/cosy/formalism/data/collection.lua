@@ -23,6 +23,8 @@ local check_container = require "cosy.formalism.data.check_container"
 -- representation of the Lua type name (for instance "boolean", "number",
 -- "string"), or a reference to the expected parent type.
 
+local prefix = "cosy.formalism.data.collection"
+
 collection [Layer.key.meta] = {
   collection = {
     key_type        = false,
@@ -34,7 +36,7 @@ collection [Layer.key.meta] = {
 
 collection [Layer.key.checks] = {}
 
-collection [Layer.key.checks] ["collection.key_type"] = function (proxy)
+collection [Layer.key.checks] [prefix .. ".key_type"] = function (proxy)
   if Layer.Proxy.has_meta (proxy) then
     return
   end
@@ -43,34 +45,30 @@ collection [Layer.key.checks] ["collection.key_type"] = function (proxy)
   end
   if type (proxy [Layer.key.meta].collection.key_type) == "string" then
     for key, _ in pairs (proxy) do
-      if getmetatable (key) ~= Layer.Key then
-        check_type (key, proxy [Layer.key.meta].collection.key_type, {
-          proxy  = proxy,
-          key    = key,
-          prefix = "formalism:data:collection:key_type",
-        })
-      end
+      check_type (key, proxy [Layer.key.meta].collection.key_type, {
+        proxy  = proxy,
+        key    = key,
+        prefix = prefix .. ".key_type",
+      })
     end
   elseif getmetatable (proxy [Layer.key.meta].collection.key_type) == Layer.Proxy then
     for key, _ in pairs (proxy) do
-      if getmetatable (key) ~= Layer.Key then
-        local resolved = Layer.Reference.resolve (key, proxy)
-        check_type (resolved, proxy [Layer.key.meta].collection.key_type, {
-          proxy  = proxy,
-          key    = key,
-          prefix = "formalism:data:collection:key_type",
-        })
-      end
+      local resolved = Layer.Reference.resolve (key, proxy)
+      check_type (resolved, proxy [Layer.key.meta].collection.key_type, {
+        proxy  = proxy,
+        key    = key,
+        prefix = prefix .. ".key_type",
+      })
     end
   else
-    Layer.coroutine.yield ("formalism:data:collection:key_type:invalid", {
+    Layer.coroutine.yield (prefix .. ".key_type.invalid", {
       proxy = proxy,
       used  = proxy [Layer.key.meta].collection.key_type,
     })
   end
 end
 
-collection [Layer.key.checks] ["collection.value_type"] = function (proxy)
+collection [Layer.key.checks] [prefix .. ".value_type"] = function (proxy)
   if Layer.Proxy.has_meta (proxy) then
     return
   end
@@ -80,23 +78,21 @@ collection [Layer.key.checks] ["collection.value_type"] = function (proxy)
   if type (proxy [Layer.key.meta].collection.value_type) == "string"
   or getmetatable (proxy [Layer.key.meta].collection.value_type) == Layer.Proxy then
     for key, value in pairs (proxy) do
-      if getmetatable (key) ~= Layer.Key then
-        check_type (value, proxy [Layer.key.meta].collection.value_type, {
-          proxy  = proxy,
-          key    = key,
-          prefix = "formalism:data:collection:value_type",
-        })
-      end
+      check_type (value, proxy [Layer.key.meta].collection.value_type, {
+        proxy  = proxy,
+        key    = key,
+        prefix = prefix .. ".value_type",
+      })
     end
   else
-    Layer.coroutine.yield ("formalism:data:collection:value_type:invalid", {
+    Layer.coroutine.yield (prefix .. ".value_type.invalid", {
       proxy = proxy,
       used  = proxy [Layer.key.meta].collection.value_type,
     })
   end
 end
 
-collection [Layer.key.checks] ["collection.key_container"] = function (proxy)
+collection [Layer.key.checks] [prefix .. ".key_container"] = function (proxy)
   if Layer.Proxy.has_meta (proxy) then
     return
   end
@@ -104,17 +100,15 @@ collection [Layer.key.checks] ["collection.key_container"] = function (proxy)
     return
   end
   for key, _ in pairs (proxy) do
-    if getmetatable (key) ~= Layer.Key then
-      check_container (key, proxy [Layer.key.meta].collection.key_container, {
-        proxy  = proxy,
-        key    = key,
-        prefix = "formalism:data:collection:key_container",
-      })
-    end
+    check_container (key, proxy [Layer.key.meta].collection.key_container, {
+      proxy  = proxy,
+      key    = key,
+      prefix = prefix .. ".key_container",
+    })
   end
 end
 
-collection [Layer.key.checks] ["collection.value_container"] = function (proxy)
+collection [Layer.key.checks] [prefix .. ".value_container"] = function (proxy)
   if Layer.Proxy.has_meta (proxy) then
     return
   end
@@ -122,13 +116,11 @@ collection [Layer.key.checks] ["collection.value_container"] = function (proxy)
     return
   end
   for key, value in pairs (proxy) do
-    if getmetatable (key) ~= Layer.Key then
-      check_container (value, proxy [Layer.key.meta].collection.value_container, {
-        proxy  = proxy,
-        key    = key,
-        prefix = "formalism:data:collection:value_container",
-      })
-    end
+    check_container (value, proxy [Layer.key.meta].collection.value_container, {
+      proxy  = proxy,
+      key    = key,
+      prefix = prefix .. ".value_container",
+    })
   end
 end
 
