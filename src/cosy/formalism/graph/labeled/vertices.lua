@@ -1,27 +1,21 @@
-local Layer             = require "layeredata"
-local hyper_multi_graph = require "formalisms.hyper_multi_graph"
-local record            = require "formalisms.record"
-local layer             = Layer.new {
-  name = "labelled vertices & hyper & multi graph",
+local Layer  = require "layeredata"
+local graph  = require "cosy.formalism.graph"
+local record = require "cosy.formalism.data.record"
+local layer  = Layer.new {
+  name = "cosy.formalism.graph.labeled.vertices",
 }
 
--- Formalism of a Hyper and Multi Graph with labels on vertices
--- ============================================================
+-- Vertex-labeled graphs
+-- =====================
 --
--- For more information of Hyper and Multi Graph formalism, see [here](./hyper_multi_graph.html)
---
--- We only add in this formalism labels on vertices.
+-- This formalism adds labels on vertices, by setting `vertex_type` as a record.
 
-layer[Layer.key.refines] = {
-  hyper_multi_graph
+layer [Layer.key.refines] = {
+  graph
 }
 
-layer[Layer.key.meta] = {
-  vertex_type = {
-    [Layer.key.refines] = {
-      record,
-    },
-  },
+layer [Layer.key.meta].vertex_type [Layer.key.refines] = {
+  record,
 }
 
 return layer
