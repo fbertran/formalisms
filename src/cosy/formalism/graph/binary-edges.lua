@@ -1,37 +1,24 @@
-local Layer             = require "layeredata"
-local hyper_multi_graph = require "formalisms.hyper_multi_graph"
-local layer             = Layer.new {
-  name = "multi graph",
+local Layer = require "layeredata"
+local graph = require "cosy.formalism.graph"
+local layer = Layer.new {
+  name = "cosy.formalism.graph.binary-edges",
 }
 
--- Formalism of a Multi Graph
--- ===========================
+-- Graph with binary edges
+-- =======================
 --
--- We describe here what is a Multi Graph
+-- This formalism restricts the hypermultigraph to binary edges, that only link
+-- two vertices. Thus, it removes the hypergraph properties.
 --
--- A Multi Graph is a Hyper and Multi Graph with a contrains on edges. The edges have a maximum arity of 2.
---
--- Formalism of Hyper and Multi Graph is describe [here](./hyper_multi_graph.html)
---
--- A Multi Graph may be define by a Graph which have identical edges.
---
--- For more information see [here](https://en.wikipedia.org/wiki/Multigraph)
+-- For more information see [here](https://en.wikipedia.org/wiki/Hypergraph)
 
-layer[Layer.key.refines] = {
-  hyper_multi_graph
+layer [Layer.key.refines] = {
+  graph
 }
 
-layer[Layer.key.meta] = {
-  edge_type = {
-    arrows = {
-      [Layer.key.checks] = {
-        function ()
-          -- TODO
-          -- check arity (size of arrows must equals 2)
-        end,
-      },
-    },
-  },
+layer [Layer.key.meta].edge_type [Layer.key.meta].arrows [Layer.key.meta] = {
+  minimum = 2,
+  maximum = 2,
 }
 
 return layer
