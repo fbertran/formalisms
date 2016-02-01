@@ -31,10 +31,35 @@ collection [Layer.key.meta] = {
     value_type      = false,
     key_container   = false,
     value_container = false,
+    minimum         = false,
+    maximum         = false,
   },
 }
 
 collection [Layer.key.checks] = {}
+
+collection [Layer.key.checks] [prefix .. ".size"] = function (proxy)
+  if Layer.Proxy.has_meta (proxy) then
+    return
+  end
+  if  not proxy [Layer.key.meta].collection.minimum
+  and not proxy [Layer.key.meta].collection.maximum then
+    return
+  end
+  local size = 0
+  for _ in pairs (collection) do
+    size = size+1
+  end
+  if  (size < (proxy [Layer.key.meta].collection.minimum or  math.huge))
+  or  (size > (proxy [Layer.key.meta].collection.maximum or -math.huge)) then
+    Layer.coroutine.yield (prefix .. ".size.illegal", {
+      proxy   = proxy,
+      minimum = proxy [Layer.key.meta].collection.minimum,
+      maximum = proxy [Layer.key.meta].collection.maximum,
+      size    = size,
+    })
+  end
+end
 
 collection [Layer.key.checks] [prefix .. ".key_type"] = function (proxy)
   if Layer.Proxy.has_meta (proxy) then
