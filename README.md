@@ -47,8 +47,9 @@ Let us start by creating some simple automata.
 First, we have to define the formalism for automata, and then create some
 models.
 
-Almost every formalism (and model) definition starts with importing useful
-modules:
+Almost every formalism (and model) definition starts with importing the
+`layeredata` module (that represents and manipulates data), and import some
+useful constants:
 
 ```lua
 local Layer   = require "layeredata"
@@ -68,8 +69,15 @@ local automaton = Layer.new {
 }
 ```
 
+Layers are _really_ like [layers in digital image editing](https://en.wikipedia.org/wiki/Layers_(digital_image_editing)).
+Each formalism is put in its own layer, and models are built on layers above.
+It allows us to _modify_ parts of imported formalisms only for a specific
+model (like adding a mustache to the Mona Lisa).
+
 We will also need sometimes to reference _things_ within the formalism.
-To do so, we create a label and a reference (named `_`) to it:
+To do so, we create a label and a reference (named `_`) to its parent,
+`automaton`. This reference does not refer to a specific layer. It refers
+to a _position_ (here the root of the data).
 
 ```lua
 automaton [labels] = {
@@ -79,19 +87,21 @@ local _ = Layer.reference "cosy.formalism.automaton"
 ```
 
 Note that `labels` is a set (in the Lua programming style, i.e., a mapping
-from names to `true`). It means that we can give several names to the same
+from identifiers to `true`). It means that we can give several names to the same
 formalism. In fact, this label will also be accessible from any model built
-upon this formalism.
+upon this formalism, and each one will add its own label.
 
 An [automaton](https://en.wikipedia.org/wiki/Automata_theory) is based on a
 "usual" graph structure. But the general definition of graphs is the
 hypermultigraph, a mix between
 [hypergraphs](https://en.wikipedia.org/wiki/Hypergraph)
 and [multigraphs](https://en.wikipedia.org/wiki/Multigraph).
+The Standard Formalisms Library for CosyVerif provides a formalism for the
+generic form of graphs, and formalisms to constrain it to various others.
 
-Our automaton refines this general structure, by restricting the number of
-vertices linked to each arc to two. _Refines_ means something like inherits
-on steroids. We will learn later more on the meaning of `refines`.
+Our automaton refines the general structure, by restricting the number of
+vertices linked to each arc to two.
+The `refines` field is a list of ancestors sorted in decreasing importance.
 
 ```lua
 local graph        = require "cosy.formalism.graph"
@@ -103,7 +113,14 @@ automaton [refines] = {
 }
 ```
 
-The `refines` field is a list of ancestors sorted in decreasing importance.
+_Refines_ means something like "inherits on steroids".
+When a data is found neither in the highest layer nor in the other ones,
+it is searched in _all_ the `refines` from the data to the root.
+For instance, if `automaton` refines `graph`, and the data `automaton.a.b.c` is
+not found, we will search for it in `graph.a.b.c`. In "usual" inheritance, we
+would have looked only at `automaton.a.b`'s refines.
+This behavior allows us to mis the ideas of layers and object orientation.
+
 We also want to state that the graph is directed (each edge has an input and
 an output), and has labels on vertices and edges. This can be added within
 the previous definition of later as below. Not that we have also skipped storing
@@ -219,3 +236,6 @@ approach, but instead uses a
 There is no strict separation between _what_ is a formalism and _what_ is
 a model. Instead, they all belong to the same continuum, and their role
 varies depending on the context.
+
+The data of a formalism or layer is organized in _layers_.
+Every imported formalism is put in its own layer, below its importer.
