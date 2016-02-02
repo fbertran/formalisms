@@ -14,7 +14,7 @@ local labels  = Layer.key.labels
 local meta    = Layer.key.meta
 local refines = Layer.key.refines
 
--- Autpmata
+-- Automata
 -- ========
 
 -- An automaton is a graph where vertices are called "states", edges are
