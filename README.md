@@ -139,8 +139,74 @@ automaton.states      = _.vertices
 automaton.transitions = _.edges
 ```
 
+Now we can define what is a `state` and a `transition`. To do so, we create
+two types, that are in fact prototypes for states and transitions.
+As they are not instances, we put them within `automaton [meta]`. On the
+contrary, all instances will be put outside the `[meta]` field.
 
-Now we can define what contains a `state`.
+A state is a graph vertex. It also contains some data. The labeled vertices,
+that we imported earlier, defines vertices as records. We can describe their
+fields within the `[meta].record` field. The `state_type` is contains an
+`identifier` (a string), and two flags (`initial` and `final`). Being a
+record, its instances can also contain other fields, not listed here, but
+they must contain at least the three described fields.
+
+```lua
+automaton [meta].state_type = {
+  [refines] = {
+    _ [meta].vertex_type,
+  },
+  [meta] = {
+    record = {
+      identifier = "string",
+      initial    = "boolean",
+      final      = "boolean",
+    }
+  }
+}
+```
+
+A transition is a graph edge. It is also a record that contains a letter,
+that is taken from an alphabet. We describe both the type of this letter,
+in `value_type` and in which container is must be in `value_container`.
+
+```lua
+automaton [meta].transition_type = {
+  [refines] = {
+    _ [meta].edge_type,
+  },
+  [meta] = {
+    record = {
+     letter = {
+       value_type      = _.alphabet [Layer.key.meta].symbol_type,
+       value_container = _.alphabet,
+     },
+   },
+ },
+}
+```
+
+The last part of the `automaton` formalism is to describe the alphabet. It is
+an enumeration of symbols, so we make it refines the `enumeration` formalism.
+It also defines explicitly the `symbol_type` to be strings. We also add some
+symbols (`a`, `b`, `c`) by default for the example.
+
+```lua
+local enumeration  = require "cosy.formalism.data.enumeration"
+automaton.alphabet = {
+  [refines] = {
+    enumeration,
+  }
+  [meta] = {
+    symbol_type = "string",
+  }
+  a = "a",
+  b = "b",
+  c = "c",
+}
+```
+
+Congratulations, you have just created your first formalism in CosyVerif!
 
 ## Formalism description
 
