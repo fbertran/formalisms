@@ -61,7 +61,7 @@ local refines = Layer.key.refines
 ```
 
 Now, we can start the automaton definition.
-It begins with creating a new `Layer` object, and giving it a unique name:
+It begins with creating a new `Layer` object, and giving it a unique name.
 
 ```lua
 local automaton = Layer.new {
@@ -71,7 +71,7 @@ local automaton = Layer.new {
 
 Layers are _really_ like [layers in digital image editing](https://en.wikipedia.org/wiki/Layers_(digital_image_editing)).
 Each formalism is put in its own layer, and models are built on layers above.
-It allows us to _modify_ parts of imported formalisms only for a specific
+It allows us to _modify_ parts of imported formalisms within a specific
 model (like adding a mustache to the Mona Lisa).
 
 We will also need sometimes to reference _things_ within the formalism.
@@ -93,15 +93,17 @@ upon this formalism, and each one will add its own label.
 
 An [automaton](https://en.wikipedia.org/wiki/Automata_theory) is based on a
 "usual" graph structure. But the general definition of graphs is the
-hypermultigraph, a mix between
+hypermultigraph, a rarely defined mix of
 [hypergraphs](https://en.wikipedia.org/wiki/Hypergraph)
 and [multigraphs](https://en.wikipedia.org/wiki/Multigraph).
 The Standard Formalisms Library for CosyVerif provides a formalism for the
-generic form of graphs, and formalisms to constrain it to various others.
+generic form of graphs, as well as formalisms to constrain it.
 
-Our automaton refines the general structure, by restricting the number of
-vertices linked to each arc to two.
-The `refines` field is a list of ancestors sorted in decreasing importance.
+Our automaton is built over the hypermultigraph structure, with a restriction
+on  the number of vertices linked to each arc.
+This notion of "built above" corresponds to the `refines` constant in the code.
+It is a list of ancestors, each one put in its own layer.
+They are sorted in decreasing importance.
 
 ```lua
 local graph        = require "cosy.formalism.graph"
@@ -114,17 +116,17 @@ automaton [refines] = {
 ```
 
 _Refines_ means something like "inherits on steroids".
-When a data is found neither in the highest layer nor in the other ones,
-it is searched in _all_ the `refines` from the data to the root.
+When a data is found neither in the highest layer nor in the ones below,
+it is searched in _all the `refines` found from the data to the root_.
 For instance, if `automaton` refines `graph`, and the data `automaton.a.b.c` is
 not found, we will search for it in `graph.a.b.c`. In "usual" inheritance, we
 would have looked only at `automaton.a.b`'s refines.
-This behavior allows us to mis the ideas of layers and object orientation.
+This behavior allows us to mix the ideas of layers and object orientation.
 
 We also want to state that the graph is directed (each edge has an input and
 an output), and has labels on vertices and edges. This can be added within
-the previous definition of later as below. Not that we have also skipped storing
-the imported modules in a local variable.
+the previous `refines` definition of later as below.
+Note that we have also skipped storing the imported modules in a local variable.
 
 ```lua
 automaton [refines] [#automaton [refines]+1] = require "cosy.formalism.graph.directed"
@@ -132,25 +134,36 @@ automaton [refines] [#automaton [refines]+1] = require "cosy.formalism.graph.lab
 automaton [refines] [#automaton [refines]+1] = require "cosy.formalism.graph.labeled.edges"
 ```
 
-The `list [#list+1]` idiom is frequently used in Lua to add an element at the end
-of a list.
+The `list [#list+1]` idiom is frequently used in Lua to add an element at the
+end of a list. Arrays start at position 1 in Lua. Their size is given by the
+`#` operator, and computed by finding the first natural key with no value.
+It takes into account the layers and `refines` to compute this number.
 
 In an automaton, vertices are called "states", and edges are called
-"transitions". The `graph` stored its vertices in a container named `vertices`,
+"transitions". The `graph` stores its vertices in a container named `vertices`,
 and its edges in a container named `edges`, both stored within the graph.
-We create two new containers with names adapted to automata, and link them
-to the corresponding graph containers:
+This naming difference is important as an automaton can also be manipulated
+as a graph. Thus, we have to make sure that notions _and data_ of the automaton
+formalisms and models are mapped to notions of the graph formalism.
+
+The layers approach provides a simple and useful way of doing such mappings.
+We juste have to create two new containers with names adapted to automata
+theory, and change the `graph` containers to refine `automaton` ones.
 
 ```lua
 automaton.vertices [refines] [#automaton.vertices [refines] + 1] = _.states
 automaton.edges    [refines] [#automaton.edges    [refines] + 1] = _.transitions
 ```
 
-We could also have written the alias below. However, it is not the preferred
-solution. The first one creates new containers for states and transitions,
-and defines the graph containers to refine them, and thus to see their contents.
-The second solution simply creates aliases. It is less extensible for Formalisms
-and models that will refine our `automaton`.
+Updating `graph` does not really impact it: in fact we update the `graph`
+data within the `automaton` layer! This also means that if `graph` is used in
+several parts of our formalism, other uses will not be affected.
+
+We could also have created a more traditional alias as below.
+However, it is not the preferred solution, because its lacks extensibility.
+The "cosy way" creates new containers for states and transitions, that can
+themselves be specialized, whereas the "below way" does not allow specialization
+at all.
 
 ```lua
 automaton.states      = _.vertices
