@@ -24,7 +24,7 @@ following commands:
 To run examples, put them in a file and launch it with:
 
 ```sh
-  ./my-prefix/bin/lua my-file
+  ./my-prefix/bin/lua my-file.lua
 ```
 You can also run the Lua interpreter interactively (by giving it no parameter),
 but remember to remove all `local` keywords from examples.
