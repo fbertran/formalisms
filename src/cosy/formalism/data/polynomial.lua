@@ -1,66 +1,76 @@
 local Layer      = require "layeredata"
-local collection = require "formalisms.collection"
-local record     = require "formalisms.record"
-local layer      = Layer.new {
-  name = "Polynomial",
+local collection = require "cosy.formalism.data.collection"
+local record     = require "cosy.formalism.data.record"
+
+local polynomial = Layer.new {
+  name = "cosy.formalism.data.polynomial",
 }
-local _          = Layer.reference "polynomial"
 
-layer[Layer.key.labels] = { polynomial = true }
+local default = Layer.key.default
+local labels  = Layer.key.labels
+local meta    = Layer.key.meta
+local refines = Layer.key.refines
 
-layer[Layer.key.meta] = {
+polynomial [labels] = {
+  ["cosy.formalism.data.polynomial"] = true
+}
+local _ = Layer.reference "cosy.formalism.data.polynomial"
+
+polynomial [meta] = {
   variable_type = {},
 
   monomial_type = {
-    [Layer.key.refines] = {
+    [refines] = {
       record
     },
-    [Layer.key.meta] = {
-      __tags__ = {
+    [meta] = {
+      record = {
         coefficient = {
-          __value_type__ = "number",
+          value_type = "number",
         },
       },
       exponents = {
-        [Layer.key.refines] = {
+        [refines] = {
           collection,
         },
-        [Layer.key.meta] = {
-          __key_type__      = _ [Layer.key.meta].variable_type,
-          __key_container__ = _.variables,
-          __value_type__    = "number",
+        [meta] = {
+          collection = {
+            key_type      = _ [meta].variable_type,
+            key_container = _.variables,
+            value_type    = "number",
+          },
         },
       },
-    },
-  },
-}
-    
-layer.variables = {
-  [Layer.key.refines] = {
-    collection,
-  },
-  [Layer.key.meta] = {
-    __value_type__ = _ [Layer.key.meta].variable_type,
-  },
-  [Layer.key.default] = {
-    [Layer.key.refines] = {
-      _ [Layer.key.meta].variable_type,
-    },
-  },
-}
-    
-layer.monomials = {
-  [Layer.key.refines] = {
-    collection,
-  },
-  [Layer.key.meta] = {
-    __value_type__ = _ [Layer.key.meta].monomial_type,
-  },
-  [Layer.key.default] = {
-    [Layer.key.refines] = {
-      _ [Layer.key.meta].monomial_type,
     },
   },
 }
 
-return layer
+polynomial.variables = {
+  [refines] = {
+    collection,
+  },
+  [meta] = {
+    value_type = _ [meta].variable_type,
+  },
+  [default] = {
+    [refines] = {
+      _ [meta].variable_type,
+    },
+  },
+}
+
+polynomial.monomials = {
+  [refines] = {
+    collection,
+  },
+  [meta] = {
+    value_type = _ [meta].monomial_type,
+  },
+  [default] = {
+    [refines] = {
+      _ [meta].monomial_type,
+    },
+  },
+}
+
+return polynomial
