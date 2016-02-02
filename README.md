@@ -54,6 +54,14 @@ Let us start by creating some simple automata.
 First, we have to define the formalism for automata, and then create some
 models.
 
+Contrary to usual metamodeling languages, Cosy does not use a
+[class-based inheritance](https://en.wikipedia.org/wiki/Class-based_programming)
+approach, but instead uses a
+[prototype-based inheritance](https://en.wikipedia.org/wiki/Prototype-based_programming).
+There is no strict separation between _what_ is a formalism and _what_ is
+a model. Instead, they all belong to the same continuum, and their role
+varies depending on the context.
+
 Almost every formalism (and model) definition starts with importing the
 `layeredata` module (that represents and manipulates data), and import some
 useful constants:
@@ -296,17 +304,3 @@ automaton.alphabet = {
 
 Congratulations, you have just created your first formalism in CosyVerif!
 Next step is to create an instance of automaton above this formalism.
-
-## Formalism description
-
-Contrary to usual metamodeling languages, Cosy does not use a
-[class-based inheritance](https://en.wikipedia.org/wiki/Class-based_programming)
-approach, but instead uses a
-[prototype-based inheritance](https://en.wikipedia.org/wiki/Prototype-based_programming).
-
-There is no strict separation between _what_ is a formalism and _what_ is
-a model. Instead, they all belong to the same continuum, and their role
-varies depending on the context.
-
-The data of a formalism or layer is organized in _layers_.
-Every imported formalism is put in its own layer, below its importer.
