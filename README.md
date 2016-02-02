@@ -41,6 +41,13 @@ if you have found a bug, or request a new feature.
 For other discussions, you can use the
 [gitter](https://gitter.im/CosyVerif/formalisms) chat.
 
+## Requirements
+
+Please learn the bases of the [Lua](http://www.lua.org) language before
+reading this tutorial. For instance, you can read
+[Programming in Lua](http://www.lua.org/pil/contents.html) (part I should be
+sufficient).
+
 ## Tutorial
 
 Let us start by creating some simple automata.
