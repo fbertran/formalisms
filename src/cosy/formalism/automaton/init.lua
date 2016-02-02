@@ -1,116 +1,98 @@
-local Layer                               = require "layeredata"
-local record                              = require "formalisms.record"
-local collection                          = require "formalisms.collection"
-local labelled_edges_hyper_multi_graph    = require "formalisms.labelled_edges_hyper_multi_graph"
-local labelled_vertices_hyper_multi_graph = require "formalisms.labelled_vertices_hyper_multi_graph"
-local directed_hyper_multi_graph          = require "formalisms.directed_hyper_multi_graph"
-local multi_graph                         = require "formalisms.multi_graph"
-local alphabet                            = require "formalisms.alphabet"
-local layer                               = Layer.new {
-  name = "automaton",
-}
-local _      = Layer.reference "automaton"
-
--- Description of automaton
--- ========================
---
--- An automaton is a 5-tuple (Q, Σ, δ, q0, F)
---
--- Q is a set of vertices called states.
---
--- Σ is a finite alphabet, describe [here](./Alphabet.html)
---
--- δ is a set of labelled edges called transition. this edges are labelled by a symbol of Σ.
---
--- q0 is the start state, q0 is in Q
---
--- F is a subset of Q, they are the accept states
---
--- For more information of automaton see [here](http://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-definitions.html)
-
-layer[Layer.key.refines] = {
-  labelled_edges_hyper_multi_graph,
-  labelled_vertices_hyper_multi_graph,
-  directed_hyper_multi_graph,
-  multi_graph,
-  alphabet,
+local Layer            = require "layeredata"
+local graph            = require "cosy.formalism.graph"
+local labeled_edges    = require "cosy.formalism.graph.labeled.edges"
+local labeled_vertices = require "cosy.formalism.graph.labeled.vertices"
+local directed         = require "cosy.formalism.graph.directed"
+local binary_edges     = require "cosy.formalism.graph.binary_edges"
+local collection       = require "cosy.formalism.data.collection"
+local enumeration      = require "cosy.formalism.data.enumeration"
+local layer            = Layer.new {
+  name = "cosy.formalism.automaton",
 }
 
-layer[Layer.key.labels] = { automaton = true }
+local labels  = Layer.key.labels
+local meta    = Layer.key.meta
+local refines = Layer.key.refines
 
-layer[Layer.key.meta] = {
-  edge_type = {
-    __tags__ = {
-      letter = {
-        __value_type__      = _ [Layer.key.meta].symbol_type,
-        __value_container__ = _.symbols,
-      },
-    },
-  },
-  
-  vertex_type  = {
-    [Layer.key.meta] = {
-      __tags__ = {
-        id = {},
-      },
-    },
-  },
+-- Autpmata
+-- ========
 
-  initial_state_type = {
-    [Layer.key.refines] = {
-      record,
-    },
-    [Layer.key.meta] = {
-      tags = {
-        vertex = {
-          __value_type__ = _ [Layer.key.meta].vertex_type,
-          __value_container__ = _.vertices,
-        },
-      },
-    },
-  },
+-- An automaton is a graph where vertices are called "states", edges are
+-- called "transitions", and edges are labeled with symbols.
+-- These symbols are taken from an alphabet, represented by an enumeration.
+--
+-- See [here](http://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-definitions.html)
 
-  accept_state_type = {
-    [Layer.key.refines] = {
-      record,
-    },
-    [Layer.key.meta] = {
-      tags = {
-        vertex = {
-          __value_type__ = _ [Layer.key.meta].vertex_type,
-          __value_container__ = _.vertices,
-        },
-      },
-    },
-  },
+layer [labels] = {
+  ["cosy.formalism.automaton"] = true,
+}
+local _ = Layer.reference "cosy.formalism.automaton"
+
+layer [refines] = {
+  graph,
+  directed,
+  binary_edges,
+  labeled_vertices,
+  labeled_edges,
 }
 
-layer.initials_states = {
-  [Layer.key.refines] = {
+layer.alphabet = {
+  [refines] = {
+    enumeration,
+  }
+}
+
+layer [meta].state_type = {
+  [refines] = {
+    layer [meta].vertex_type,
+  },
+  [meta] = {
+    record = {
+      identifier = false,
+      initial    = "boolean",
+      final      = "boolean",
+    }
+  }
+}
+
+layer [meta].transition_type = {
+  [refines] = {
+    layer [meta].edge_type,
+  },
+  [meta] = {
+    record = {
+     letter = {
+       value_type      = _.alphabet [Layer.key.meta].symbol_type,
+       value_container = _.alphabet,
+     },
+   },
+ },
+}
+
+layer.states = {
+  [refines] = {
     collection,
   },
-  [Layer.key.meta] = {
-    __value_type__ = _ [Layer.key.meta].initial_state_type,
-  },
-  [Layer.key.default] = {
-    [Layer.key.refines] = {
-      _ [Layer.key.meta].initial_state_type,
-    },
-  },
+  [meta] = {
+    value_type = _ [meta].state_type,
+  }
 }
 
-layer.accept_states = {
-  [Layer.key.refines] = {
+layer.transitions = {
+  [refines] = {
     collection,
   },
-  [Layer.key.meta] = {
-    __value_type__ = _ [Layer.key.meta].accept_state_type,
-  },
-  [Layer.key.default] = {
-    [Layer.key.refines] = {
-      _ [Layer.key.meta].accept_state_type,
-    },
-  },
+  [meta] = {
+    value_type = _ [meta].transition_type,
+  }
+}
+
+layer.vertices [refines] = {
+  _.states,
+}
+
+layer.edges [refines] = {
+  _.transitions,
 }
 
 return layer
