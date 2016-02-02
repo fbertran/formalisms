@@ -4,7 +4,6 @@ local labeled_edges    = require "cosy.formalism.graph.labeled.edges"
 local labeled_vertices = require "cosy.formalism.graph.labeled.vertices"
 local directed         = require "cosy.formalism.graph.directed"
 local binary_edges     = require "cosy.formalism.graph.binary_edges"
-local collection       = require "cosy.formalism.data.collection"
 
 local petrinet = Layer.new {
   name = "cosy.formalism.petrinet",
@@ -62,28 +61,34 @@ petrinet [meta].arc_type = {
 
 petrinet.places = {
   [refines] = {
-    collection,
+    _ [meta].vertices,
   },
-  [meta   ] = {
-    value_type = _ [meta].place_type,
+  [meta] = {
+    collection = {
+      value_type = _ [meta].place_type,
+    }
   }
 }
 
 petrinet.transitions = {
   [refines] = {
-    collection,
+    _ [meta].vertices,
   },
-  [meta   ] = {
-    value_type = _ [meta].transition_type,
+  [meta] = {
+    collection = {
+      value_type = _ [meta].transition_type,
+    }
   }
 }
 
 petrinet.arcs = {
   [refines] = {
-    collection,
+    _ [meta].edges,
   },
-  [meta   ] = {
-    value_type = _ [meta].arc_type,
+  [meta] = {
+    collection = {
+      value_type = _ [meta].arc_type,
+    }
   }
 }
 
