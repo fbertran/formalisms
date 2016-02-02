@@ -170,17 +170,68 @@ automaton.states      = _.vertices
 automaton.transitions = _.edges
 ```
 
-Now we can define what is a `state` and a `transition`. To do so, we create
-two types, that are in fact prototypes for states and transitions.
-As they are not instances, we put them within `automaton [meta]`. On the
-contrary, all instances will be put outside the `[meta]` field.
+Now we can define what are states and transitions.
+They are containers of data of the same type (`state_type` for `states`,
+`transition_type` for `transitions`).
+This is expressed by refining the `collection` formalism.
+This one automatically defines several checks, for instance to verify that
+all elements of the collection have a given type.
+This type is given within the `[meta].collection.value_type` field,
+a convention set by the `collection` formalism.
 
-A state is a graph vertex. It also contains some data. The labeled vertices,
-that we imported earlier, defines vertices as records. We can describe their
-fields within the `[meta].record` field. The `state_type` is contains an
-`identifier` (a string), and two flags (`initial` and `final`). Being a
-record, its instances can also contain other fields, not listed here, but
-they must contain at least the three described fields.
+```lua
+local collection = require "cosy.formalism.data.collection"
+automaton.states = {
+  [refines] = {
+    collection,
+    _ [meta].vertices,
+  },
+  [meta] = {
+    collection = {
+      value_type = _ [meta].state_type,
+    }
+  }
+}
+automaton.transitions = {
+  [refines] = {
+    collection,
+    _ [meta].edges,
+  },
+  [meta] = {
+    collection = {
+      value_type = _ [meta].transition_type,
+    }
+  }
+}
+```
+
+As we do not have the notions of classes and instances, "have a type" means
+refining the type. For instance, all elements in `states` must refine
+`_ [meta].state_type`.
+
+Note that our containers refine `_ [meta].vertices` and `_ [meta].edges`.
+This is because the `graph`formalsm defines already containers for vertices
+and edges, and we would like to import what has already been defined on them.
+It creates a harmless circular refinement with our previous extension of
+`vertices` and `edges`. As these two containers already refine `collection`,
+we could have skipped it.
+
+Now, we still have to define the two types `state_type` and `transition_type`.
+They are prototypes for state and transition instances that will be put within
+the `states` and `transitions` containers.
+
+Containers have been defined within the `automaton` object because they are
+instances. But we have no way to differentiate types from instances. Thus,
+a convention is to put all types and other metadata with the `[meta]` fields.
+
+A state is a graph vertex. It also contains some data.
+The labeled vertices, that we imported earlier, defines vertices as records.
+We can describe their fields within the `[meta].record` field (a convention set
+by the `record` formalism).
+Each state contains an `identifier` (a string), and two flags
+(`initial` and `final`).
+Being a record, its instances are also allowed to contain other fields,
+not listed here, but they must contain at least the three described fields.
 
 ```lua
 automaton [meta].state_type = {
@@ -198,8 +249,10 @@ automaton [meta].state_type = {
 ```
 
 A transition is a graph edge. It is also a record that contains a letter,
-that is taken from an alphabet. We describe both the type of this letter,
-in `value_type` and in which container is must be in `value_container`.
+taken from an alphabet.
+We describe the type of this letter in `value_type`, and in which container it
+must be stored in `value_container`.
+These two attributes are used by convention by the `record` formalism.
 
 ```lua
 automaton [meta].transition_type = {
@@ -217,13 +270,13 @@ automaton [meta].transition_type = {
 }
 ```
 
-The last part of the `automaton` formalism is to describe the alphabet. It is
-an enumeration of symbols, so we make it refines the `enumeration` formalism.
-It also defines explicitly the `symbol_type` to be strings. We also add some
-symbols (`a`, `b`, `c`) by default for the example.
+The last part of the `automaton` formalism is to describe the alphabet.
+It is an enumeration of symbols, so we make it refines the `enumeration`
+formalism.
+It also defines explicitly the `symbol_type` to be strings.
 
 ```lua
-local enumeration  = require "cosy.formalism.data.enumeration"
+local enumeration = require "cosy.formalism.data.enumeration"
 automaton.alphabet = {
   [refines] = {
     enumeration,
@@ -231,13 +284,11 @@ automaton.alphabet = {
   [meta] = {
     symbol_type = "string",
   }
-  a = "a",
-  b = "b",
-  c = "c",
 }
 ```
 
 Congratulations, you have just created your first formalism in CosyVerif!
+Next step is to create an instance of automaton above this formalism.
 
 ## Formalism description
 
