@@ -87,13 +87,8 @@ petrinet.arcs = {
   }
 }
 
-petrinet.vertices [refines] = {
-  _.places,
-  _.transitions,
-}
-
-petrinet.edges [refines] = {
-  _.arcs,
-}
+petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = _.places
+petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = _.transitions
+petrinet.edges    [refines] [#petrinet.edges    [refines] + 1] = _.arcs
 
 return petrinet

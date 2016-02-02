@@ -88,12 +88,7 @@ automaton.transitions = {
   }
 }
 
-automaton.vertices [refines] = {
-  _.states,
-}
-
-automaton.edges [refines] = {
-  _.transitions,
-}
+automaton.vertices [refines] [#automaton.vertices [refines] + 1] = _.states
+automaton.edges    [refines] [#automaton.edges    [refines] + 1] = _.transitions
 
 return automaton

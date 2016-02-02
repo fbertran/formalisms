@@ -120,12 +120,8 @@ We create two new containers with names adapted to automata, and link them
 to the corresponding graph containers:
 
 ```lua
-automaton.vertices [refines] = {
-  _.states,
-}
-automaton.edges [refines] = {
-  _.transitions,
-}
+automaton.vertices [refines] [#automaton.vertices [refines] + 1] = _.states
+automaton.edges    [refines] [#automaton.edges    [refines] + 1] = _.transitions
 ```
 
 We could also have written the alias below. However, it is not the preferred
