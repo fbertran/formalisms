@@ -29,6 +29,11 @@ To run examples, put them in a file and launch it with:
 You can also run the Lua interpreter interactively (by giving it no parameter),
 but remember to remove all `local` keywords from examples.
 
+## Contributing
+
+If you would like to create a formalism and have it included in this library,
+please fork and make a pull request!
+
 ## Discussion, Bugs, ...
 
 Please create [a new issue](https://github.com/CosyVerif/formalisms/issues/new)
