@@ -1,6 +1,7 @@
 local Layer = require "layeredata"
 local graph = require "cosy.formalism.graph"
-local layer = Layer.new {
+
+local directed = Layer.new {
   name = "cosy.formalism.graph.directed",
 }
 
@@ -12,11 +13,11 @@ local layer = Layer.new {
 --
 -- See [this article](http://link.springer.com/chapter/10.1007/3-540-45446-2_20).
 
-layer [Layer.key.refines] = {
+directed [Layer.key.refines] = {
   graph
 }
 
-layer [Layer.key.meta].edge_type [Layer.key.meta].arrow_type = {
+directed [Layer.key.meta].edge_type [Layer.key.meta].arrow_type = {
   [Layer.key.meta] = {
     record = {
       input  = {
@@ -31,4 +32,4 @@ layer [Layer.key.meta].edge_type [Layer.key.meta].arrow_type = {
   output = false,
 }
 
-return layer
+return directed

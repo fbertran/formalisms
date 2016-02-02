@@ -6,7 +6,8 @@ local directed         = require "cosy.formalism.graph.directed"
 local binary_edges     = require "cosy.formalism.graph.binary_edges"
 local collection       = require "cosy.formalism.data.collection"
 local enumeration      = require "cosy.formalism.data.enumeration"
-local layer            = Layer.new {
+
+local automaton = Layer.new {
   name = "cosy.formalism.automaton",
 }
 
@@ -23,12 +24,12 @@ local refines = Layer.key.refines
 --
 -- See [here](http://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-definitions.html)
 
-layer [labels] = {
+automaton [labels] = {
   ["cosy.formalism.automaton"] = true,
 }
 local _ = Layer.reference "cosy.formalism.automaton"
 
-layer [refines] = {
+automaton [refines] = {
   graph,
   directed,
   binary_edges,
@@ -36,15 +37,15 @@ layer [refines] = {
   labeled_edges,
 }
 
-layer.alphabet = {
+automaton.alphabet = {
   [refines] = {
     enumeration,
   }
 }
 
-layer [meta].state_type = {
+automaton [meta].state_type = {
   [refines] = {
-    layer [meta].vertex_type,
+    _ [meta].vertex_type,
   },
   [meta] = {
     record = {
@@ -55,9 +56,9 @@ layer [meta].state_type = {
   }
 }
 
-layer [meta].transition_type = {
+automaton [meta].transition_type = {
   [refines] = {
-    layer [meta].edge_type,
+    _ [meta].edge_type,
   },
   [meta] = {
     record = {
@@ -69,7 +70,7 @@ layer [meta].transition_type = {
  },
 }
 
-layer.states = {
+automaton.states = {
   [refines] = {
     collection,
   },
@@ -78,7 +79,7 @@ layer.states = {
   }
 }
 
-layer.transitions = {
+automaton.transitions = {
   [refines] = {
     collection,
   },
@@ -87,12 +88,12 @@ layer.transitions = {
   }
 }
 
-layer.vertices [refines] = {
+automaton.vertices [refines] = {
   _.states,
 }
 
-layer.edges [refines] = {
+automaton.edges [refines] = {
   _.transitions,
 }
 
-return layer
+return automaton

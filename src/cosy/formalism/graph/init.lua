@@ -1,7 +1,8 @@
 local Layer      = require "layeredata"
 local collection = require "cosy.formalism.data.collection"
 local record     = require "cosy.formalism.data.record"
-local layer      = Layer.new {
+
+local graph = Layer.new {
   name = "graph (hyper & multi)",
 }
 
@@ -21,7 +22,7 @@ local layer      = Layer.new {
 -- This inversion allows to create sub-containers with specific defaults,
 -- one for places, one for transitions... and the graph container for all vertices.
 
-layer [Layer.key.labels] = {
+graph [Layer.key.labels] = {
   ["cosy.formalism.graph"] = true,
 }
 local _ = Layer.reference "cosy.formalism.graph"
@@ -70,7 +71,7 @@ local edge_type   = {
 }
 
 -- A graph defines the type of its vertices, and the type of its edges.
-layer [Layer.key.meta] = {
+graph [Layer.key.meta] = {
   vertex_type = vertex_type,
   edge_type   = edge_type,
 }
@@ -78,7 +79,7 @@ layer [Layer.key.meta] = {
 -- A graph contains a collection of vertices.
 -- The `default` key states that all elements within the `vertices` container
 -- are of type `vertex_type`.
-layer.vertices = {
+graph.vertices = {
   [Layer.key.refines] = {
     collection,
   },
@@ -95,7 +96,7 @@ layer.vertices = {
 -- A graph contains a collection of edges.
 -- The `default` key states that all elements within the `edges` container
 -- are of type `edge_type`.
-layer.edges = {
+graph.edges = {
   [Layer.key.refines] = {
     collection,
   },
@@ -109,4 +110,4 @@ layer.edges = {
   },
 }
 
-return layer
+return graph

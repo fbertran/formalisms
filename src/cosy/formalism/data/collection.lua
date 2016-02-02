@@ -1,4 +1,5 @@
-local Layer      = require "layeredata"
+local Layer = require "layeredata"
+
 local collection = Layer.new {
   name = "collection",
 }

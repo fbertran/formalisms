@@ -1,6 +1,7 @@
 local Layer      = require "layeredata"
 local collection = require "cosy.formalism.data.collection"
-local layer      = Layer.new {
+
+local enumeration = Layer.new {
   name = "cosy.formalism.data.enumeration",
 }
 
@@ -13,26 +14,26 @@ local layer      = Layer.new {
 -- Instead, the `symbols` collection uses symbols as values. this does not
 -- guarantee uniqueness of the symbols.
 
-layer [Layer.key.labels] = {
+enumeration [Layer.key.labels] = {
   ["cosy.formalism.data.enumeration"] = true,
 }
 local _ = Layer.reference "cosy.formalism.data.enumeration"
 
-layer [Layer.key.refines] = {
+enumeration [Layer.key.refines] = {
   collection,
 }
 
-layer [Layer.key.meta] = {
+enumeration [Layer.key.meta] = {
   symbol_type = false,
   collection = {
     value_type = _ [Layer.key.meta].symbol_type,
   },
 }
 
-layer [Layer.key.default] = {
+enumeration [Layer.key.default] = {
   [Layer.key.refines] = {
     _ [Layer.key.meta].symbol_type,
   },
 }
 
-return layer
+return enumeration

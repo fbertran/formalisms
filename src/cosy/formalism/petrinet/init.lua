@@ -5,7 +5,8 @@ local labeled_vertices = require "cosy.formalism.graph.labeled.vertices"
 local directed         = require "cosy.formalism.graph.directed"
 local binary_edges     = require "cosy.formalism.graph.binary_edges"
 local collection       = require "cosy.formalism.data.collection"
-local layer            = Layer.new {
+
+local petrinet = Layer.new {
   name = "cosy.formalism.petrinet",
 }
 
@@ -22,12 +23,12 @@ local refines = Layer.key.refines
 --
 -- See [here](https://en.wikipedia.org/wiki/Petri_net)
 
-layer [labels] = {
+petrinet [labels] = {
   ["cosy.formalism.petrinet"] = true,
 }
 local _ = Layer.reference "cosy.formalism.petrinet"
 
-layer [refines] = {
+petrinet [refines] = {
   graph,
   directed,
   binary_edges,
@@ -35,9 +36,9 @@ layer [refines] = {
   labeled_edges,
 }
 
-layer [meta].place_type = {
+petrinet [meta].place_type = {
   [refines] = {
-    layer [meta].vertex_type,
+    _ [meta].vertex_type,
   },
   [meta] = {
     record = {
@@ -47,19 +48,19 @@ layer [meta].place_type = {
   }
 }
 
-layer [meta].transition_type = {
+petrinet [meta].transition_type = {
   [refines] = {
-    layer [meta].vertex_type,
+    _ [meta].vertex_type,
   }
 }
 
-layer [meta].arc_type = {
+petrinet [meta].arc_type = {
   [refines] = {
-    layer [meta].edge_type,
+    _ [meta].edge_type,
   },
 }
 
-layer.places = {
+petrinet.places = {
   [refines] = {
     collection,
   },
@@ -68,7 +69,7 @@ layer.places = {
   }
 }
 
-layer.transitions = {
+petrinet.transitions = {
   [refines] = {
     collection,
   },
@@ -77,7 +78,7 @@ layer.transitions = {
   }
 }
 
-layer.arcs = {
+petrinet.arcs = {
   [refines] = {
     collection,
   },
@@ -86,13 +87,13 @@ layer.arcs = {
   }
 }
 
-layer.vertices [refines] = {
+petrinet.vertices [refines] = {
   _.places,
   _.transitions,
 }
 
-layer.edges [refines] = {
+petrinet.edges [refines] = {
   _.arcs,
 }
 
-return layer
+return petrinet

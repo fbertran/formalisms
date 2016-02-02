@@ -1,6 +1,7 @@
 local Layer = require "layeredata"
 local graph = require "cosy.formalism.graph"
-local layer = Layer.new {
+
+local unique_edges = Layer.new {
   name = "cosy.formalism.graph.unique-edges",
 }
 
@@ -12,12 +13,12 @@ local layer = Layer.new {
 --
 -- For more information see [here](https://en.wikipedia.org/wiki/Multigraph)
 
-layer [Layer.key.labels] = {
+unique_edges [Layer.key.labels] = {
   ["cosy.formalism.graph.unique-edges"] = true,
 }
 local _ = Layer.reference "cosy.formalism.graph.unique-edges"
 
-layer [Layer.key.refines] = {
+unique_edges [Layer.key.refines] = {
   graph,
 }
 
@@ -26,7 +27,7 @@ layer [Layer.key.refines] = {
 --
 -- FIXME: this is very inefficient, as it performs iteration on the whole
 -- collection each time it is modified.
-layer.edges [Layer.key.checks] = {
+unique_edges.edges [Layer.key.checks] = {
   ["cosy.formalism.graph.unique-edges"] = function (proxy)
     local edges = {}
     for _, edge in pairs (_.edges) do
@@ -65,4 +66,4 @@ layer.edges [Layer.key.checks] = {
   end,
 }
 
-return layer
+return unique_edges

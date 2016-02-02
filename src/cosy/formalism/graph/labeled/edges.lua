@@ -1,7 +1,8 @@
 local Layer  = require "layeredata"
 local graph  = require "cosy.formalism.graph"
 local record = require "cosy.formalism.data.record"
-local layer  = Layer.new {
+
+local labeled_edges  = Layer.new {
   name = "cosy.formalism.graph.labeled.edges",
 }
 
@@ -10,12 +11,12 @@ local layer  = Layer.new {
 --
 -- This formalism adds labels on edges, by setting `edge_type` as a record.
 
-layer [Layer.key.refines] = {
+labeled_edges [Layer.key.refines] = {
   graph
 }
 
-layer [Layer.key.meta].edge_type [Layer.key.refines] = {
+labeled_edges [Layer.key.meta].edge_type [Layer.key.refines] = {
   record
 }
 
-return layer
+return labeled_edges

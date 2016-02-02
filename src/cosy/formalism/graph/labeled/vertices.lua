@@ -1,7 +1,8 @@
 local Layer  = require "layeredata"
 local graph  = require "cosy.formalism.graph"
 local record = require "cosy.formalism.data.record"
-local layer  = Layer.new {
+
+local labeled_vertices  = Layer.new {
   name = "cosy.formalism.graph.labeled.vertices",
 }
 
@@ -10,12 +11,12 @@ local layer  = Layer.new {
 --
 -- This formalism adds labels on vertices, by setting `vertex_type` as a record.
 
-layer [Layer.key.refines] = {
+labeled_vertices [Layer.key.refines] = {
   graph
 }
 
-layer [Layer.key.meta].vertex_type [Layer.key.refines] = {
+labeled_vertices [Layer.key.meta].vertex_type [Layer.key.refines] = {
   record,
 }
 
-return layer
+return labeled_vertices
