@@ -1,16 +1,19 @@
 local Layer      = require "layeredata"
-local record     = require "formalisms.record"
-local collection = require "formalisms.collection"
-local automaton  = require "formalisms.automaton"
---local polynomial = require "formalisms.polynomial"
-local layer      = Layer.new {
-  name = "interrupt timed automaton",
-}
-local _          = Layer.reference "ITA"
---local root       = Layer.reference (false)
+local record     = require "cosy.formalism.data.record"
+local collection = require "cosy.formalism.data.collection"
+local automaton  = require "cosy.formalism.automaton"
 
--- Formalism of Interrupt Timed Automaton
--- ======================================
+local default = Layer.key.default
+local labels  = Layer.key.labels
+local meta    = Layer.key.meta
+local refines = Layer.key.refines
+
+local ita = Layer.new {
+  name = "cosy.formalism.automaton.ita",
+}
+
+-- Interrupt Timed Automata
+-- ========================
 --
 -- An interrupt timed automaton is a tuple (Q, Σ, q0, F, X, λ, δ) where:
 --
@@ -25,136 +28,144 @@ local _          = Layer.reference "ITA"
 --      * a symbol of Σ
 --      * an update, it's the new valuation of a clock calculate by a polynomial of the others.
 --
---For more information of Interrupt timed automaton see [here](http://arxiv.org/abs/1504.04541)
+-- See [here](http://arxiv.org/abs/1504.04541)
 
+ita [labels] = {
+  ["cosy.formalism.automaton.ita"] = true,
+}
+local _ = Layer.reference "cosy.formalism.automaton.ita"
 
-layer[Layer.key.refines] = {
+ita [refines] = {
   automaton,
 }
 
-layer[Layer.key.labels] = { ITA = true }
-
-layer[Layer.key.meta] = {
-  analog_type = {
-    [Layer.key.refines] = {
-      record,
+ita.analogs = {
+  [refines] = {
+    collection,
+  },
+  [meta] = {
+    record = {
+      value_type = _ [meta].analog_type,
     },
-    [Layer.key.meta] = {
-      __tags__ = {
-        active_level = {
-          __value_type__      = _ [Layer.key.meta].level_type,
-          __value_container__ = _.levels,
-        },
+  },
+  [default] = {
+    [refines] = {
+      _ [meta].analog_type,
+    },
+  },
+}
+
+ita.levels = {
+  [refines] = {
+    collection,
+  },
+  [meta] = {
+    record = {
+      value_type = _ [meta].level_type,
+    }
+  },
+  [default] = {
+    [refines] = {
+      _ [meta].level_type,
+    },
+  },
+}
+
+ita [meta].analog_type = {
+  [refines] = {
+    record,
+  },
+  [meta] = {
+    record = {
+      active_level = {
+        value_type      = _ [meta].level_type,
+        value_container = _.levels,
       },
+    }
+  },
+}
+
+ita [meta].level_type = {}
+
+ita [meta].guard_type = {
+  [refines] = {
+    record,
+  },
+  [meta] = {
+    record = {
+      comparison = {
+        value_type      = "string",
+        value_container = { "<", "<=", "=", ">=", ">" },
+      },
+    },
+  }
+}
+
+ita [meta].polynomial = {
+  [refines] = {
+    collection,
+  },
+  [meta] = {
+    value_type = _ [meta].polynomial_type,
+  },
+  [default] = {
+    [refines] = {
+      _ [meta].polynomial_type,
+    },
+  },
+}
+
+ita [meta].update_type = {
+  [refines] = {
+    collection,
+  },
+  [meta] = {
+    collection = {
+      value_type    = _ [meta].polynomial_type,
+      key_type      = _ [meta].analog_type,
+      key_container = _.analogs,
+    }
+  },
+}
+
+ita [meta].edge_type = {
+  update = {
+    [refines] = {
+      _ [meta].update_type,
     },
   },
 
-  level_type = {},
+  guard = {
+    [refines] = {
+      _ [meta].guard_type
+    },
+  },
+}
 
-  guard_type = {
-    [Layer.key.refines] = {
-      record,
-    },
-    [Layer.key.meta] = {
-      __tags__ = {
-        comparison = {
-          __value_type__      = "string",
-          __value_container__ = {"<", "<=", "=", ">=", ">"},
-        },
-      },
-    },
-    polynomial = {
-      [Layer.key.refines] = {
-        collection,
-      },
-      [Layer.key.meta]    = {
-        __value_type__ = _ [Layer.key.meta].polynomial_type,
-      },
-      [Layer.key.default] = {
-        [Layer.key.refines] = {
-          _ [Layer.key.meta].polynomial_type,
-        },
+ita [meta].vertex_type  = {
+  [meta] = {
+    record = {
+      level = {
+        value_type      = _ [meta].level_type,
+        value_container = _.levels,
       },
     },
   },
+}
 
-  update_type = {
-    [Layer.key.refines] = {
+ita [meta].initial_state_type = {
+  analogs_init = {
+    [refines] = {
       collection,
     },
-    [Layer.key.meta] = {
-      __value_type__    = _ [Layer.key.meta].polynomial_type,
-      __key_type__      = _ [Layer.key.meta].analog_type,
-      __key_container__ = _.analogs,
-    },
-  },
-
-  edge_type = {
-    update = {
-      [Layer.key.refines] = {
-        _ [Layer.key.meta].update_type,
-      },
-    },
-
-    guard = {
-      [Layer.key.refines] = {
-        _ [Layer.key.meta].guard_type
-      },
-    },
-  },
-
-  vertex_type  = {
-    [Layer.key.meta] = {
-      __tags__ = {
-        level = {
-          __value_type__      = _ [Layer.key.meta].level_type,
-          __value_container__ = _.levels,
-        },
-      },
-    },
-  },
-
-  initial_state_type = {
-    analogs_init = {
-      [Layer.key.refines] = {
-        collection,
-      },
-
-      [Layer.key.meta] = {
-        __value_type__    = "number",
-        __key_type__      = _ [Layer.key.meta].analog_type,
-        __key_container__ = _.analogs,
+    [meta] = {
+      collection = {
+        value_type    = "number",
+        key_type      = _ [meta].analog_type,
+        key_container = _.analogs,
       },
     },
   },
 }
 
-layer.analogs = {
-  [Layer.key.refines] = {
-    collection,
-  },
-  [Layer.key.meta] = {
-    __value_type__ = _ [Layer.key.meta].analog_type,
-  },
-  [Layer.key.default] = {
-    [Layer.key.refines] = {
-      _ [Layer.key.meta].analog_type,
-    },
-  },
-}
-
-layer.levels = {
-  [Layer.key.refines] = {
-    collection,
-  },
-  [Layer.key.meta] = {
-    __value_type__ = _ [Layer.key.meta].level_type,
-  },
-  [Layer.key.default] = {
-    [Layer.key.refines] = {
-      _ [Layer.key.meta].level_type,
-    },
-  },
-}
-
-return layer
+return ita
