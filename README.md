@@ -304,3 +304,5 @@ automaton.alphabet = {
 
 Congratulations, you have just created your first formalism in CosyVerif!
 Next step is to create an instance of automaton above this formalism.
+
+***
