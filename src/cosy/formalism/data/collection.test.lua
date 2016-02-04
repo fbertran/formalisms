@@ -345,7 +345,7 @@ describe ("Formalism data.collection", function ()
       assert.is_not_nil (messages ["cosy/formalism/data.collection.value_type.illegal"])
     end)
 
-    it ("detects correctly typed value (proxy) #current", function ()
+    it ("detects correctly typed value (proxy)", function ()
       local collection = Layer.require "cosy/formalism/data.collection"
       local layer  = Layer.new {
         name = "layer",

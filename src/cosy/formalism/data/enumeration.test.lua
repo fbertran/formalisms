@@ -87,7 +87,7 @@ describe ("Formalism data.enumeration", function ()
     assert.is_nil (layer [Layer.key.messages])
   end)
 
-  it ("sets the value type by default (proxy) #current", function ()
+  it ("sets the value type by default (proxy)", function ()
     local enumeration = Layer.require "cosy/formalism/data.enumeration"
     local layer = Layer.new {
       name = "layer",
