@@ -9,27 +9,24 @@
 
 return function (Layer)
 
-  local checks   = Layer.key.checks
-  local default  = Layer.key.default
   local labels   = Layer.key.labels
-  local messages = Layer.key.messages
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
-  local graph            = Layer.require "cosy.formalism.graph"
-  local labeled_edges    = Layer.require "cosy.formalism.graph.labeled.edges"
-  local labeled_vertices = Layer.require "cosy.formalism.graph.labeled.vertices"
-  local directed         = Layer.require "cosy.formalism.graph.directed"
-  local binary_edges     = Layer.require "cosy.formalism.graph.binary_edges"
+  local graph            = Layer.require "cosy/formalism/graph"
+  local labeled_edges    = Layer.require "cosy/formalism/graph.labeled.edges"
+  local labeled_vertices = Layer.require "cosy/formalism/graph.labeled.vertices"
+  local directed         = Layer.require "cosy/formalism/graph.directed"
+  local binary_edges     = Layer.require "cosy/formalism/graph.binary_edges"
 
   local petrinet = Layer.new {
-    name = "cosy.formalism.petrinet",
+    name = "cosy/formalism/petrinet",
   }
 
   petrinet [labels] = {
-    ["cosy.formalism.petrinet"] = true,
+    ["cosy/formalism/petrinet"] = true,
   }
-  local _ = Layer.reference "cosy.formalism.petrinet"
+  local _ = Layer.reference "cosy/formalism/petrinet"
 
   petrinet [refines] = {
     graph,
@@ -101,3 +98,5 @@ return function (Layer)
   petrinet.edges    [refines] [#petrinet.edges    [refines] + 1] = _.arcs
 
   return petrinet
+
+end

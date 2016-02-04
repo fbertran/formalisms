@@ -21,10 +21,10 @@ return function (Layer)
     name = "record",
   }
 
-  local check_type      = require "cosy.formalism.data.check_type"      (Layer)
-  local check_container = require "cosy.formalism.data.check_container" (Layer)
+  local check_type      = require "cosy/formalism/data.check_type"      (Layer)
+  local check_container = require "cosy/formalism/data.check_container" (Layer)
 
-  local prefix = "cosy.formalism.data.record"
+  local prefix = "cosy/formalism/data.record"
 
   record [meta] = {
     record = {},

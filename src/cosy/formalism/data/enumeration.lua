@@ -14,16 +14,16 @@ return function (Layer)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
-  local collection = Layer.require "cosy.formalism.data.collection"
+  local collection = Layer.require "cosy/formalism/data.collection"
 
   local enumeration = Layer.new {
-    name = "cosy.formalism.data.enumeration",
+    name = "cosy/formalism/data.enumeration",
   }
 
   enumeration [labels] = {
-    ["cosy.formalism.data.enumeration"] = true,
+    ["cosy/formalism/data.enumeration"] = true,
   }
-  local _ = Layer.reference "cosy.formalism.data.enumeration"
+  local _ = Layer.reference "cosy/formalism/data.enumeration"
 
   enumeration [refines] = {
     collection,

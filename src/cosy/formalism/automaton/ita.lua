@@ -18,25 +18,23 @@
 
 return function (Layer)
 
-  local checks   = Layer.key.checks
   local default  = Layer.key.default
   local labels   = Layer.key.labels
-  local messages = Layer.key.messages
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
-  local record     = Layer.require "cosy.formalism.data.record"
-  local collection = Layer.require "cosy.formalism.data.collection"
-  local automaton  = Layer.require "cosy.formalism.automaton"
+  local record     = Layer.require "cosy/formalism/data.record"
+  local collection = Layer.require "cosy/formalism/data.collection"
+  local automaton  = Layer.require "cosy/formalism/automaton"
 
   local ita = Layer.new {
-    name = "cosy.formalism.automaton.ita",
+    name = "cosy/formalism/automaton.ita",
   }
 
   ita [labels] = {
-    ["cosy.formalism.automaton.ita"] = true,
+    ["cosy/formalism/automaton.ita"] = true,
   }
-  local _ = Layer.reference "cosy.formalism.automaton.ita"
+  local _ = Layer.reference "cosy/formalism/automaton.ita"
 
   ita [refines] = {
     automaton,

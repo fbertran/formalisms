@@ -5,17 +5,17 @@ return function (Layer)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
-  local collection = Layer.require "cosy.formalism.data.collection"
-  local record     = Layer.require "cosy.formalism.data.record"
+  local collection = Layer.require "cosy/formalism/data.collection"
+  local record     = Layer.require "cosy/formalism/data.record"
 
   local polynomial = Layer.new {
-    name = "cosy.formalism.data.polynomial",
+    name = "cosy/formalism/data.polynomial",
   }
 
   polynomial [labels] = {
-    ["cosy.formalism.data.polynomial"] = true
+    ["cosy/formalism/data.polynomial"] = true
   }
-  local _ = Layer.reference "cosy.formalism.data.polynomial"
+  local _ = Layer.reference "cosy/formalism/data.polynomial"
 
   polynomial [meta] = {
     variable_type = {},

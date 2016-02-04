@@ -12,16 +12,16 @@ return function (Layer)
   local labels   = Layer.key.labels
   local refines  = Layer.key.refines
 
-  local graph = Layer.require "cosy.formalism.graph"
+  local graph = Layer.require "cosy/formalism/graph"
 
   local unique_edges = Layer.new {
-    name = "cosy.formalism.graph.unique-edges",
+    name = "cosy/formalism/graph.unique-edges",
   }
 
   unique_edges [labels] = {
-    ["cosy.formalism.graph.unique-edges"] = true,
+    ["cosy/formalism/graph.unique-edges"] = true,
   }
-  local _ = Layer.reference "cosy.formalism.graph.unique-edges"
+  local _ = Layer.reference "cosy/formalism/graph.unique-edges"
 
   unique_edges [refines] = {
     graph,
@@ -33,7 +33,7 @@ return function (Layer)
   -- FIXME: this is very inefficient, as it performs iteration on the whole
   -- collection each time it is modified.
   unique_edges.edges [checks] = {
-    ["cosy.formalism.graph.unique-edges"] = function (proxy)
+    ["cosy/formalism/graph.unique-edges"] = function (proxy)
       local edges = {}
       for _, edge in pairs (_.edges) do
         local vertices = {}
@@ -59,7 +59,7 @@ return function (Layer)
               end
             end
             if found_l and found_r then
-              Layer.coroutine.yield ("cosy:formalism:graph:unique-edges:illegal", {
+              Layer.coroutine.yield ("cosy/formalism/graph.unique-edges.illegal", {
                 proxy     = proxy,
                 container = _.edges,
                 edges     = { edge_l, edge_r },

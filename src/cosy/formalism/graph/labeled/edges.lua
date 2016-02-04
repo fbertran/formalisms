@@ -8,11 +8,11 @@ return function (Layer)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
-  local graph  = Layer.require "cosy.formalism.graph"
-  local record = Layer.require "cosy.formalism.data.record"
+  local graph  = Layer.require "cosy/formalism/graph"
+  local record = Layer.require "cosy/formalism/data.record"
 
   local labeled_edges  = Layer.new {
-    name = "cosy.formalism.graph.labeled.edges",
+    name = "cosy/formalism/graph.labeled.edges",
   }
 
   labeled_edges [refines] = {

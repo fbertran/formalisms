@@ -21,13 +21,13 @@ return function (Layer)
   local meta     = Layer.key.meta
 
   local collection = Layer.new {
-    name = "collection",
+    name = "cosy/formalism/data.collection",
   }
 
   local check_type      = require "cosy.formalism.data.check_type"      (Layer)
   local check_container = require "cosy.formalism.data.check_container" (Layer)
 
-  local prefix = "cosy.formalism.data.collection"
+  local prefix = "cosy/formalism/data.collection"
 
   collection [meta] = {
     collection = {

@@ -86,14 +86,17 @@ local refines = Layer.key.refines
 
 Now, we can start the automaton definition.
 It begins with creating a new `Layer` object, and giving it a unique name.
-This name __must__ correspond to the file name of the formalism, using
+This name __must__ correspond to a resource on the Cosy server.
+Its pattern is: `user/project/resource`.
+For tests, a special loader is used, that converts the name to a standard
+Lua module name, for instance `user.project.resource`, using
 [Lua `require` conventions](http://www.lua.org/pil/8.1.html).
 It allows to automatically load formalism and model dependencies in the `Layer`
 module.
 
 ```lua
 local automaton = Layer.new {
-  name = "cosy.formalism.automaton",
+  name = "cosy/formalism/automaton",
 }
 ```
 
@@ -109,9 +112,9 @@ to a _position_ (here the root of the data).
 
 ```lua
 automaton [labels] = {
-  ["cosy.formalism.automaton"] = true,
+  ["cosy/formalism/automaton"] = true,
 }
-local _ = Layer.reference "cosy.formalism.automaton"
+local _ = Layer.reference "cosy/formalism/automaton"
 ```
 
 Note that `labels` is a set (in the Lua programming style, i.e., a mapping
@@ -134,8 +137,8 @@ It is a list of ancestors, each one put in its own layer.
 They are sorted in decreasing importance.
 
 ```lua
-local graph        = Layer.require "cosy.formalism.graph"
-local binary_edges = Layer.require "cosy.formalism.graph.binary_edges"
+local graph        = Layer.require "cosy/formalism/graph"
+local binary_edges = Layer.require "cosy/formalism/graph.binary_edges"
 
 automaton [refines] = {
   graph,
@@ -161,9 +164,9 @@ the previous `refines` definition of later as below.
 Note that we have also skipped storing the imported modules in a local variable.
 
 ```lua
-automaton [refines] [#automaton [refines]+1] = Layer.require "cosy.formalism.graph.directed"
-automaton [refines] [#automaton [refines]+1] = Layer.require "cosy.formalism.graph.labeled.vertices"
-automaton [refines] [#automaton [refines]+1] = Layer.require "cosy.formalism.graph.labeled.edges"
+automaton [refines] [#automaton [refines]+1] = Layer.require "cosy/formalism/graph.directed"
+automaton [refines] [#automaton [refines]+1] = Layer.require "cosy/formalism/graph.labeled.vertices"
+automaton [refines] [#automaton [refines]+1] = Layer.require "cosy/formalism/graph.labeled.edges"
 ```
 
 The `list [#list+1]` idiom is frequently used in Lua to add an element at the
@@ -213,7 +216,7 @@ This type is given within the `[meta].collection.value_type` field,
 a convention set by the `collection` formalism.
 
 ```lua
-local collection = Layer.require "cosy.formalism.data.collection"
+local collection = Layer.require "cosy/formalism/data.collection"
 automaton.states = {
   [refines] = {
     collection,
@@ -309,7 +312,7 @@ formalism.
 It also defines explicitly the `symbol_type` to be strings.
 
 ```lua
-local enumeration = Layer.require "cosy.formalism.data.enumeration"
+local enumeration = Layer.require "cosy/formalism/data.enumeration"
 automaton.alphabet = {
   [refines] = {
     enumeration,

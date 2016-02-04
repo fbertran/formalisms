@@ -2,15 +2,21 @@
 require "busted.runner" ()
 
 local Layer = require "layeredata"
+do
+  local oldrequire = Layer.require
+  Layer.require = function (name)
+    return oldrequire (name:gsub ("/", "."))
+  end
+end
 
 describe ("Formalism data.record", function ()
 
   it ("can be loaded", function ()
-    local _ = Layer.require "cosy.formalism.data.record"
+    local _ = Layer.require "cosy/formalism/data.record"
   end)
 
   it ("detects missing key (primitive)", function ()
-    local record = Layer.require "cosy.formalism.data.record"
+    local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
@@ -24,11 +30,11 @@ describe ("Formalism data.record", function ()
     }
     Layer.Proxy.check (layer)
     local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.missing"])
+    assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.missing"])
   end)
 
   it ("detects missing key (proxy)", function ()
-    local record = Layer.require "cosy.formalism.data.record"
+    local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
@@ -44,11 +50,11 @@ describe ("Formalism data.record", function ()
     }
     Layer.Proxy.check (layer)
     local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.missing"])
+    assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.missing"])
   end)
 
   it ("detects wrongly typed key/value (primitive)", function ()
-    local record = Layer.require "cosy.formalism.data.record"
+    local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
@@ -63,11 +69,11 @@ describe ("Formalism data.record", function ()
     }
     Layer.Proxy.check (layer)
     local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.illegal"])
+    assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.illegal"])
   end)
 
   it ("detects correctly typed key/value (primitive)", function ()
-    local record = Layer.require "cosy.formalism.data.record"
+    local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
@@ -85,7 +91,7 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("detects wrongly typed key/value (proxy)", function ()
-    local record = Layer.require "cosy.formalism.data.record"
+    local record = Layer.require "cosy/formalism/data.record"
     local common = Layer.new {
       name = "record",
       data = {
@@ -119,17 +125,17 @@ describe ("Formalism data.record", function ()
     do
       Layer.Proxy.check (l1)
       local messages = l1 [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.illegal"])
+      assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.illegal"])
     end
     do
       Layer.Proxy.check (l2)
       local messages = l2 [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.illegal"])
+      assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.illegal"])
     end
   end)
 
   it ("detects correctly typed key/value (proxy)", function ()
-    local record = Layer.require "cosy.formalism.data.record"
+    local record = Layer.require "cosy/formalism/data.record"
     local common = Layer.new {
       name = "record",
       data = {
@@ -159,7 +165,7 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("allows non declared keys", function ()
-    local record = Layer.require "cosy.formalism.data.record"
+    local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
@@ -178,7 +184,7 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("forbids non types for value_type", function ()
-    local record = Layer.require "cosy.formalism.data.record"
+    local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
@@ -193,7 +199,7 @@ describe ("Formalism data.record", function ()
     }
     Layer.Proxy.check (layer)
     local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["cosy.formalism.data.record.value_type.invalid"])
+    assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.invalid"])
   end)
 
 end)

@@ -21,17 +21,17 @@ return function (Layer)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
-  local collection = Layer.require "cosy.formalism.data.collection"
-  local record     = Layer.require "cosy.formalism.data.record"
+  local collection = Layer.require "cosy/formalism/data.collection"
+  local record     = Layer.require "cosy/formalism/data.record"
 
   local graph = Layer.new {
     name = "graph (hyper & multi)",
   }
 
   graph [labels] = {
-    ["cosy.formalism.graph"] = true,
+    ["cosy/formalism/graph"] = true,
   }
-  local _ = Layer.reference "cosy.formalism.graph"
+  local _ = Layer.reference "cosy/formalism/graph"
 
   -- Vertices are empty in base graph.
   local vertex_type = {}

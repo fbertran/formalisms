@@ -13,21 +13,21 @@ return function (Layer)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
-  local graph            = Layer.require "cosy.formalism.graph"
-  local labeled_edges    = Layer.require "cosy.formalism.graph.labeled.edges"
-  local labeled_vertices = Layer.require "cosy.formalism.graph.labeled.vertices"
-  local directed         = Layer.require "cosy.formalism.graph.directed"
-  local binary_edges     = Layer.require "cosy.formalism.graph.binary_edges"
-  local enumeration      = Layer.require "cosy.formalism.data.enumeration"
+  local graph            = Layer.require "cosy/formalism/graph"
+  local labeled_edges    = Layer.require "cosy/formalism/graph.labeled.edges"
+  local labeled_vertices = Layer.require "cosy/formalism/graph.labeled.vertices"
+  local directed         = Layer.require "cosy/formalism/graph.directed"
+  local binary_edges     = Layer.require "cosy/formalism/graph.binary_edges"
+  local enumeration      = Layer.require "cosy/formalism/data.enumeration"
 
   local automaton = Layer.new {
-    name = "cosy.formalism.automaton",
+    name = "cosy/formalism/automaton",
   }
 
   automaton [labels] = {
-    ["cosy.formalism.automaton"] = true,
+    ["cosy/formalism/automaton"] = true,
   }
-  local _ = Layer.reference "cosy.formalism.automaton"
+  local _ = Layer.reference "cosy/formalism/automaton"
 
   automaton [refines] = {
     graph,

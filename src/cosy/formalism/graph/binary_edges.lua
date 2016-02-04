@@ -11,10 +11,10 @@ return function (Layer)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
-  local graph = Layer.require "cosy.formalism.graph"
+  local graph = Layer.require "cosy/formalism/graph"
 
   local binary_edges = Layer.new {
-    name = "cosy.formalism.graph.binary-edges",
+    name = "cosy/formalism/graph.binary-edges",
   }
 
   binary_edges [refines] = {
