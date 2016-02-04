@@ -25,7 +25,7 @@ return function (Layer)
   local record     = Layer.require "cosy/formalism/data.record"
 
   local graph = Layer.new {
-    name = "graph (hyper & multi)",
+    name = "cosy/formalism/graph",
   }
 
   graph [labels] = {
@@ -39,11 +39,11 @@ return function (Layer)
   -- Arrows are records with only one predefined field: `vertex`.
   -- It points to the destination of the arrow, that must be a vertex of the
   -- graph.
-  local arrow_type  = {
+  local arrow_type = {
     [refines] = {
       record,
     },
-    [meta   ] = {
+    [meta] = {
       vertex = {
         value_type      = _ [meta].vertex_type,
         value_container = _.vertices,
@@ -57,7 +57,7 @@ return function (Layer)
   -- each edge type.
   -- The `default` key states that all elements within the `arrows` container
   -- are of type `arrow_type`.
-  local edge_type   = {
+  local edge_type = {
     [meta] = {
       arrow_type = arrow_type,
     },
