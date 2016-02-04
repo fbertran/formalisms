@@ -6,15 +6,15 @@ local Layer = require "layeredata"
 describe ("Formalism data.record", function ()
 
   it ("can be loaded", function ()
-    local _ = require "cosy.formalism.data.record"
+    local _ = Layer.require "cosy.formalism.data.record"
   end)
 
   it ("detects missing key (primitive)", function ()
-    local Record = require "cosy.formalism.data.record"
+    local record = Layer.require "cosy.formalism.data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
-        [Layer.key.refines] = { Record },
+        [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
           record = {
             key = { value_type = "string" },
@@ -28,13 +28,13 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("detects missing key (proxy)", function ()
-    local Record = require "cosy.formalism.data.record"
+    local record = Layer.require "cosy.formalism.data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
         t = {},
         [Layer.key.labels ] = { layer = true },
-        [Layer.key.refines] = { Record },
+        [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
           record = {
             key = { value_type = Layer.reference "layer".t },
@@ -48,11 +48,11 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("detects wrongly typed key/value (primitive)", function ()
-    local Record = require "cosy.formalism.data.record"
+    local record = Layer.require "cosy.formalism.data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
-        [Layer.key.refines] = { Record },
+        [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
           record = {
             key = { value_type = "string" },
@@ -67,11 +67,11 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("detects correctly typed key/value (primitive)", function ()
-    local Record = require "cosy.formalism.data.record"
+    local record = Layer.require "cosy.formalism.data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
-        [Layer.key.refines] = { Record },
+        [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
           record = {
             key = { value_type = "string" },
@@ -85,14 +85,14 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("detects wrongly typed key/value (proxy)", function ()
-    local Record = require "cosy.formalism.data.record"
-    local record = Layer.new {
+    local record = Layer.require "cosy.formalism.data.record"
+    local common = Layer.new {
       name = "record",
       data = {
         type1 = {},
         type2 = {},
         [Layer.key.labels ] = { layer = true },
-        [Layer.key.refines] = { Record },
+        [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
           record = {
             key = { value_type = Layer.reference "layer".type1 },
@@ -103,14 +103,14 @@ describe ("Formalism data.record", function ()
     local l1 = Layer.new {
       name = "l1",
       data = {
-        [Layer.key.refines] = { record },
+        [Layer.key.refines] = { common },
         key = 1,
       }
     }
     local l2 = Layer.new {
       name = "l2",
       data = {
-        [Layer.key.refines] = { record },
+        [Layer.key.refines] = { common },
         key = {
           [Layer.key.refines] = { Layer.reference (false).type2 },
         },
@@ -129,14 +129,14 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("detects correctly typed key/value (proxy)", function ()
-    local Record = require "cosy.formalism.data.record"
-    local record = Layer.new {
+    local record = Layer.require "cosy.formalism.data.record"
+    local common = Layer.new {
       name = "record",
       data = {
         type1 = {},
         type2 = {},
         [Layer.key.labels ] = { record = true },
-        [Layer.key.refines] = { Record },
+        [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
           record = {
             key = { value_type = Layer.reference "record".type1 },
@@ -148,7 +148,7 @@ describe ("Formalism data.record", function ()
       name = "layer",
       data = {
         [Layer.key.labels ] = { layer = true },
-        [Layer.key.refines] = { record },
+        [Layer.key.refines] = { common },
         key = {
           [Layer.key.refines] = { Layer.reference "layer".type1 },
         },
@@ -159,11 +159,11 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("allows non declared keys", function ()
-    local Record = require "cosy.formalism.data.record"
+    local record = Layer.require "cosy.formalism.data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
-        [Layer.key.refines] = { Record },
+        [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
           record = {
             key = { value_type = "string" },
@@ -178,11 +178,11 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("forbids non types for value_type", function ()
-    local Record = require "cosy.formalism.data.record"
+    local record = Layer.require "cosy.formalism.data.record"
     local layer  = Layer.new {
       name = "layer",
       data = {
-        [Layer.key.refines] = { Record },
+        [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
           record = {
             key = { value_type = true },

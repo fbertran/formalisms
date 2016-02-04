@@ -6,11 +6,11 @@ local Layer = require "layeredata"
 describe ("Formalism data.enumeration", function ()
 
   it ("can be loaded", function ()
-    local _ = require "cosy.formalism.data.enumeration"
+    local _ = Layer.require "cosy.formalism.data.enumeration"
   end)
 
   it ("detects wrongly typed elements (primitive)", function ()
-    local enumeration = require "cosy.formalism.data.enumeration"
+    local enumeration = Layer.require "cosy.formalism.data.enumeration"
     local layer = Layer.new {
       name = "layer",
       data = {
@@ -27,7 +27,7 @@ describe ("Formalism data.enumeration", function ()
   end)
 
   it ("detects correctly typed elements (primitive)", function ()
-    local enumeration = require "cosy.formalism.data.enumeration"
+    local enumeration = Layer.require "cosy.formalism.data.enumeration"
     local layer = Layer.new {
       name = "layer",
       data = {
@@ -43,7 +43,7 @@ describe ("Formalism data.enumeration", function ()
   end)
 
   it ("detects wrongly typed elements (proxy)", function ()
-    local enumeration = require "cosy.formalism.data.enumeration"
+    local enumeration = Layer.require "cosy.formalism.data.enumeration"
     local layer = Layer.new {
       name = "layer",
       data = {
@@ -62,7 +62,7 @@ describe ("Formalism data.enumeration", function ()
   end)
 
   it ("detects correctly typed elements (proxy)", function ()
-    local enumeration = require "cosy.formalism.data.enumeration"
+    local enumeration = Layer.require "cosy.formalism.data.enumeration"
     local layer = Layer.new {
       name = "layer",
       data = {
@@ -82,7 +82,7 @@ describe ("Formalism data.enumeration", function ()
   end)
 
   it ("sets the value type by default (proxy) #current", function ()
-    local enumeration = require "cosy.formalism.data.enumeration"
+    local enumeration = Layer.require "cosy.formalism.data.enumeration"
     local layer = Layer.new {
       name = "layer",
       data = {

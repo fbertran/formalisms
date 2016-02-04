@@ -1,10 +1,3 @@
-local Layer = require "layeredata"
-local graph = require "cosy.formalism.graph"
-
-local directed = Layer.new {
-  name = "cosy.formalism.graph.directed",
-}
-
 -- Directed graphs
 -- ===============
 --
@@ -13,23 +6,36 @@ local directed = Layer.new {
 --
 -- See [this article](http://link.springer.com/chapter/10.1007/3-540-45446-2_20).
 
-directed [Layer.key.refines] = {
-  graph
-}
+return function (Layer)
 
-directed [Layer.key.meta].edge_type [Layer.key.meta].arrow_type = {
-  [Layer.key.meta] = {
-    record = {
-      input  = {
-        value_type = "boolean",
-      },
-      output = {
-        value_type = "boolean",
+  local meta     = Layer.key.meta
+  local refines  = Layer.key.refines
+
+  local graph = Layer.require "cosy.formalism.graph"
+
+  local directed = Layer.new {
+    name = "cosy.formalism.graph.directed",
+  }
+
+  directed [refines] = {
+    graph
+  }
+
+  directed [meta].edge_type [meta].arrow_type = {
+    [meta] = {
+      record = {
+        input  = {
+          value_type = "boolean",
+        },
+        output = {
+          value_type = "boolean",
+        },
       },
     },
-  },
-  input  = false,
-  output = false,
-}
+    input  = false,
+    output = false,
+  }
 
-return directed
+  return directed
+
+end

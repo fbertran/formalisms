@@ -1,12 +1,3 @@
-local Layer = require "layeredata"
-
-local record = Layer.new {
-  name = "record",
-}
-
-local check_type      = require "cosy.formalism.data.check_type"
-local check_container = require "cosy.formalism.data.check_container"
-
 -- Record
 -- ======
 --
@@ -21,59 +12,73 @@ local check_container = require "cosy.formalism.data.check_container"
 -- (for instance "boolean", "number", "string"), or a reference to the expected
 -- parent type.
 
-local prefix = "cosy.formalism.data.record"
+return function (Layer)
 
-record [Layer.key.meta] = {
-  record = {},
-}
+  local checks   = Layer.key.checks
+  local meta     = Layer.key.meta
 
-record [Layer.key.checks] = {}
+  local record = Layer.new {
+    name = "record",
+  }
 
-record [Layer.key.checks] [prefix .. ".value_type"] = function (proxy)
-  if Layer.Proxy.has_meta (proxy) then
-    return
-  end
-  for key, description in pairs (proxy [Layer.key.meta].record) do
-    if description.value_type ~= nil then
-      if  type (description.value_type) ~= "string"
-      and getmetatable (description.value_type) ~= Layer.Proxy then
-        Layer.coroutine.yield (prefix .. ".value_type.invalid", {
-          proxy = proxy,
-          key   = key,
-          used  = description.value_type,
-        })
-      else
-        check_type (proxy [key], description.value_type, {
-          proxy  = proxy,
-          key    = key,
-          prefix = prefix .. ".value_type",
-        })
+  local check_type      = require "cosy.formalism.data.check_type"      (Layer)
+  local check_container = require "cosy.formalism.data.check_container" (Layer)
+
+  local prefix = "cosy.formalism.data.record"
+
+  record [meta] = {
+    record = {},
+  }
+
+  record [checks] = {}
+
+  record [checks] [prefix .. ".value_type"] = function (proxy)
+    if Layer.Proxy.has_meta (proxy) then
+      return
+    end
+    for key, description in pairs (proxy [meta].record) do
+      if description.value_type ~= nil then
+        if  type (description.value_type) ~= "string"
+        and getmetatable (description.value_type) ~= Layer.Proxy then
+          Layer.coroutine.yield (prefix .. ".value_type.invalid", {
+            proxy = proxy,
+            key   = key,
+            used  = description.value_type,
+          })
+        else
+          check_type (proxy [key], description.value_type, {
+            proxy  = proxy,
+            key    = key,
+            prefix = prefix .. ".value_type",
+          })
+        end
       end
     end
   end
-end
 
-record [Layer.key.checks] [prefix .. ".value_container"] = function (proxy)
-  if Layer.Proxy.has_meta (proxy) then
-    return
-  end
-  for key, description in pairs (proxy [Layer.key.meta].record) do
-    if description.value_container ~= nil then
-      if  getmetatable (description.value_container) ~= Layer.Proxy then
-        Layer.coroutine.yield (prefix .. ".value_container.invalid", {
-          proxy = proxy,
-          key   = key,
-          used  = description.value_container,
-        })
-      else
-        check_container (proxy [key], description.value_container, {
-          proxy  = proxy,
-          key    = key,
-          prefix = prefix .. ".value_container",
-        })
+  record [checks] [prefix .. ".value_container"] = function (proxy)
+    if Layer.Proxy.has_meta (proxy) then
+      return
+    end
+    for key, description in pairs (proxy [meta].record) do
+      if description.value_container ~= nil then
+        if  getmetatable (description.value_container) ~= Layer.Proxy then
+          Layer.coroutine.yield (prefix .. ".value_container.invalid", {
+            proxy = proxy,
+            key   = key,
+            used  = description.value_container,
+          })
+        else
+          check_container (proxy [key], description.value_container, {
+            proxy  = proxy,
+            key    = key,
+            prefix = prefix .. ".value_container",
+          })
+        end
       end
     end
   end
-end
 
-return record
+  return record
+
+end

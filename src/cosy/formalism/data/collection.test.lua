@@ -6,17 +6,17 @@ local Layer = require "layeredata"
 describe ("Formalism data.collection", function ()
 
   it ("can be loaded", function ()
-    local _ = require "cosy.formalism.data.collection"
+    local _ = Layer.require "cosy.formalism.data.collection"
   end)
 
   describe ("with size information", function ()
 
     it ("forbids a size less than the minimum", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
               minimum = 1,
@@ -30,11 +30,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("allows any size if there is no minimum", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
             },
@@ -46,11 +46,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("forbids a size greater than the maximum", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
               maximum = 1,
@@ -66,11 +66,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("allows any size if there is no maximum", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
             },
@@ -88,11 +88,11 @@ describe ("Formalism data.collection", function ()
   describe ("with key_type", function ()
 
     it ("allows an empty collection", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
               key_type = "string",
@@ -105,11 +105,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("allows anything if key_type is not defined", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {},
           },
@@ -124,11 +124,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("detects wrongly typed key (primitive)", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
               key_type = "string",
@@ -143,11 +143,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("detects correctly typed key (primitive)", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
               key_type = "string",
@@ -161,11 +161,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("detects wrongly typed key (reference)", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             t1 = {},
             t2 = {},
@@ -182,11 +182,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("detects correctly typed key (reference)", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer  = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             t1 = {},
             t2 = {},
@@ -202,11 +202,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("detects misreferenced key", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer  = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             t1 = {},
             collection = {
@@ -222,11 +222,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("forbids other types for key_type", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer  = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
               key_type = true,
@@ -244,11 +244,11 @@ describe ("Formalism data.collection", function ()
   describe ("with value_type", function ()
 
     it ("allows an empty collection", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
               value_type = "string" ,
@@ -261,11 +261,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("allows anything if value_type is not defined", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {},
           },
@@ -280,11 +280,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("detects wrongly typed value (primitive)", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
               value_type = "string",
@@ -299,11 +299,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("detects correctly typed value (primitive)", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
               key_type = "string",
@@ -317,11 +317,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("detects wrongly typed value (proxy)", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             t1 = {},
             t2 = {},
@@ -340,11 +340,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("detects correctly typed value (proxy) #current", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer  = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             t1 = {},
             t2 = {},
@@ -362,11 +362,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("cannot detect misreferenced value", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer  = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             t1 = {},
             collection = {
@@ -381,11 +381,11 @@ describe ("Formalism data.collection", function ()
     end)
 
     it ("forbids other types for value_type", function ()
-      local Collection = require "cosy.formalism.data.collection"
+      local collection = Layer.require "cosy.formalism.data.collection"
       local layer  = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { Collection },
+          [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             collection = {
               value_type = true,

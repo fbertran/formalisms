@@ -1,17 +1,3 @@
-local Layer      = require "layeredata"
-local record     = require "cosy.formalism.data.record"
-local collection = require "cosy.formalism.data.collection"
-local automaton  = require "cosy.formalism.automaton"
-
-local default = Layer.key.default
-local labels  = Layer.key.labels
-local meta    = Layer.key.meta
-local refines = Layer.key.refines
-
-local ita = Layer.new {
-  name = "cosy.formalism.automaton.ita",
-}
-
 -- Interrupt Timed Automata
 -- ========================
 --
@@ -30,142 +16,161 @@ local ita = Layer.new {
 --
 -- See [here](http://arxiv.org/abs/1504.04541)
 
-ita [labels] = {
-  ["cosy.formalism.automaton.ita"] = true,
-}
-local _ = Layer.reference "cosy.formalism.automaton.ita"
+return function (Layer)
 
-ita [refines] = {
-  automaton,
-}
+  local checks   = Layer.key.checks
+  local default  = Layer.key.default
+  local labels   = Layer.key.labels
+  local messages = Layer.key.messages
+  local meta     = Layer.key.meta
+  local refines  = Layer.key.refines
 
-ita.analogs = {
-  [refines] = {
-    collection,
-  },
-  [meta] = {
-    record = {
-      value_type = _ [meta].analog_type,
-    },
-  },
-  [default] = {
+  local record     = Layer.require "cosy.formalism.data.record"
+  local collection = Layer.require "cosy.formalism.data.collection"
+  local automaton  = Layer.require "cosy.formalism.automaton"
+
+  local ita = Layer.new {
+    name = "cosy.formalism.automaton.ita",
+  }
+
+  ita [labels] = {
+    ["cosy.formalism.automaton.ita"] = true,
+  }
+  local _ = Layer.reference "cosy.formalism.automaton.ita"
+
+  ita [refines] = {
+    automaton,
+  }
+
+  ita.analogs = {
     [refines] = {
-      _ [meta].analog_type,
+      collection,
     },
-  },
-}
-
-ita.levels = {
-  [refines] = {
-    collection,
-  },
-  [meta] = {
-    record = {
-      value_type = _ [meta].level_type,
-    }
-  },
-  [default] = {
-    [refines] = {
-      _ [meta].level_type,
-    },
-  },
-}
-
-ita [meta].analog_type = {
-  [refines] = {
-    record,
-  },
-  [meta] = {
-    record = {
-      active_level = {
-        value_type      = _ [meta].level_type,
-        value_container = _.levels,
+    [meta] = {
+      record = {
+        value_type = _ [meta].analog_type,
       },
-    }
-  },
-}
-
-ita [meta].level_type = {}
-
-ita [meta].guard_type = {
-  [refines] = {
-    record,
-  },
-  [meta] = {
-    record = {
-      comparison = {
-        value_type      = "string",
-        value_container = { "<", "<=", "=", ">=", ">" },
+    },
+    [default] = {
+      [refines] = {
+        _ [meta].analog_type,
       },
     },
   }
-}
 
-ita [meta].polynomial = {
-  [refines] = {
-    collection,
-  },
-  [meta] = {
-    value_type = _ [meta].polynomial_type,
-  },
-  [default] = {
+  ita.levels = {
     [refines] = {
-      _ [meta].polynomial_type,
+      collection,
     },
-  },
-}
-
-ita [meta].update_type = {
-  [refines] = {
-    collection,
-  },
-  [meta] = {
-    collection = {
-      value_type    = _ [meta].polynomial_type,
-      key_type      = _ [meta].analog_type,
-      key_container = _.analogs,
-    }
-  },
-}
-
-ita [meta].edge_type = {
-  update = {
-    [refines] = {
-      _ [meta].update_type,
+    [meta] = {
+      record = {
+        value_type = _ [meta].level_type,
+      }
     },
-  },
-
-  guard = {
-    [refines] = {
-      _ [meta].guard_type
-    },
-  },
-}
-
-ita [meta].vertex_type  = {
-  [meta] = {
-    record = {
-      level = {
-        value_type      = _ [meta].level_type,
-        value_container = _.levels,
+    [default] = {
+      [refines] = {
+        _ [meta].level_type,
       },
     },
-  },
-}
+  }
 
-ita [meta].initial_state_type = {
-  analogs_init = {
+  ita [meta].analog_type = {
+    [refines] = {
+      record,
+    },
+    [meta] = {
+      record = {
+        active_level = {
+          value_type      = _ [meta].level_type,
+          value_container = _.levels,
+        },
+      }
+    },
+  }
+
+  ita [meta].level_type = {}
+
+  ita [meta].guard_type = {
+    [refines] = {
+      record,
+    },
+    [meta] = {
+      record = {
+        comparison = {
+          value_type      = "string",
+          value_container = { "<", "<=", "=", ">=", ">" },
+        },
+      },
+    }
+  }
+
+  ita [meta].polynomial = {
+    [refines] = {
+      collection,
+    },
+    [meta] = {
+      value_type = _ [meta].polynomial_type,
+    },
+    [default] = {
+      [refines] = {
+        _ [meta].polynomial_type,
+      },
+    },
+  }
+
+  ita [meta].update_type = {
     [refines] = {
       collection,
     },
     [meta] = {
       collection = {
-        value_type    = "number",
+        value_type    = _ [meta].polynomial_type,
         key_type      = _ [meta].analog_type,
         key_container = _.analogs,
+      }
+    },
+  }
+
+  ita [meta].edge_type = {
+    update = {
+      [refines] = {
+        _ [meta].update_type,
       },
     },
-  },
-}
 
-return ita
+    guard = {
+      [refines] = {
+        _ [meta].guard_type
+      },
+    },
+  }
+
+  ita [meta].vertex_type  = {
+    [meta] = {
+      record = {
+        level = {
+          value_type      = _ [meta].level_type,
+          value_container = _.levels,
+        },
+      },
+    },
+  }
+
+  ita [meta].initial_state_type = {
+    analogs_init = {
+      [refines] = {
+        collection,
+      },
+      [meta] = {
+        collection = {
+          value_type    = "number",
+          key_type      = _ [meta].analog_type,
+          key_container = _.analogs,
+        },
+      },
+    },
+  }
+
+  return ita
+
+end

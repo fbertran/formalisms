@@ -62,12 +62,21 @@ There is no strict separation between _what_ is a formalism and _what_ is
 a model. Instead, they all belong to the same continuum, and their role
 varies depending on the context.
 
-Almost every formalism (and model) definition starts with importing the
-`layeredata` module (that represents and manipulates data), and import some
-useful constants:
+Almost every formalism (and model) definition is a single function that takes
+as parameter a `Layer` module (used to represent and manipulates data), and
+returns the formalism or model.
+This convention allows to load formalisms and models either locally or from
+a remote Cosy server.
 
 ```lua
-local Layer   = require "layeredata"
+return function (Layer)
+  ...
+end
+```
+
+We begin filling this function with the import of some useful constants:
+
+```lua
 local checks  = Layer.key.checks
 local default = Layer.key.default
 local labels  = Layer.key.labels
@@ -77,6 +86,10 @@ local refines = Layer.key.refines
 
 Now, we can start the automaton definition.
 It begins with creating a new `Layer` object, and giving it a unique name.
+This name __must__ correspond to the file name of the formalism, using
+[Lua `require` conventions](http://www.lua.org/pil/8.1.html).
+It allows to automatically load formalism and model dependencies in the `Layer`
+module.
 
 ```lua
 local automaton = Layer.new {
@@ -121,14 +134,18 @@ It is a list of ancestors, each one put in its own layer.
 They are sorted in decreasing importance.
 
 ```lua
-local graph        = require "cosy.formalism.graph"
-local binary_edges = require "cosy.formalism.graph.binary_edges"
+local graph        = Layer.require "cosy.formalism.graph"
+local binary_edges = Layer.require "cosy.formalism.graph.binary_edges"
 
 automaton [refines] = {
   graph,
   binary_edges,
 }
 ```
+
+Please not that we have used `Layer.require` instead of `require` to import
+the dependencies. This is required to allow loading from a Cosy server as well
+as from the filesystem.
 
 _Refines_ means something like "inherits on steroids".
 When a data is found neither in the highest layer nor in the ones below,
@@ -144,9 +161,9 @@ the previous `refines` definition of later as below.
 Note that we have also skipped storing the imported modules in a local variable.
 
 ```lua
-automaton [refines] [#automaton [refines]+1] = require "cosy.formalism.graph.directed"
-automaton [refines] [#automaton [refines]+1] = require "cosy.formalism.graph.labeled.vertices"
-automaton [refines] [#automaton [refines]+1] = require "cosy.formalism.graph.labeled.edges"
+automaton [refines] [#automaton [refines]+1] = Layer.require "cosy.formalism.graph.directed"
+automaton [refines] [#automaton [refines]+1] = Layer.require "cosy.formalism.graph.labeled.vertices"
+automaton [refines] [#automaton [refines]+1] = Layer.require "cosy.formalism.graph.labeled.edges"
 ```
 
 The `list [#list+1]` idiom is frequently used in Lua to add an element at the
@@ -170,9 +187,10 @@ automaton.vertices [refines] [#automaton.vertices [refines] + 1] = _.states
 automaton.edges    [refines] [#automaton.edges    [refines] + 1] = _.transitions
 ```
 
-Updating `graph` does not really impact it: in fact we update the `graph`
-data within the `automaton` layer! This also means that if `graph` is used in
-several parts of our formalism, other uses will not be affected.
+Updating `vertices` and `edges` does not really impact the `graph` formalism:
+we update the `graph` data within the `automaton` layer.
+This also means that if `graph` is used in several parts of our formalism,
+other uses will not be affected.
 
 We could also have created a more traditional alias as below.
 However, it is not the preferred solution, because its lacks extensibility.
@@ -195,7 +213,7 @@ This type is given within the `[meta].collection.value_type` field,
 a convention set by the `collection` formalism.
 
 ```lua
-local collection = require "cosy.formalism.data.collection"
+local collection = Layer.require "cosy.formalism.data.collection"
 automaton.states = {
   [refines] = {
     collection,
@@ -291,7 +309,7 @@ formalism.
 It also defines explicitly the `symbol_type` to be strings.
 
 ```lua
-local enumeration = require "cosy.formalism.data.enumeration"
+local enumeration = Layer.require "cosy.formalism.data.enumeration"
 automaton.alphabet = {
   [refines] = {
     enumeration,

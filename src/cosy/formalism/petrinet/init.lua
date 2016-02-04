@@ -1,18 +1,3 @@
-local Layer            = require "layeredata"
-local graph            = require "cosy.formalism.graph"
-local labeled_edges    = require "cosy.formalism.graph.labeled.edges"
-local labeled_vertices = require "cosy.formalism.graph.labeled.vertices"
-local directed         = require "cosy.formalism.graph.directed"
-local binary_edges     = require "cosy.formalism.graph.binary_edges"
-
-local petrinet = Layer.new {
-  name = "cosy.formalism.petrinet",
-}
-
-local labels  = Layer.key.labels
-local meta    = Layer.key.meta
-local refines = Layer.key.refines
-
 -- Petri nets
 -- ==========
 --
@@ -22,78 +7,97 @@ local refines = Layer.key.refines
 --
 -- See [here](https://en.wikipedia.org/wiki/Petri_net)
 
-petrinet [labels] = {
-  ["cosy.formalism.petrinet"] = true,
-}
-local _ = Layer.reference "cosy.formalism.petrinet"
+return function (Layer)
 
-petrinet [refines] = {
-  graph,
-  directed,
-  binary_edges,
-  labeled_vertices,
-  labeled_edges,
-}
+  local checks   = Layer.key.checks
+  local default  = Layer.key.default
+  local labels   = Layer.key.labels
+  local messages = Layer.key.messages
+  local meta     = Layer.key.meta
+  local refines  = Layer.key.refines
 
-petrinet [meta].place_type = {
-  [refines] = {
-    _ [meta].vertex_type,
-  },
-  [meta] = {
-    record = {
-      identifier = false,
-      marking    = false,
+  local graph            = Layer.require "cosy.formalism.graph"
+  local labeled_edges    = Layer.require "cosy.formalism.graph.labeled.edges"
+  local labeled_vertices = Layer.require "cosy.formalism.graph.labeled.vertices"
+  local directed         = Layer.require "cosy.formalism.graph.directed"
+  local binary_edges     = Layer.require "cosy.formalism.graph.binary_edges"
+
+  local petrinet = Layer.new {
+    name = "cosy.formalism.petrinet",
+  }
+
+  petrinet [labels] = {
+    ["cosy.formalism.petrinet"] = true,
+  }
+  local _ = Layer.reference "cosy.formalism.petrinet"
+
+  petrinet [refines] = {
+    graph,
+    directed,
+    binary_edges,
+    labeled_vertices,
+    labeled_edges,
+  }
+
+  petrinet [meta].place_type = {
+    [refines] = {
+      _ [meta].vertex_type,
+    },
+    [meta] = {
+      record = {
+        identifier = false,
+        marking    = false,
+      }
     }
   }
-}
 
-petrinet [meta].transition_type = {
-  [refines] = {
-    _ [meta].vertex_type,
-  }
-}
-
-petrinet [meta].arc_type = {
-  [refines] = {
-    _ [meta].edge_type,
-  },
-}
-
-petrinet.places = {
-  [refines] = {
-    _ [meta].vertices,
-  },
-  [meta] = {
-    collection = {
-      value_type = _ [meta].place_type,
+  petrinet [meta].transition_type = {
+    [refines] = {
+      _ [meta].vertex_type,
     }
   }
-}
 
-petrinet.transitions = {
-  [refines] = {
-    _ [meta].vertices,
-  },
-  [meta] = {
-    collection = {
-      value_type = _ [meta].transition_type,
+  petrinet [meta].arc_type = {
+    [refines] = {
+      _ [meta].edge_type,
+    },
+  }
+
+  petrinet.places = {
+    [refines] = {
+      _ [meta].vertices,
+    },
+    [meta] = {
+      collection = {
+        value_type = _ [meta].place_type,
+      }
     }
   }
-}
 
-petrinet.arcs = {
-  [refines] = {
-    _ [meta].edges,
-  },
-  [meta] = {
-    collection = {
-      value_type = _ [meta].arc_type,
+  petrinet.transitions = {
+    [refines] = {
+      _ [meta].vertices,
+    },
+    [meta] = {
+      collection = {
+        value_type = _ [meta].transition_type,
+      }
     }
   }
-}
 
-petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = _.places
-petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = _.transitions
-petrinet.edges    [refines] [#petrinet.edges    [refines] + 1] = _.arcs
+  petrinet.arcs = {
+    [refines] = {
+      _ [meta].edges,
+    },
+    [meta] = {
+      collection = {
+        value_type = _ [meta].arc_type,
+      }
+    }
+  }
 
-return petrinet
+  petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = _.places
+  petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = _.transitions
+  petrinet.edges    [refines] [#petrinet.edges    [refines] + 1] = _.arcs
+
+  return petrinet

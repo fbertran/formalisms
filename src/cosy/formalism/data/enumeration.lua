@@ -1,10 +1,3 @@
-local Layer      = require "layeredata"
-local collection = require "cosy.formalism.data.collection"
-
-local enumeration = Layer.new {
-  name = "cosy.formalism.data.enumeration",
-}
-
 -- Enumerations
 -- ============
 --
@@ -14,26 +7,41 @@ local enumeration = Layer.new {
 -- Instead, the `symbols` collection uses symbols as values. this does not
 -- guarantee uniqueness of the symbols.
 
-enumeration [Layer.key.labels] = {
-  ["cosy.formalism.data.enumeration"] = true,
-}
-local _ = Layer.reference "cosy.formalism.data.enumeration"
+return function (Layer)
 
-enumeration [Layer.key.refines] = {
-  collection,
-}
+  local default  = Layer.key.default
+  local labels   = Layer.key.labels
+  local meta     = Layer.key.meta
+  local refines  = Layer.key.refines
 
-enumeration [Layer.key.meta] = {
-  symbol_type = false,
-  collection = {
-    value_type = _ [Layer.key.meta].symbol_type,
-  },
-}
+  local collection = Layer.require "cosy.formalism.data.collection"
 
-enumeration [Layer.key.default] = {
-  [Layer.key.refines] = {
-    _ [Layer.key.meta].symbol_type,
-  },
-}
+  local enumeration = Layer.new {
+    name = "cosy.formalism.data.enumeration",
+  }
 
-return enumeration
+  enumeration [labels] = {
+    ["cosy.formalism.data.enumeration"] = true,
+  }
+  local _ = Layer.reference "cosy.formalism.data.enumeration"
+
+  enumeration [refines] = {
+    collection,
+  }
+
+  enumeration [meta] = {
+    symbol_type = false,
+    collection = {
+      value_type = _ [meta].symbol_type,
+    },
+  }
+
+  enumeration [default] = {
+    [refines] = {
+      _ [meta].symbol_type,
+    },
+  }
+
+  return enumeration
+
+end
