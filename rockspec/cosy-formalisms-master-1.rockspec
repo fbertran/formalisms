@@ -13,7 +13,6 @@ description = {
 }
 
 dependencies = {
-  "coronest",
   "layeredata",
 }
 
