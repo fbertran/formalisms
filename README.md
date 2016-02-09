@@ -63,18 +63,64 @@ a model. Instead, they all belong to the same continuum, and their role
 varies depending on the context.
 
 Almost every formalism (and model) definition is a single function that takes
-as parameter a `Layer` module (used to represent and manipulates data), and
-returns the formalism or model.
+as parameters:
+
+* a `Layer` module (used to represent and manipulates data);
+* a second parameter representing the formalism or model to describe in this
+  file; you should name this parameter with a meaningful name, like `automaton`
+  in this tutorial;
+* a third parameter representing a *reference* to the root of this formalism
+  or model.
+
+The function to define should return the formalism or model, but this `return`
+can be omitted for convenience.
 This convention allows to load formalisms and models either locally or from
 a remote Cosy server.
 
 ```lua
-return function (Layer)
+return function (Layer, automaton, ref)
   ...
 end
 ```
 
-We begin filling this function with the import of some useful constants:
+The second argument of this function, `automaton`, is an already created
+new `Layer` object, with a unique name following the convention
+`user/project/resource`.
+For tests, a special loader is used, that converts the name to a standard
+Lua module name, for instance `user.project.resource`, using
+[Lua `require` conventions](http://www.lua.org/pil/8.1.html).
+It allows to automatically load formalism and model dependencies in the `Layer`
+module.
+
+Layers are _really_ like [layers in digital image editing](https://en.wikipedia.org/wiki/Layers_(digital_image_editing)).
+Each formalism is put in its own layer, and models are built on layers above.
+It allows us to _modify_ parts of imported formalisms within a specific
+model (like adding a mustache to the Mona Lisa).
+
+We will also need sometimes to reference _things_ within the formalism.
+Do not reference things using a syntax like `something = automaton.some.thing`.
+The layer system **requires** that you use instead the `ref` parameter:
+`something = ref.some.thing`.
+This is mandatory to handle correctly inheritance between formalisms and models.
+
+You can also create labels and references yourself using the following syntax.
+The first part creates a label to the `automaton` object, whereas the second
+part creates a reference to the part of a formalism or model that refines
+`automaton`.
+
+```lua
+automaton [labels] = {
+  ["mylabel"] = true,
+}
+local myref = Layer.reference "mylabel"
+```
+
+Note that `labels` is a set (in the Lua programming style, i.e., a mapping
+from identifiers to `true`). It means that we can give several names to the same
+formalism. In fact, this label will also be accessible from any model built
+upon this formalism, and each one will add its own label.
+
+We begin filling the main function with the import of some useful constants:
 
 ```lua
 local checks  = Layer.key.checks
@@ -83,44 +129,6 @@ local labels  = Layer.key.labels
 local meta    = Layer.key.meta
 local refines = Layer.key.refines
 ```
-
-Now, we can start the automaton definition.
-It begins with creating a new `Layer` object, and giving it a unique name.
-This name __must__ correspond to a resource on the Cosy server.
-Its pattern is: `user/project/resource`.
-For tests, a special loader is used, that converts the name to a standard
-Lua module name, for instance `user.project.resource`, using
-[Lua `require` conventions](http://www.lua.org/pil/8.1.html).
-It allows to automatically load formalism and model dependencies in the `Layer`
-module.
-
-```lua
-local automaton = Layer.new {
-  name = "cosy/formalism/automaton",
-}
-```
-
-Layers are _really_ like [layers in digital image editing](https://en.wikipedia.org/wiki/Layers_(digital_image_editing)).
-Each formalism is put in its own layer, and models are built on layers above.
-It allows us to _modify_ parts of imported formalisms within a specific
-model (like adding a mustache to the Mona Lisa).
-
-We will also need sometimes to reference _things_ within the formalism.
-To do so, we create a label and a reference (named `_`) to its parent,
-`automaton`. This reference does not refer to a specific layer. It refers
-to a _position_ (here the root of the data).
-
-```lua
-automaton [labels] = {
-  ["cosy/formalism/automaton"] = true,
-}
-local _ = Layer.reference "cosy/formalism/automaton"
-```
-
-Note that `labels` is a set (in the Lua programming style, i.e., a mapping
-from identifiers to `true`). It means that we can give several names to the same
-formalism. In fact, this label will also be accessible from any model built
-upon this formalism, and each one will add its own label.
 
 An [automaton](https://en.wikipedia.org/wiki/Automata_theory) is based on a
 "usual" graph structure. But the general definition of graphs is the
@@ -186,8 +194,8 @@ We juste have to create two new containers with names adapted to automata
 theory, and change the `graph` containers to refine `automaton` ones.
 
 ```lua
-automaton.vertices [refines] [#automaton.vertices [refines] + 1] = _.states
-automaton.edges    [refines] [#automaton.edges    [refines] + 1] = _.transitions
+automaton.vertices [refines] [#automaton.vertices [refines] + 1] = ref.states
+automaton.edges    [refines] [#automaton.edges    [refines] + 1] = ref.transitions
 ```
 
 Updating `vertices` and `edges` does not really impact the `graph` formalism:
@@ -202,8 +210,8 @@ themselves be specialized, whereas the "below way" does not allow specialization
 at all.
 
 ```lua
-automaton.states      = _.vertices
-automaton.transitions = _.edges
+automaton.states      = ref.vertices
+automaton.transitions = ref.edges
 ```
 
 Now we can define what are states and transitions.
@@ -220,22 +228,22 @@ local collection = Layer.require "cosy/formalism/data.collection"
 automaton.states = {
   [refines] = {
     collection,
-    _ [meta].vertices,
+    ref [meta].vertices,
   },
   [meta] = {
     collection = {
-      value_type = _ [meta].state_type,
+      value_type = ref [meta].state_type,
     }
   }
 }
 automaton.transitions = {
   [refines] = {
     collection,
-    _ [meta].edges,
+    ref [meta].edges,
   },
   [meta] = {
     collection = {
-      value_type = _ [meta].transition_type,
+      value_type = ref [meta].transition_type,
     }
   }
 }
@@ -243,9 +251,9 @@ automaton.transitions = {
 
 As we do not have the notions of classes and instances, "have a type" means
 refining the type. For instance, all elements in `states` must refine
-`_ [meta].state_type`.
+`ref [meta].state_type`.
 
-Note that our containers refine `_ [meta].vertices` and `_ [meta].edges`.
+Note that our containers refine `ref [meta].vertices` and `ref [meta].edges`.
 This is because the `graph`formalsm defines already containers for vertices
 and edges, and we would like to import what has already been defined on them.
 It creates a harmless circular refinement with our previous extension of
@@ -272,7 +280,7 @@ not listed here, but they must contain at least the three described fields.
 ```lua
 automaton [meta].state_type = {
   [refines] = {
-    _ [meta].vertex_type,
+    ref [meta].vertex_type,
   },
   [meta] = {
     record = {
@@ -293,13 +301,13 @@ These two attributes are used by convention by the `record` formalism.
 ```lua
 automaton [meta].transition_type = {
   [refines] = {
-    _ [meta].edge_type,
+    ref [meta].edge_type,
   },
   [meta] = {
     record = {
      letter = {
-       value_type      = _.alphabet [Layer.key.meta].symbol_type,
-       value_container = _.alphabet,
+       value_type      = ref.alphabet [Layer.key.meta].symbol_type,
+       value_container = ref.alphabet,
      },
    },
  },
