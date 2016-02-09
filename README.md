@@ -11,7 +11,7 @@ formalisms, to use within the [CosyVerif](http://cosyverif.org) platform.
 
 CosyVerif formalisms are a set of [Lua](http://www.lua.org) modules.
 It is bundled in [Luarocks](https://luarocks.org), a package manager for Lua.
-To install it, first install Lua (version 5.2 or 5.3), for install using the
+To install it, first install Lua (version 5.2 or 5.3), for instance using the
 following commands:
 
 ```sh
