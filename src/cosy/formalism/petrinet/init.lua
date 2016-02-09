@@ -7,9 +7,8 @@
 --
 -- See [here](https://en.wikipedia.org/wiki/Petri_net)
 
-return function (Layer)
+return function (Layer, petrinet, ref)
 
-  local labels   = Layer.key.labels
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
@@ -18,15 +17,6 @@ return function (Layer)
   local labeled_vertices = Layer.require "cosy/formalism/graph.labeled.vertices"
   local directed         = Layer.require "cosy/formalism/graph.directed"
   local binary_edges     = Layer.require "cosy/formalism/graph.binary_edges"
-
-  local petrinet = Layer.new {
-    name = "cosy/formalism/petrinet",
-  }
-
-  petrinet [labels] = {
-    ["cosy/formalism/petrinet"] = true,
-  }
-  local _ = Layer.reference "cosy/formalism/petrinet"
 
   petrinet [refines] = {
     graph,
@@ -38,7 +28,7 @@ return function (Layer)
 
   petrinet [meta].place_type = {
     [refines] = {
-      _ [meta].vertex_type,
+      ref [meta].vertex_type,
     },
     [meta] = {
       record = {
@@ -50,53 +40,51 @@ return function (Layer)
 
   petrinet [meta].transition_type = {
     [refines] = {
-      _ [meta].vertex_type,
+      ref [meta].vertex_type,
     }
   }
 
   petrinet [meta].arc_type = {
     [refines] = {
-      _ [meta].edge_type,
+      ref [meta].edge_type,
     },
   }
 
   petrinet.places = {
     [refines] = {
-      _ [meta].vertices,
+      ref [meta].vertices,
     },
     [meta] = {
       collection = {
-        value_type = _ [meta].place_type,
+        value_type = ref [meta].place_type,
       }
     }
   }
 
   petrinet.transitions = {
     [refines] = {
-      _ [meta].vertices,
+      ref [meta].vertices,
     },
     [meta] = {
       collection = {
-        value_type = _ [meta].transition_type,
+        value_type = ref [meta].transition_type,
       }
     }
   }
 
   petrinet.arcs = {
     [refines] = {
-      _ [meta].edges,
+      ref [meta].edges,
     },
     [meta] = {
       collection = {
-        value_type = _ [meta].arc_type,
+        value_type = ref [meta].arc_type,
       }
     }
   }
 
-  petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = _.places
-  petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = _.transitions
-  petrinet.edges    [refines] [#petrinet.edges    [refines] + 1] = _.arcs
-
-  return petrinet
+  petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = ref.places
+  petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = ref.transitions
+  petrinet.edges    [refines] [#petrinet.edges    [refines] + 1] = ref.arcs
 
 end

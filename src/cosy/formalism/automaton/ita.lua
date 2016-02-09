@@ -16,25 +16,15 @@
 --
 -- See [here](http://arxiv.org/abs/1504.04541)
 
-return function (Layer)
+return function (Layer, ita, ref)
 
   local default  = Layer.key.default
-  local labels   = Layer.key.labels
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
   local record     = Layer.require "cosy/formalism/data.record"
   local collection = Layer.require "cosy/formalism/data.collection"
   local automaton  = Layer.require "cosy/formalism/automaton"
-
-  local ita = Layer.new {
-    name = "cosy/formalism/automaton.ita",
-  }
-
-  ita [labels] = {
-    ["cosy/formalism/automaton.ita"] = true,
-  }
-  local _ = Layer.reference "cosy/formalism/automaton.ita"
 
   ita [refines] = {
     automaton,
@@ -46,12 +36,12 @@ return function (Layer)
     },
     [meta] = {
       record = {
-        value_type = _ [meta].analog_type,
+        value_type = ref [meta].analog_type,
       },
     },
     [default] = {
       [refines] = {
-        _ [meta].analog_type,
+        ref [meta].analog_type,
       },
     },
   }
@@ -62,12 +52,12 @@ return function (Layer)
     },
     [meta] = {
       record = {
-        value_type = _ [meta].level_type,
+        value_type = ref [meta].level_type,
       }
     },
     [default] = {
       [refines] = {
-        _ [meta].level_type,
+        ref [meta].level_type,
       },
     },
   }
@@ -79,8 +69,8 @@ return function (Layer)
     [meta] = {
       record = {
         active_level = {
-          value_type      = _ [meta].level_type,
-          value_container = _.levels,
+          value_type      = ref [meta].level_type,
+          value_container = ref.levels,
         },
       }
     },
@@ -107,11 +97,11 @@ return function (Layer)
       collection,
     },
     [meta] = {
-      value_type = _ [meta].polynomial_type,
+      value_type = ref [meta].polynomial_type,
     },
     [default] = {
       [refines] = {
-        _ [meta].polynomial_type,
+        ref [meta].polynomial_type,
       },
     },
   }
@@ -122,9 +112,9 @@ return function (Layer)
     },
     [meta] = {
       collection = {
-        value_type    = _ [meta].polynomial_type,
-        key_type      = _ [meta].analog_type,
-        key_container = _.analogs,
+        value_type    = ref [meta].polynomial_type,
+        key_type      = ref [meta].analog_type,
+        key_container = ref.analogs,
       }
     },
   }
@@ -132,13 +122,13 @@ return function (Layer)
   ita [meta].edge_type = {
     update = {
       [refines] = {
-        _ [meta].update_type,
+        ref [meta].update_type,
       },
     },
 
     guard = {
       [refines] = {
-        _ [meta].guard_type
+        ref [meta].guard_type
       },
     },
   }
@@ -147,8 +137,8 @@ return function (Layer)
     [meta] = {
       record = {
         level = {
-          value_type      = _ [meta].level_type,
-          value_container = _.levels,
+          value_type      = ref [meta].level_type,
+          value_container = ref.levels,
         },
       },
     },
@@ -162,13 +152,11 @@ return function (Layer)
       [meta] = {
         collection = {
           value_type    = "number",
-          key_type      = _ [meta].analog_type,
-          key_container = _.analogs,
+          key_type      = ref [meta].analog_type,
+          key_container = ref.analogs,
         },
       },
     },
   }
-
-  return ita
 
 end

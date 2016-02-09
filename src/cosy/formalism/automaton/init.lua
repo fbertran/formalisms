@@ -7,9 +7,8 @@
 --
 -- See [here](http://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-definitions.html)
 
-return function (Layer)
+return function (Layer, automaton, ref)
 
-  local labels   = Layer.key.labels
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
@@ -19,15 +18,6 @@ return function (Layer)
   local directed         = Layer.require "cosy/formalism/graph.directed"
   local binary_edges     = Layer.require "cosy/formalism/graph.binary_edges"
   local enumeration      = Layer.require "cosy/formalism/data.enumeration"
-
-  local automaton = Layer.new {
-    name = "cosy/formalism/automaton",
-  }
-
-  automaton [labels] = {
-    ["cosy/formalism/automaton"] = true,
-  }
-  local _ = Layer.reference "cosy/formalism/automaton"
 
   automaton [refines] = {
     graph,
@@ -45,7 +35,7 @@ return function (Layer)
 
   automaton [meta].state_type = {
     [refines] = {
-      _ [meta].vertex_type,
+      ref [meta].vertex_type,
     },
     [meta] = {
       record = {
@@ -58,13 +48,13 @@ return function (Layer)
 
   automaton [meta].transition_type = {
     [refines] = {
-      _ [meta].edge_type,
+      ref [meta].edge_type,
     },
     [meta] = {
       record = {
        letter = {
-         value_type      = _.alphabet [Layer.key.meta].symbol_type,
-         value_container = _.alphabet,
+         value_type      = ref.alphabet [Layer.key.meta].symbol_type,
+         value_container = ref.alphabet,
        },
      },
    },
@@ -72,28 +62,28 @@ return function (Layer)
 
   automaton.states = {
     [refines] = {
-      _ [meta].vertices,
+      ref [meta].vertices,
     },
     [meta] = {
       collection = {
-        value_type = _ [meta].state_type,
+        value_type = ref [meta].state_type,
       }
     }
   }
 
   automaton.transitions = {
     [refines] = {
-      _ [meta].edges,
+      ref [meta].edges,
     },
     [meta] = {
       collection = {
-        value_type = _ [meta].transition_type,
+        value_type = ref [meta].transition_type,
       }
     }
   }
 
-  automaton.vertices [refines] [#automaton.vertices [refines] + 1] = _.states
-  automaton.edges    [refines] [#automaton.edges    [refines] + 1] = _.transitions
+  automaton.vertices [refines] [#automaton.vertices [refines] + 1] = ref.states
+  automaton.edges    [refines] [#automaton.edges    [refines] + 1] = ref.transitions
 
   return automaton
 

@@ -6,16 +6,12 @@
 --
 -- See [this article](http://link.springer.com/chapter/10.1007/3-540-45446-2_20).
 
-return function (Layer)
+return function (Layer, directed)
 
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
   local graph = Layer.require "cosy/formalism/graph"
-
-  local directed = Layer.new {
-    name = "cosy/formalism/graph.directed",
-  }
 
   directed [refines] = {
     graph
@@ -35,7 +31,5 @@ return function (Layer)
     input  = false,
     output = false,
   }
-
-  return directed
 
 end

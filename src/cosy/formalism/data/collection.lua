@@ -15,14 +15,10 @@
 -- representation of the Lua type name (for instance "boolean", "number",
 -- "string"), or a reference to the expected parent type.
 
-return function (Layer)
+return function (Layer, collection)
 
   local checks   = Layer.key.checks
   local meta     = Layer.key.meta
-
-  local collection = Layer.new {
-    name = "cosy/formalism/data.collection",
-  }
 
   local check_type      = require "cosy.formalism.data.check_type"      (Layer)
   local check_container = require "cosy.formalism.data.check_container" (Layer)
@@ -152,7 +148,5 @@ return function (Layer)
       })
     end
   end
-
-  return collection
 
 end

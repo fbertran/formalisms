@@ -13,22 +13,12 @@
 -- * `model`: the tool instance;
 -- * `scheduler`: a scheduler to create (parallel) tasks, sleep, wakeup, ...
 
-return function (Layer)
+return function (Layer, tool)
 
-  local labels   = Layer.key.labels
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
   local record     = Layer.require "cosy/formalism/data.record"
-
-  local tool = Layer.new {
-    name = "cosy/formalism/tool",
-  }
-
-  tool [labels] = {
-    ["cosy/formalism/tool"] = true,
-  }
-  local _ = Layer.reference "cosy/formalism/tool"
 
   local parameter_type = {
     [refines] = {
@@ -55,7 +45,5 @@ return function (Layer)
       run         = { value_type = "function" },
     }
   }
-
-  return tool
 
 end

@@ -1,13 +1,7 @@
 -- These lines are required to correctly run tests.
 require "busted.runner" ()
 
-local Layer = require "layeredata"
-do
-  local oldrequire = Layer.require
-  Layer.require = function (name)
-    return oldrequire (name:gsub ("/", "."))
-  end
-end
+local Layer = require "cosy.formalism.layer"
 
 describe ("Formalism data.record", function ()
 

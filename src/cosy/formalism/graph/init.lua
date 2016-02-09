@@ -14,24 +14,14 @@
 -- This inversion allows to create sub-containers with specific defaults,
 -- one for places, one for transitions... and the graph container for all vertices.
 
-return function (Layer)
+return function (Layer, graph, ref)
 
   local default  = Layer.key.default
-  local labels   = Layer.key.labels
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
   local collection = Layer.require "cosy/formalism/data.collection"
   local record     = Layer.require "cosy/formalism/data.record"
-
-  local graph = Layer.new {
-    name = "cosy/formalism/graph",
-  }
-
-  graph [labels] = {
-    ["cosy/formalism/graph"] = true,
-  }
-  local _ = Layer.reference "cosy/formalism/graph"
 
   -- Vertices are empty in base graph.
   local vertex_type = {}
@@ -45,8 +35,8 @@ return function (Layer)
     },
     [meta] = {
       vertex = {
-        value_type      = _ [meta].vertex_type,
-        value_container = _.vertices,
+        value_type      = ref [meta].vertex_type,
+        value_container = ref.vertices,
       },
     },
     vertex = nil,
@@ -66,11 +56,11 @@ return function (Layer)
         collection,
       },
       [meta] = {
-        value_type = _ [meta].edge_type [meta].arrow_type,
+        value_type = ref [meta].edge_type [meta].arrow_type,
       },
       [default] = {
         [refines] = {
-          _ [meta].edge_type [meta].arrow_type,
+          ref [meta].edge_type [meta].arrow_type,
         },
       },
     },
@@ -90,11 +80,11 @@ return function (Layer)
       collection,
     },
     [meta] = {
-      value_type = _ [meta].vertex_type,
+      value_type = ref [meta].vertex_type,
     },
     [default] = {
       [refines] = {
-        _ [meta].vertex_type,
+        ref [meta].vertex_type,
       },
     },
   }
@@ -107,15 +97,13 @@ return function (Layer)
       collection,
     },
     [meta] = {
-      value_type = _ [meta].edge_type,
+      value_type = ref [meta].edge_type,
     },
     [default] = {
       [refines] = {
-        _ [meta].edge_type,
+        ref [meta].edge_type,
       }
     },
   }
-
-  return graph
 
 end

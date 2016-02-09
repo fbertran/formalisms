@@ -6,16 +6,12 @@
 --
 -- For more information see [here](https://en.wikipedia.org/wiki/Hypergraph)
 
-return function (Layer)
+return function (Layer, binary_edges)
 
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
   local graph = Layer.require "cosy/formalism/graph"
-
-  local binary_edges = Layer.new {
-    name = "cosy/formalism/graph.binary-edges",
-  }
 
   binary_edges [refines] = {
     graph
@@ -25,7 +21,5 @@ return function (Layer)
     minimum = 2,
     maximum = 2,
   }
-
-  return binary_edges
 
 end

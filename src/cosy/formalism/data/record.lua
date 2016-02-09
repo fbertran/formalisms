@@ -12,14 +12,10 @@
 -- (for instance "boolean", "number", "string"), or a reference to the expected
 -- parent type.
 
-return function (Layer)
+return function (Layer, record)
 
   local checks   = Layer.key.checks
   local meta     = Layer.key.meta
-
-  local record = Layer.new {
-    name = "record",
-  }
 
   local check_type      = require "cosy/formalism/data.check_type"      (Layer)
   local check_container = require "cosy/formalism/data.check_container" (Layer)
@@ -78,7 +74,5 @@ return function (Layer)
       end
     end
   end
-
-  return record
 
 end

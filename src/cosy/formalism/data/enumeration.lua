@@ -7,23 +7,13 @@
 -- Instead, the `symbols` collection uses symbols as values. this does not
 -- guarantee uniqueness of the symbols.
 
-return function (Layer)
+return function (Layer, enumeration, ref)
 
   local default  = Layer.key.default
-  local labels   = Layer.key.labels
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
   local collection = Layer.require "cosy/formalism/data.collection"
-
-  local enumeration = Layer.new {
-    name = "cosy/formalism/data.enumeration",
-  }
-
-  enumeration [labels] = {
-    ["cosy/formalism/data.enumeration"] = true,
-  }
-  local _ = Layer.reference "cosy/formalism/data.enumeration"
 
   enumeration [refines] = {
     collection,
@@ -32,16 +22,14 @@ return function (Layer)
   enumeration [meta] = {
     symbol_type = false,
     collection = {
-      value_type = _ [meta].symbol_type,
+      value_type = ref [meta].symbol_type,
     },
   }
 
   enumeration [default] = {
     [refines] = {
-      _ [meta].symbol_type,
+      ref [meta].symbol_type,
     },
   }
-
-  return enumeration
 
 end

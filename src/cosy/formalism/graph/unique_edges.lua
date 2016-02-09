@@ -6,22 +6,12 @@
 --
 -- For more information see [here](https://en.wikipedia.org/wiki/Multigraph)
 
-return function (Layer)
+return function (Layer, unique_edges)
 
   local checks   = Layer.key.checks
-  local labels   = Layer.key.labels
   local refines  = Layer.key.refines
 
   local graph = Layer.require "cosy/formalism/graph"
-
-  local unique_edges = Layer.new {
-    name = "cosy/formalism/graph.unique-edges",
-  }
-
-  unique_edges [labels] = {
-    ["cosy/formalism/graph.unique-edges"] = true,
-  }
-  local _ = Layer.reference "cosy/formalism/graph.unique-edges"
 
   unique_edges [refines] = {
     graph,
@@ -35,7 +25,7 @@ return function (Layer)
   unique_edges.edges [checks] = {
     ["cosy/formalism/graph.unique-edges"] = function (proxy)
       local edges = {}
-      for _, edge in pairs (_.edges) do
+      for _, edge in pairs (proxy.edges) do
         local vertices = {}
         for _, arrow in pairs (edge.arrows) do
           vertices [arrow.vertex] = true
@@ -61,7 +51,7 @@ return function (Layer)
             if found_l and found_r then
               Layer.coroutine.yield ("cosy/formalism/graph.unique-edges.illegal", {
                 proxy     = proxy,
-                container = _.edges,
+                container = proxy.edges,
                 edges     = { edge_l, edge_r },
               })
             end
