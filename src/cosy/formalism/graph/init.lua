@@ -34,10 +34,12 @@ return function (Layer, graph, ref)
       record,
     },
     [meta] = {
-      vertex = {
-        value_type      = ref [meta].vertex_type,
-        value_container = ref.vertices,
-      },
+      record = {
+        vertex = {
+          value_type      = ref [meta].vertex_type,
+          value_container = ref.vertices,
+        }
+      }
     },
     vertex = nil,
   }
