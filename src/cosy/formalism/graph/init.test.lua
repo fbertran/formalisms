@@ -9,58 +9,128 @@ describe ("Formalism graph", function ()
     local _ = Layer.require "cosy/formalism/graph"
   end)
 
-  it ("allows to create vertices", function ()
-    local graph = Layer.require "cosy/formalism/graph"
-    local layer = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.refines] = { graph },
-      },
-    }
-    layer.vertices.a = {}
-    layer.vertices.b = {}
-    Layer.Proxy.check (layer)
-    assert.is_nil (layer [Layer.key.messages])
-    assert.is_true (layer [Layer.key.meta].vertex_type <= layer.vertices.a)
-    assert.is_true (layer [Layer.key.meta].vertex_type <= layer.vertices.b)
-  end)
+  describe ("vertices", function ()
 
-  it ("does not add refinement if a vertex already refines something", function ()
-    local graph = Layer.require "cosy/formalism/graph"
-    local layer = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.refines] = { graph },
-        [Layer.key.meta   ] = {
-          t = {},
+    it ("can be created", function ()
+      local graph = Layer.require "cosy/formalism/graph"
+      local layer = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { graph },
         },
-      },
-    }
-    layer.vertices.a = {
-      [Layer.key.refines] = { Layer.reference (false) [Layer.key.meta].t }
-    }
-    assert.is_true  (layer [Layer.key.meta].t <= layer.vertices.a)
-    assert.is_false (layer [Layer.key.meta].vertex_type <= layer.vertices.a)
+      }
+      layer.vertices.a = {}
+      layer.vertices.b = {}
+      Layer.Proxy.check (layer)
+      assert.is_nil (layer [Layer.key.messages])
+      assert.is_true (layer [Layer.key.meta].vertex_type <= layer.vertices.a)
+      assert.is_true (layer [Layer.key.meta].vertex_type <= layer.vertices.b)
+    end)
+
+    it ("refine vertex_type", function ()
+      local graph = Layer.require "cosy/formalism/graph"
+      local layer = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { graph },
+          [Layer.key.meta   ] = {
+            t = {},
+          },
+        },
+      }
+      layer.vertices.a = {
+        [Layer.key.refines] = { Layer.reference (false) [Layer.key.meta].t }
+      }
+      assert.is_true (layer [Layer.key.meta].t <= layer.vertices.a)
+      assert.is_true (layer [Layer.key.meta].vertex_type <= layer.vertices.a)
+    end)
+
+    it ("are iterable", function ()
+      local graph = Layer.require "cosy/formalism/graph"
+      local layer = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { graph },
+        },
+      }
+      layer.vertices.a = {}
+      layer.vertices.b = {}
+      local found = {}
+      for k in pairs (layer.vertices) do
+        found [k] = true
+      end
+      assert.are.same (found, {
+        a = true,
+        b = true,
+      })
+    end)
+
   end)
 
-  it ("allows to iterate over vertices", function ()
-    local graph = Layer.require "cosy/formalism/graph"
-    local layer = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.refines] = { graph },
-      },
-    }
-    layer.vertices.a = {}
-    layer.vertices.b = {}
-    local found = {}
-    for k in pairs (layer.vertices) do
-      found [k] = true
-    end
-    assert.are.same (found, {
-      a = true,
-      b = true,
-    })
+  describe ("edges", function ()
+
+    it ("can be created", function ()
+      local graph = Layer.require "cosy/formalism/graph"
+      local layer, ref = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { graph },
+        },
+      }
+      layer.vertices.a = {}
+      layer.vertices.b = {}
+      layer.edges.ab   = {
+        arrows = {
+          a = { vertex = ref.vertices.a },
+          b = { vertex = ref.vertices.b },
+        }
+      }
+      Layer.Proxy.check (layer)
+      assert.is_nil (layer [Layer.key.messages])
+      assert.is_true (layer [Layer.key.meta].edge_type <= layer.edges.ab)
+      assert.is_true (layer.edges.ab [Layer.key.meta].arrow_type <= layer.edges.ab.arrows.a)
+      assert.is_true (layer.edges.ab [Layer.key.meta].arrow_type <= layer.edges.ab.arrows.b)
+    end)
+
+    it ("must contain a vertex field", function ()
+      local graph = Layer.require "cosy/formalism/graph"
+      local layer = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { graph },
+        },
+      }
+      layer.vertices.a = {}
+      layer.vertices.b = {}
+      layer.edges.ab   = {
+        arrows = {
+          a = {},
+        }
+      }
+      Layer.Proxy.check (layer)
+      assert.is_not_nil (layer.edges.ab.arrows.a [Layer.key.messages])
+    end)
+
+    it ("must contain a vertex field from the vertices container", function ()
+      local graph = Layer.require "cosy/formalism/graph"
+      local layer, ref = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { graph },
+        },
+      }
+      layer.vertices.a = {}
+      layer.vertices.b = {}
+      layer.edges.ab   = {
+        arrows = {
+          a = { vertex = ref.edges.ab },
+        }
+      }
+      Layer.Proxy.check (layer)
+      assert.is_not_nil (layer.edges.ab.arrows.a [Layer.key.messages])
+    end)
+
   end)
+
 
 end)

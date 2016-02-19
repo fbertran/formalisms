@@ -50,16 +50,22 @@ return function (Layer, graph, ref)
   -- each edge type.
   -- The `default` key states that all elements within the `arrows` container
   -- are of type `arrow_type`.
+  local current_edge = Layer.reference "cosy/formalism/graph:edge"
   local edge_type = {
     [meta] = {
       arrow_type = arrow_type,
+    },
+    [labels] = {
+      ["cosy/formalism/graph:edge"] = true,
     },
     arrows = {
       [refines] = {
         collection,
       },
       [meta] = {
-        value_type = ref [meta].edge_type [meta].arrow_type,
+        collection = {
+          value_type = current_edge [meta].arrow_type,
+        }
       },
       [defaults] = {
         current_edge [meta].arrow_type,
