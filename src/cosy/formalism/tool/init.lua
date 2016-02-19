@@ -28,7 +28,7 @@ return function (Layer, tool)
       record = {
         name        = { value_type = "string" },
         description = { value_type = "string" },
-        type        = nil;
+        type        = nil,
         default     = nil,
       }
     }
