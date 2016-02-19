@@ -40,8 +40,8 @@ return function (Layer, automaton, ref)
     [meta] = {
       record = {
         identifier = false,
-        initial    = "boolean",
-        final      = "boolean",
+        initial    = { value_type = "boolean" },
+        final      = { value_type = "boolean" },
       }
     }
   }
