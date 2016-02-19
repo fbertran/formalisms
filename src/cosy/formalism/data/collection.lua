@@ -5,13 +5,13 @@
 -- always have the same type.
 --
 -- To create a new collection type, refine this formalism and add the fields
--- descriptions in its `[meta].collection` table.
+-- descriptions in its `[meta][collection]` table.
 --
--- `[meta].collection` can define a `key_type` field, with either the string
+-- `[meta][collection]` can define a `key_type` field, with either the string
 -- representation of the Lua type name (for instance "boolean", "number",
 -- "string"), or a reference to the expected parent type.
 --
--- `[meta].collection` can define a `value_type` field, with either the string
+-- `[meta][collection]` can define a `value_type` field, with either the string
 -- representation of the Lua type name (for instance "boolean", "number",
 -- "string"), or a reference to the expected parent type.
 
@@ -26,7 +26,7 @@ return function (Layer, collection --[[, ref]])
   local prefix = "cosy/formalism/data.collection"
 
   collection [meta] = {
-    collection = {
+    [collection] = {
       key_type        = false,
       value_type      = false,
       key_container   = false,
@@ -42,20 +42,20 @@ return function (Layer, collection --[[, ref]])
     if Layer.Proxy.has_meta (proxy) then
       return
     end
-    if  not proxy [meta].collection.minimum
-    and not proxy [meta].collection.maximum then
+    if  not proxy [meta][collection].minimum
+    and not proxy [meta][collection].maximum then
       return
     end
     local size = 0
     for _ in pairs (collection) do
       size = size+1
     end
-    if  (size < (proxy [meta].collection.minimum or  math.huge))
-    or  (size > (proxy [meta].collection.maximum or -math.huge)) then
+    if  (size < (proxy [meta][collection].minimum or  math.huge))
+    or  (size > (proxy [meta][collection].maximum or -math.huge)) then
       Layer.coroutine.yield (prefix .. ".size.illegal", {
         proxy   = proxy,
-        minimum = proxy [meta].collection.minimum,
-        maximum = proxy [meta].collection.maximum,
+        minimum = proxy [meta][collection].minimum,
+        maximum = proxy [meta][collection].maximum,
         size    = size,
       })
     end
@@ -65,21 +65,21 @@ return function (Layer, collection --[[, ref]])
     if Layer.Proxy.has_meta (proxy) then
       return
     end
-    if not proxy [meta].collection.key_type then
+    if not proxy [meta][collection].key_type then
       return
     end
-    if type (proxy [meta].collection.key_type) == "string" then
+    if type (proxy [meta][collection].key_type) == "string" then
       for key, _ in pairs (proxy) do
-        check_type (key, proxy [meta].collection.key_type, {
+        check_type (key, proxy [meta][collection].key_type, {
           proxy  = proxy,
           key    = key,
           prefix = prefix .. ".key_type",
         })
       end
-    elseif getmetatable (proxy [meta].collection.key_type) == Layer.Proxy then
+    elseif getmetatable (proxy [meta][collection].key_type) == Layer.Proxy then
       for key, _ in pairs (proxy) do
         local resolved = Layer.Reference.resolve (key, proxy)
-        check_type (resolved, proxy [meta].collection.key_type, {
+        check_type (resolved, proxy [meta][collection].key_type, {
           proxy  = proxy,
           key    = key,
           prefix = prefix .. ".key_type",
@@ -88,7 +88,7 @@ return function (Layer, collection --[[, ref]])
     else
       Layer.coroutine.yield (prefix .. ".key_type.invalid", {
         proxy = proxy,
-        used  = proxy [meta].collection.key_type,
+        used  = proxy [meta][collection].key_type,
       })
     end
   end
@@ -97,13 +97,13 @@ return function (Layer, collection --[[, ref]])
     if Layer.Proxy.has_meta (proxy) then
       return
     end
-    if not proxy [meta].collection.value_type then
+    if not proxy [meta][collection].value_type then
       return
     end
-    if type (proxy [meta].collection.value_type) == "string"
-    or getmetatable (proxy [meta].collection.value_type) == Layer.Proxy then
+    if type (proxy [meta][collection].value_type) == "string"
+    or getmetatable (proxy [meta][collection].value_type) == Layer.Proxy then
       for key, value in pairs (proxy) do
-        check_type (value, proxy [meta].collection.value_type, {
+        check_type (value, proxy [meta][collection].value_type, {
           proxy  = proxy,
           key    = key,
           prefix = prefix .. ".value_type",
@@ -112,7 +112,7 @@ return function (Layer, collection --[[, ref]])
     else
       Layer.coroutine.yield (prefix .. ".value_type.invalid", {
         proxy = proxy,
-        used  = proxy [meta].collection.value_type,
+        used  = proxy [meta][collection].value_type,
       })
     end
   end
@@ -121,11 +121,11 @@ return function (Layer, collection --[[, ref]])
     if Layer.Proxy.has_meta (proxy) then
       return
     end
-    if not proxy [meta].collection.key_container then
+    if not proxy [meta][collection].key_container then
       return
     end
     for key, _ in pairs (proxy) do
-      check_container (key, proxy [meta].collection.key_container, {
+      check_container (key, proxy [meta][collection].key_container, {
         proxy  = proxy,
         key    = key,
         prefix = prefix .. ".key_container",
@@ -137,11 +137,11 @@ return function (Layer, collection --[[, ref]])
     if Layer.Proxy.has_meta (proxy) then
       return
     end
-    if not proxy [meta].collection.value_container then
+    if not proxy [meta][collection].value_container then
       return
     end
     for key, value in pairs (proxy) do
-      check_container (value, proxy [meta].collection.value_container, {
+      check_container (value, proxy [meta][collection].value_container, {
         proxy  = proxy,
         key    = key,
         prefix = prefix .. ".value_container",

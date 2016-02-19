@@ -18,14 +18,14 @@ return function (Layer, tool)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
-  local record     = Layer.require "cosy/formalism/data.record"
+  local record   = Layer.require "cosy/formalism/data.record"
 
   local parameter_type = {
     [refines] = {
       record,
     },
     [meta] = {
-      record = {
+      [record] = {
         name        = { value_type = "string" },
         description = { value_type = "string" },
         type        = nil,
@@ -40,7 +40,7 @@ return function (Layer, tool)
 
   tool [meta] = {
     parameter_type = parameter_type,
-    record = {
+    [record] = {
       description = { value_type = "string"   },
       run         = { value_type = "function" },
     }

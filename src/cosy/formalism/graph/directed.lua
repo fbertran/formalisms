@@ -12,6 +12,7 @@ return function (Layer, directed)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
+  local record       = Layer.require "cosy/formalism/data.record"
   local graph        = Layer.require "cosy/formalism/graph"
   local binary_edges = Layer.require "cosy/formalism/graph.binary_edges"
 
@@ -22,7 +23,7 @@ return function (Layer, directed)
 
   directed [meta].edge_type [meta].arrow_type = {
     [meta] = {
-      record = {
+      [record] = {
         input  = {
           value_type = "boolean",
         },

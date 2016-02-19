@@ -20,16 +20,16 @@ return function (Layer, enumeration, ref)
   }
 
   enumeration [meta] = {
-    enumeration = {
+    [enumeration] = {
       symbol_type = false,
     },
-    collection = {
-      value_type = ref [meta].enumeration.symbol_type,
+    [collection] = {
+      value_type = ref [meta][enumeration].symbol_type,
     },
   }
 
   enumeration [defaults] = {
-    ref [meta].enumeration.symbol_type,
+    ref [meta][enumeration].symbol_type,
   }
 
 end

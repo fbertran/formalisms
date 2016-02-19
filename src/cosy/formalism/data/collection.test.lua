@@ -18,7 +18,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
               minimum = 1,
             },
           },
@@ -36,7 +36,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
             },
           },
         },
@@ -52,7 +52,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
               maximum = 1,
             },
           },
@@ -72,7 +72,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
             },
           },
           a = true,
@@ -94,7 +94,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
               key_type = "string",
             },
           },
@@ -111,7 +111,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {},
+            [collection] = {},
           },
           [true] = true,
           [1   ] = 1,
@@ -130,7 +130,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
               key_type = "string",
             },
           },
@@ -149,7 +149,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
               key_type = "string",
             },
           },
@@ -169,7 +169,7 @@ describe ("Formalism data.collection", function ()
           [Layer.key.meta   ] = {
             t1 = {},
             t2 = {},
-            collection = {
+            [collection] = {
               key_type = Layer.reference (false) [Layer.key.meta].t1,
             },
           },
@@ -190,7 +190,7 @@ describe ("Formalism data.collection", function ()
           [Layer.key.meta   ] = {
             t1 = {},
             t2 = {},
-            collection = {
+            [collection] = {
               key_type = Layer.reference (false) [Layer.key.meta].t1,
             },
           },
@@ -209,7 +209,7 @@ describe ("Formalism data.collection", function ()
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             t1 = {},
-            collection = {
+            [collection] = {
               key_type = Layer.reference (false) [Layer.key.meta].t1,
             },
           },
@@ -228,7 +228,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
               key_type = true,
             },
           },
@@ -250,7 +250,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
               value_type = "string" ,
             },
           },
@@ -267,7 +267,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {},
+            [collection] = {},
           },
           [true] = true,
           [1   ] = 1,
@@ -286,7 +286,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
               value_type = "string",
             },
           },
@@ -305,7 +305,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
               key_type = "string",
             },
           },
@@ -325,7 +325,7 @@ describe ("Formalism data.collection", function ()
           [Layer.key.meta   ] = {
             t1 = {},
             t2 = {},
-            collection = {
+            [collection] = {
               value_type = Layer.reference (false) [Layer.key.meta].t1,
             },
           },
@@ -348,7 +348,7 @@ describe ("Formalism data.collection", function ()
           [Layer.key.meta   ] = {
             t1 = {},
             t2 = {},
-            collection = {
+            [collection] = {
               value_type = Layer.reference (false) [Layer.key.meta].t1,
             },
           },
@@ -369,7 +369,7 @@ describe ("Formalism data.collection", function ()
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
             t1 = {},
-            collection = {
+            [collection] = {
               value_type = Layer.reference (false) [Layer.key.meta].t1,
             },
           },
@@ -387,7 +387,7 @@ describe ("Formalism data.collection", function ()
         data = {
           [Layer.key.refines] = { collection },
           [Layer.key.meta   ] = {
-            collection = {
+            [collection] = {
               value_type = true,
             },
           },

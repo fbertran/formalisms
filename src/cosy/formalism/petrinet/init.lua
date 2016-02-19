@@ -12,6 +12,8 @@ return function (Layer, petrinet, ref)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
+  local collection       = Layer.require "cosy/formalism/data.collection"
+  local record           = Layer.require "cosy/formalism/data.record"
   local graph            = Layer.require "cosy/formalism/graph"
   local labeled_edges    = Layer.require "cosy/formalism/graph.labeled.edges"
   local labeled_vertices = Layer.require "cosy/formalism/graph.labeled.vertices"
@@ -31,7 +33,7 @@ return function (Layer, petrinet, ref)
       ref [meta].vertex_type,
     },
     [meta] = {
-      record = {
+      [record] = {
         identifier = false,
         marking    = false,
       }
@@ -55,7 +57,7 @@ return function (Layer, petrinet, ref)
       ref [meta].vertices,
     },
     [meta] = {
-      collection = {
+      [collection] = {
         value_type = ref [meta].place_type,
       }
     }
@@ -66,7 +68,7 @@ return function (Layer, petrinet, ref)
       ref [meta].vertices,
     },
     [meta] = {
-      collection = {
+      [collection] = {
         value_type = ref [meta].transition_type,
       }
     }
@@ -77,7 +79,7 @@ return function (Layer, petrinet, ref)
       ref [meta].edges,
     },
     [meta] = {
-      collection = {
+      [collection] = {
         value_type = ref [meta].arc_type,
       }
     }

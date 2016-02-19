@@ -5,9 +5,9 @@
 -- values are typed.
 --
 -- To create a new record type, refine this formalism and add the fields
--- descriptions in its `[meta].record` table.
+-- descriptions in its `[meta][record]` table.
 --
--- `[meta].record` is a mapping from keys to their require value type,
+-- `[meta][record]` is a mapping from keys to their require value type,
 -- that can be either the string representation of the Lua type name
 -- (for instance "boolean", "number", "string"), or a reference to the expected
 -- parent type.
@@ -23,7 +23,7 @@ return function (Layer, record)
   local prefix = "cosy/formalism/data.record"
 
   record [meta] = {
-    record = {
+    [record] = {
       -- key = {
       --   value_type      = false,
       --   value_container = false,
@@ -37,7 +37,7 @@ return function (Layer, record)
     if Layer.Proxy.has_meta (proxy) then
       return
     end
-    for key, description in pairs (proxy [meta].record) do
+    for key, description in pairs (proxy [meta][record]) do
       if description.value_type ~= nil then
         if  type (description.value_type) ~= "string"
         and getmetatable (description.value_type) ~= Layer.Proxy then
@@ -61,7 +61,7 @@ return function (Layer, record)
     if Layer.Proxy.has_meta (proxy) then
       return
     end
-    for key, description in pairs (proxy [meta].record) do
+    for key, description in pairs (proxy [meta][record]) do
       if description.value_container ~= nil then
         if  getmetatable (description.value_container) ~= Layer.Proxy then
           Layer.coroutine.yield (prefix .. ".value_container.invalid", {

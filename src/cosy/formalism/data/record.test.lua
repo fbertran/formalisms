@@ -16,7 +16,7 @@ describe ("Formalism data.record", function ()
       data = {
         [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
-          record = {
+          [record] = {
             key = { value_type = "string" },
           },
         },
@@ -36,7 +36,7 @@ describe ("Formalism data.record", function ()
         [Layer.key.labels ] = { layer = true },
         [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
-          record = {
+          [record] = {
             key = { value_type = Layer.reference "layer".t },
           },
         },
@@ -54,7 +54,7 @@ describe ("Formalism data.record", function ()
       data = {
         [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
-          record = {
+          [record] = {
             key = { value_type = "string" },
           },
         },
@@ -73,7 +73,7 @@ describe ("Formalism data.record", function ()
       data = {
         [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
-          record = {
+          [record] = {
             key = { value_type = "string" },
           },
         },
@@ -94,7 +94,7 @@ describe ("Formalism data.record", function ()
         [Layer.key.labels ] = { layer = true },
         [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
-          record = {
+          [record] = {
             key = { value_type = Layer.reference "layer".type1 },
           },
         },
@@ -138,7 +138,7 @@ describe ("Formalism data.record", function ()
         [Layer.key.labels ] = { record = true },
         [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
-          record = {
+          [record] = {
             key = { value_type = Layer.reference "record".type1 },
           },
         },
@@ -165,7 +165,7 @@ describe ("Formalism data.record", function ()
       data = {
         [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
-          record = {
+          [record] = {
             key = { value_type = "string" },
           },
         },
@@ -184,7 +184,7 @@ describe ("Formalism data.record", function ()
       data = {
         [Layer.key.refines] = { record },
         [Layer.key.meta   ] = {
-          record = {
+          [record] = {
             key = { value_type = true },
           },
         },

@@ -35,7 +35,7 @@ return function (Layer, graph, ref)
       record,
     },
     [meta] = {
-      record = {
+      [record] = {
         vertex = {
           value_type      = ref [meta].vertex_type,
           value_container = ref.vertices,
@@ -63,7 +63,7 @@ return function (Layer, graph, ref)
         collection,
       },
       [meta] = {
-        collection = {
+        [collection] = {
           value_type = current_edge [meta].arrow_type,
         }
       },
@@ -87,7 +87,9 @@ return function (Layer, graph, ref)
       collection,
     },
     [meta] = {
-      value_type = ref [meta].vertex_type,
+      [collection] = {
+        value_type = ref [meta].vertex_type,
+      },
     },
     [defaults] = {
       ref [meta].vertex_type,
@@ -102,7 +104,9 @@ return function (Layer, graph, ref)
       collection,
     },
     [meta] = {
-      value_type = ref [meta].edge_type,
+      [collection] = {
+        value_type = ref [meta].edge_type,
+      },
     },
     [defaults] = {
       ref [meta].edge_type,

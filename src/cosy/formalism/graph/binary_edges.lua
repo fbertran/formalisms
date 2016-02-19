@@ -11,15 +11,18 @@ return function (Layer, binary_edges)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
-  local graph = Layer.require "cosy/formalism/graph"
+  local collection = Layer.require "cosy/formalism/data.collection"
+  local graph      = Layer.require "cosy/formalism/graph"
 
   binary_edges [refines] = {
     graph
   }
 
   binary_edges [meta].edge_type [meta].arrows [meta] = {
-    minimum = 2,
-    maximum = 2,
+    [collection] = {
+      minimum = 2,
+      maximum = 2,
+    },
   }
 
 end

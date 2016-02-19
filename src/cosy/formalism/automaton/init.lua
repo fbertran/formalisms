@@ -12,12 +12,14 @@ return function (Layer, automaton, ref)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
+  local collection       = Layer.require "cosy/formalism/data.collection"
+  local enumeration      = Layer.require "cosy/formalism/data.enumeration"
+  local record           = Layer.require "cosy/formalism/data.record"
   local graph            = Layer.require "cosy/formalism/graph"
   local labeled_edges    = Layer.require "cosy/formalism/graph.labeled.edges"
   local labeled_vertices = Layer.require "cosy/formalism/graph.labeled.vertices"
   local directed         = Layer.require "cosy/formalism/graph.directed"
   local binary_edges     = Layer.require "cosy/formalism/graph.binary_edges"
-  local enumeration      = Layer.require "cosy/formalism/data.enumeration"
 
   automaton [refines] = {
     graph,
@@ -38,7 +40,7 @@ return function (Layer, automaton, ref)
       ref [meta].vertex_type,
     },
     [meta] = {
-      record = {
+      [record] = {
         identifier = false,
         initial    = { value_type = "boolean" },
         final      = { value_type = "boolean" },
@@ -51,13 +53,13 @@ return function (Layer, automaton, ref)
       ref [meta].edge_type,
     },
     [meta] = {
-      record = {
-       letter = {
-         value_type      = ref.alphabet [Layer.key.meta].symbol_type,
-         value_container = ref.alphabet,
-       },
-     },
-   },
+      [record] = {
+        letter = {
+          value_type      = ref.alphabet [Layer.key.meta] [enumeration].symbol_type,
+          value_container = ref.alphabet,
+        },
+      },
+    },
   }
 
   automaton.states = {
@@ -65,7 +67,7 @@ return function (Layer, automaton, ref)
       ref [meta].vertices,
     },
     [meta] = {
-      collection = {
+      [collection] = {
         value_type = ref [meta].state_type,
       }
     }
@@ -76,7 +78,7 @@ return function (Layer, automaton, ref)
       ref [meta].edges,
     },
     [meta] = {
-      collection = {
+      [collection] = {
         value_type = ref [meta].transition_type,
       }
     }
