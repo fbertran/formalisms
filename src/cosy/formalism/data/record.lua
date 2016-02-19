@@ -23,7 +23,12 @@ return function (Layer, record)
   local prefix = "cosy/formalism/data.record"
 
   record [meta] = {
-    record = {},
+    record = {
+      -- key = {
+      --   value_type      = false,
+      --   value_container = false,
+      -- }
+    },
   }
 
   record [checks] = {}

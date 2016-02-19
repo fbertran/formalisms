@@ -15,7 +15,7 @@
 -- representation of the Lua type name (for instance "boolean", "number",
 -- "string"), or a reference to the expected parent type.
 
-return function (Layer, collection)
+return function (Layer, collection --[[, ref]])
 
   local checks   = Layer.key.checks
   local meta     = Layer.key.meta
