@@ -123,11 +123,11 @@ upon this formalism, and each one will add its own label.
 We begin filling the main function with the import of some useful constants:
 
 ```lua
-local checks  = Layer.key.checks
-local default = Layer.key.default
-local labels  = Layer.key.labels
-local meta    = Layer.key.meta
-local refines = Layer.key.refines
+local checks   = Layer.key.checks
+local defaults = Layer.key.defaults
+local labels   = Layer.key.labels
+local meta     = Layer.key.meta
+local refines  = Layer.key.refines
 ```
 
 An [automaton](https://en.wikipedia.org/wiki/Automata_theory) is based on a
