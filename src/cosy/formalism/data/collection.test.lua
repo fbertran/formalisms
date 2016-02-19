@@ -25,8 +25,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy/formalism/data.collection.size.illegal"])
+      assert.is_not_nil (Layer.messages (layer) ())
     end)
 
     it ("allows any size if there is no minimum", function ()
@@ -42,7 +41,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
     it ("forbids a size greater than the maximum", function ()
@@ -61,8 +60,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy/formalism/data.collection.size.illegal"])
+      assert.is_not_nil (Layer.messages (layer) ())
     end)
 
     it ("allows any size if there is no maximum", function ()
@@ -80,7 +78,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
   end)
@@ -101,7 +99,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
     it ("allows anything if key_type is not defined", function ()
@@ -120,7 +118,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
     it ("detects wrongly typed key (primitive)", function ()
@@ -138,8 +136,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy/formalism/data.collection.key_type.illegal"])
+      assert.is_not_nil (Layer.messages (layer) ())
     end)
 
     it ("detects correctly typed key (primitive)", function ()
@@ -157,7 +154,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
     it ("detects wrongly typed key (reference)", function ()
@@ -177,8 +174,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy/formalism/data.collection.key_type.illegal"])
+      assert.is_not_nil (Layer.messages (layer) ())
     end)
 
     it ("detects correctly typed key (reference)", function ()
@@ -198,7 +194,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
     it ("detects misreferenced key", function ()
@@ -217,8 +213,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy/formalism/data.collection.key_type.missing"])
+      assert.is_not_nil (Layer.messages (layer) ())
     end)
 
     it ("forbids other types for key_type", function ()
@@ -235,8 +230,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy/formalism/data.collection.key_type.invalid"])
+      assert.is_not_nil (Layer.messages (layer) ())
     end)
 
   end)
@@ -257,7 +251,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
     it ("allows anything if value_type is not defined", function ()
@@ -276,7 +270,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
     it ("detects wrongly typed value (primitive)", function ()
@@ -294,8 +288,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy/formalism/data.collection.value_type.illegal"])
+      assert.is_not_nil (Layer.messages (layer) ())
     end)
 
     it ("detects correctly typed value (primitive)", function ()
@@ -313,7 +306,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
     it ("detects wrongly typed value (proxy)", function ()
@@ -335,8 +328,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy/formalism/data.collection.value_type.illegal"])
+      assert.is_not_nil (Layer.messages (layer) ())
     end)
 
     it ("detects correctly typed value (proxy)", function ()
@@ -358,7 +350,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
     it ("cannot detect misreferenced value", function ()
@@ -377,7 +369,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
     it ("forbids other types for value_type", function ()
@@ -394,8 +386,7 @@ describe ("Formalism data.collection", function ()
         },
       }
       Layer.Proxy.check (layer)
-      local messages = layer [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy/formalism/data.collection.value_type.invalid"])
+      assert.is_not_nil (Layer.messages (layer) ())
     end)
 
   end)

@@ -86,7 +86,7 @@ describe ("Formalism graph", function ()
         }
       }
       Layer.Proxy.check (layer)
-      assert.is_nil (layer [Layer.key.messages])
+      assert.is_nil (Layer.messages (layer) ())
       assert.is_true (layer [Layer.key.meta].edge_type <= layer.edges.ab)
       assert.is_true (layer.edges.ab [Layer.key.meta].arrow_type <= layer.edges.ab.arrows.a)
       assert.is_true (layer.edges.ab [Layer.key.meta].arrow_type <= layer.edges.ab.arrows.b)
@@ -108,7 +108,7 @@ describe ("Formalism graph", function ()
         }
       }
       Layer.Proxy.check (layer)
-      assert.is_not_nil (layer.edges.ab.arrows.a [Layer.key.messages])
+      assert.is_not_nil (Layer.messages (layer) ())
     end)
 
     it ("must contain a vertex field from the vertices container", function ()
@@ -127,7 +127,7 @@ describe ("Formalism graph", function ()
         }
       }
       Layer.Proxy.check (layer)
-      assert.is_not_nil (layer.edges.ab.arrows.a [Layer.key.messages])
+      assert.is_not_nil (Layer.messages (layer) ())
     end)
 
   end)

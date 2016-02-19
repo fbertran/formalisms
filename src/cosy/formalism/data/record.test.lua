@@ -23,8 +23,7 @@ describe ("Formalism data.record", function ()
       },
     }
     Layer.Proxy.check (layer)
-    local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.missing"])
+    assert.is_not_nil (Layer.messages (layer) ())
   end)
 
   it ("detects missing key (proxy)", function ()
@@ -43,8 +42,7 @@ describe ("Formalism data.record", function ()
       },
     }
     Layer.Proxy.check (layer)
-    local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.missing"])
+    assert.is_not_nil (Layer.messages (layer) ())
   end)
 
   it ("detects wrongly typed key/value (primitive)", function ()
@@ -62,8 +60,7 @@ describe ("Formalism data.record", function ()
       },
     }
     Layer.Proxy.check (layer)
-    local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.illegal"])
+    assert.is_not_nil (Layer.messages (layer) ())
   end)
 
   it ("detects correctly typed key/value (primitive)", function ()
@@ -81,7 +78,7 @@ describe ("Formalism data.record", function ()
       },
     }
     Layer.Proxy.check (layer)
-    assert.is_nil (layer [Layer.key.messages])
+    assert.is_nil (Layer.messages (layer) ())
   end)
 
   it ("detects wrongly typed key/value (proxy)", function ()
@@ -118,13 +115,11 @@ describe ("Formalism data.record", function ()
     }
     do
       Layer.Proxy.check (l1)
-      local messages = l1 [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.illegal"])
+      assert.is_not_nil (Layer.messages (l1) ())
     end
     do
       Layer.Proxy.check (l2)
-      local messages = l2 [Layer.key.messages]
-      assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.illegal"])
+      assert.is_not_nil (Layer.messages (l2) ())
     end
   end)
 
@@ -155,7 +150,7 @@ describe ("Formalism data.record", function ()
       }
     }
     Layer.Proxy.check (layer)
-    assert.is_nil (layer [Layer.key.messages])
+    assert.is_nil (Layer.messages (layer) ())
   end)
 
   it ("allows non declared keys", function ()
@@ -174,7 +169,7 @@ describe ("Formalism data.record", function ()
       },
     }
     Layer.Proxy.check (layer)
-    assert.is_nil (layer [Layer.key.messages])
+    assert.is_nil (Layer.messages (layer) ())
   end)
 
   it ("forbids non types for value_type", function ()
@@ -192,8 +187,7 @@ describe ("Formalism data.record", function ()
       },
     }
     Layer.Proxy.check (layer)
-    local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["cosy/formalism/data.record.value_type.invalid"])
+    assert.is_not_nil (Layer.messages (layer) ())
   end)
 
 end)

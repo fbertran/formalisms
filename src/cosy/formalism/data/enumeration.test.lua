@@ -24,8 +24,7 @@ describe ("Formalism data.enumeration", function ()
       },
     }
     Layer.Proxy.check (layer)
-    local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["cosy/formalism/data.collection.value_type.illegal"])
+    assert.is_not_nil (Layer.messages (layer) ())
   end)
 
   it ("detects correctly typed elements (primitive)", function ()
@@ -43,7 +42,7 @@ describe ("Formalism data.enumeration", function ()
       },
     }
     Layer.Proxy.check (layer)
-    assert.is_nil (layer [Layer.key.messages])
+    assert.is_nil (Layer.messages (layer) ())
   end)
 
   it ("detects wrongly typed elements (proxy)", function ()
@@ -63,8 +62,7 @@ describe ("Formalism data.enumeration", function ()
       },
     }
     Layer.Proxy.check (layer)
-    local messages = layer [Layer.key.messages]
-    assert.is_not_nil (messages ["cosy/formalism/data.collection.value_type.illegal"])
+    assert.is_not_nil (Layer.messages (layer) ())
   end)
 
   it ("detects correctly typed elements (proxy)", function ()
@@ -86,7 +84,7 @@ describe ("Formalism data.enumeration", function ()
       },
     }
     Layer.Proxy.check (layer)
-    assert.is_nil (layer [Layer.key.messages])
+    assert.is_nil (Layer.messages (layer) ())
   end)
 
   it ("sets the value type by default (proxy)", function ()
@@ -106,7 +104,7 @@ describe ("Formalism data.enumeration", function ()
       },
     }
    Layer.Proxy.check (layer)
-   assert.is_nil (layer [Layer.key.messages])
+   assert.is_nil (Layer.messages (layer) ())
   end)
 
 end)
