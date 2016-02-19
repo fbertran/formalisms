@@ -1,6 +1,6 @@
 return function (Layer, polynomial, ref)
 
-  local default  = Layer.key.default
+  local defaults = Layer.key.defaults
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
@@ -43,10 +43,8 @@ return function (Layer, polynomial, ref)
     [meta] = {
       value_type = ref [meta].variable_type,
     },
-    [default] = {
-      [refines] = {
-        ref [meta].variable_type,
-      },
+    [defaults] = {
+      ref [meta].variable_type,
     },
   }
 
@@ -57,10 +55,8 @@ return function (Layer, polynomial, ref)
     [meta] = {
       value_type = ref [meta].monomial_type,
     },
-    [default] = {
-      [refines] = {
-        ref [meta].monomial_type,
-      },
+    [defaults] = {
+      ref [meta].monomial_type,
     },
   }
 

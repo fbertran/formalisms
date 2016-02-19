@@ -16,7 +16,8 @@
 
 return function (Layer, graph, ref)
 
-  local default  = Layer.key.default
+  local defaults = Layer.key.defaults
+  local labels   = Layer.key.labels
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
@@ -60,10 +61,8 @@ return function (Layer, graph, ref)
       [meta] = {
         value_type = ref [meta].edge_type [meta].arrow_type,
       },
-      [default] = {
-        [refines] = {
-          ref [meta].edge_type [meta].arrow_type,
-        },
+      [defaults] = {
+        current_edge [meta].arrow_type,
       },
     },
   }
@@ -84,10 +83,8 @@ return function (Layer, graph, ref)
     [meta] = {
       value_type = ref [meta].vertex_type,
     },
-    [default] = {
-      [refines] = {
-        ref [meta].vertex_type,
-      },
+    [defaults] = {
+      ref [meta].vertex_type,
     },
   }
 
@@ -101,10 +98,8 @@ return function (Layer, graph, ref)
     [meta] = {
       value_type = ref [meta].edge_type,
     },
-    [default] = {
-      [refines] = {
-        ref [meta].edge_type,
-      }
+    [defaults] = {
+      ref [meta].edge_type,
     },
   }
 

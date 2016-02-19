@@ -18,7 +18,7 @@
 
 return function (Layer, ita, ref)
 
-  local default  = Layer.key.default
+  local defaults = Layer.key.defaults
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
@@ -39,10 +39,8 @@ return function (Layer, ita, ref)
         value_type = ref [meta].analog_type,
       },
     },
-    [default] = {
-      [refines] = {
-        ref [meta].analog_type,
-      },
+    [defaults] = {
+      ref [meta].analog_type,
     },
   }
 
@@ -55,10 +53,8 @@ return function (Layer, ita, ref)
         value_type = ref [meta].level_type,
       }
     },
-    [default] = {
-      [refines] = {
-        ref [meta].level_type,
-      },
+    [defaults] = {
+      ref [meta].level_type,
     },
   }
 
@@ -99,10 +95,8 @@ return function (Layer, ita, ref)
     [meta] = {
       value_type = ref [meta].polynomial_type,
     },
-    [default] = {
-      [refines] = {
-        ref [meta].polynomial_type,
-      },
+    [defaults] = {
+      ref [meta].polynomial_type,
     },
   }
 

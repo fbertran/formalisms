@@ -16,7 +16,9 @@ describe ("Formalism data.enumeration", function ()
       data = {
         [Layer.key.refines] = { enumeration },
         [Layer.key.meta   ] = {
-          symbol_type = "string"
+          enumeration = {
+            symbol_type = "string"
+          },
         },
         key = 3,
       },
@@ -33,7 +35,9 @@ describe ("Formalism data.enumeration", function ()
       data = {
         [Layer.key.refines] = { enumeration },
         [Layer.key.meta   ] = {
-          symbol_type = "string"
+          enumeration = {
+            symbol_type = "string"
+          },
         },
         key = "value",
       },
@@ -51,7 +55,9 @@ describe ("Formalism data.enumeration", function ()
         [Layer.key.refines] = { enumeration },
         [Layer.key.meta   ] = {
           t = {},
-          symbol_type = Layer.reference "label" [Layer.key.meta].t,
+          enumeration = {
+            symbol_type = Layer.reference "label" [Layer.key.meta].t,
+          }
         },
         key = true,
       },
@@ -70,7 +76,9 @@ describe ("Formalism data.enumeration", function ()
         [Layer.key.refines] = { enumeration },
         [Layer.key.meta   ] = {
           t = {},
-          symbol_type = Layer.reference "label" [Layer.key.meta].t,
+          enumeration = {
+            symbol_type = Layer.reference "label" [Layer.key.meta].t,
+          }
         },
         key = {
           [Layer.key.refines] = { Layer.reference "label" [Layer.key.meta].t }
@@ -90,7 +98,9 @@ describe ("Formalism data.enumeration", function ()
         [Layer.key.refines] = { enumeration },
         [Layer.key.meta   ] = {
           t = { a = 1 },
-          symbol_type = Layer.reference "label" [Layer.key.meta].t,
+          enumeration = {
+            symbol_type = Layer.reference "label" [Layer.key.meta].t,
+          }
         },
         key = {},
       },
