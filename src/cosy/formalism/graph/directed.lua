@@ -11,10 +11,12 @@ return function (Layer, directed)
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
-  local graph = Layer.require "cosy/formalism/graph"
+  local graph        = Layer.require "cosy/formalism/graph"
+  local binary_edges = Layer.require "cosy/formalism/graph.binary_edges"
 
   directed [refines] = {
-    graph
+    graph,
+    binary_edges,
   }
 
   directed [meta].edge_type [meta].arrow_type = {
