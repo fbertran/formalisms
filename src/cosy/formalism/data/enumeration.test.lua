@@ -11,77 +11,59 @@ describe ("Formalism data.enumeration", function ()
 
   it ("detects wrongly typed elements (primitive)", function ()
     local enumeration = Layer.require "cosy/formalism/data.enumeration"
-    local layer = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.refines] = { enumeration },
-        [Layer.key.meta   ] = {
-          [enumeration] = {
-            symbol_type = "string"
-          },
-        },
-        key = 3,
+    local layer = Layer.new {}
+    layer [Layer.key.refines] = { enumeration }
+    layer [Layer.key.meta   ] = {
+      [enumeration] = {
+        symbol_type = "string"
       },
     }
+    layer.key = 3
     Layer.Proxy.check (layer)
     assert.is_not_nil (Layer.messages (layer) ())
   end)
 
   it ("detects correctly typed elements (primitive)", function ()
     local enumeration = Layer.require "cosy/formalism/data.enumeration"
-    local layer = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.refines] = { enumeration },
-        [Layer.key.meta   ] = {
-          [enumeration] = {
-            symbol_type = "string"
-          },
-        },
-        key = "value",
+    local layer = Layer.new {}
+    layer [Layer.key.refines] = { enumeration }
+    layer [Layer.key.meta   ] = {
+      [enumeration] = {
+        symbol_type = "string"
       },
     }
+    layer.key = "value"
     Layer.Proxy.check (layer)
     assert.is_nil (Layer.messages (layer) ())
   end)
 
   it ("detects wrongly typed elements (proxy)", function ()
     local enumeration = Layer.require "cosy/formalism/data.enumeration"
-    local layer = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.labels ] = { label = true },
-        [Layer.key.refines] = { enumeration },
-        [Layer.key.meta   ] = {
-          t = {},
-          [enumeration] = {
-            symbol_type = Layer.reference "label" [Layer.key.meta].t,
-          }
-        },
-        key = true,
-      },
+    local layer, ref  = Layer.new {}
+    layer [Layer.key.refines] = { enumeration }
+    layer [Layer.key.meta   ] = {
+      t = {},
+      [enumeration] = {
+        symbol_type = ref [Layer.key.meta].t,
+      }
     }
+    layer.key = true
     Layer.Proxy.check (layer)
     assert.is_not_nil (Layer.messages (layer) ())
   end)
 
   it ("detects correctly typed elements (proxy)", function ()
     local enumeration = Layer.require "cosy/formalism/data.enumeration"
-    local layer = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.labels ] = { label = true },
-        [Layer.key.refines] = { enumeration },
-        [Layer.key.meta   ] = {
-          t = {},
-          [enumeration] = {
-            symbol_type = Layer.reference "label" [Layer.key.meta].t,
-          }
-        },
-        key = {
-          [Layer.key.refines] = { Layer.reference "label" [Layer.key.meta].t }
-        },
-      },
+    local layer, ref  = Layer.new {}
+    layer [Layer.key.refines] = { enumeration }
+    layer [Layer.key.meta   ] = {
+      t = {},
+      [enumeration] = {
+        symbol_type = ref [Layer.key.meta].t,
+      }
+    }
+    layer.key = {
+      [Layer.key.refines] = { ref [Layer.key.meta].t }
     }
     Layer.Proxy.check (layer)
     assert.is_nil (Layer.messages (layer) ())
@@ -89,22 +71,17 @@ describe ("Formalism data.enumeration", function ()
 
   it ("sets the value type by default (proxy)", function ()
     local enumeration = Layer.require "cosy/formalism/data.enumeration"
-    local layer = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.labels ] = { label = true },
-        [Layer.key.refines] = { enumeration },
-        [Layer.key.meta   ] = {
-          t = { a = 1 },
-          [enumeration] = {
-            symbol_type = Layer.reference "label" [Layer.key.meta].t,
-          }
-        },
-        key = {},
-      },
+    local layer, ref  = Layer.new {}
+    layer [Layer.key.refines] = { enumeration }
+    layer [Layer.key.meta   ] = {
+      t = { a = 1 },
+      [enumeration] = {
+        symbol_type = ref [Layer.key.meta].t,
+      }
     }
-   Layer.Proxy.check (layer)
-   assert.is_nil (Layer.messages (layer) ())
+    layer.key = {}
+    Layer.Proxy.check (layer)
+    assert.is_nil (Layer.messages (layer) ())
   end)
 
 end)

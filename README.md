@@ -103,29 +103,17 @@ The layer system **requires** that you use instead the `ref` parameter:
 `something = ref.some.thing`.
 This is mandatory to handle correctly inheritance between formalisms and models.
 
-You can also create labels and references yourself using the following syntax.
-The first part creates a label to the `automaton` object, whereas the second
-part creates a reference to the part of a formalism or model that refines
-`automaton`.
+You can also create references yourself using the following syntax.
 
 ```lua
-automaton [labels] = {
-  ["mylabel"] = true,
-}
-local myref = Layer.reference "mylabel"
+local myref = Layer.reference (automaton)
 ```
-
-Note that `labels` is a set (in the Lua programming style, i.e., a mapping
-from identifiers to `true`). It means that we can give several names to the same
-formalism. In fact, this label will also be accessible from any model built
-upon this formalism, and each one will add its own label.
 
 We begin filling the main function with the import of some useful constants:
 
 ```lua
 local checks   = Layer.key.checks
 local defaults = Layer.key.defaults
-local labels   = Layer.key.labels
 local meta     = Layer.key.meta
 local refines  = Layer.key.refines
 ```

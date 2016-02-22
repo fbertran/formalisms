@@ -11,15 +11,11 @@ describe ("Formalism data.record", function ()
 
   it ("detects missing key (primitive)", function ()
     local record = Layer.require "cosy/formalism/data.record"
-    local layer  = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.refines] = { record },
-        [Layer.key.meta   ] = {
-          [record] = {
-            key = { value_type = "string" },
-          },
-        },
+    local layer  = Layer.new {}
+    layer [Layer.key.refines] = { record }
+    layer [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = "string" },
       },
     }
     Layer.Proxy.check (layer)
@@ -27,18 +23,13 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("detects missing key (proxy)", function ()
-    local record = Layer.require "cosy/formalism/data.record"
-    local layer  = Layer.new {
-      name = "layer",
-      data = {
-        t = {},
-        [Layer.key.labels ] = { layer = true },
-        [Layer.key.refines] = { record },
-        [Layer.key.meta   ] = {
-          [record] = {
-            key = { value_type = Layer.reference "layer".t },
-          },
-        },
+    local record     = Layer.require "cosy/formalism/data.record"
+    local layer, ref = Layer.new {}
+    layer.t = {}
+    layer [Layer.key.refines] = { record }
+    layer [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = ref.t },
       },
     }
     Layer.Proxy.check (layer)
@@ -47,71 +38,50 @@ describe ("Formalism data.record", function ()
 
   it ("detects wrongly typed key/value (primitive)", function ()
     local record = Layer.require "cosy/formalism/data.record"
-    local layer  = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.refines] = { record },
-        [Layer.key.meta   ] = {
-          [record] = {
-            key = { value_type = "string" },
-          },
-        },
-        key = 1,
+    local layer  = Layer.new {}
+    layer [Layer.key.refines] = { record }
+    layer [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = "string" },
       },
     }
+    layer.key = 1
     Layer.Proxy.check (layer)
     assert.is_not_nil (Layer.messages (layer) ())
   end)
 
   it ("detects correctly typed key/value (primitive)", function ()
     local record = Layer.require "cosy/formalism/data.record"
-    local layer  = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.refines] = { record },
-        [Layer.key.meta   ] = {
-          [record] = {
-            key = { value_type = "string" },
-          },
-        },
-        key = "value",
+    local layer  = Layer.new {}
+    layer [Layer.key.refines] = { record }
+    layer [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = "string" },
       },
     }
+    layer.key = "value"
     Layer.Proxy.check (layer)
     assert.is_nil (Layer.messages (layer) ())
   end)
 
   it ("detects wrongly typed key/value (proxy)", function ()
-    local record = Layer.require "cosy/formalism/data.record"
-    local common = Layer.new {
-      name = "record",
-      data = {
-        type1 = {},
-        type2 = {},
-        [Layer.key.labels ] = { layer = true },
-        [Layer.key.refines] = { record },
-        [Layer.key.meta   ] = {
-          [record] = {
-            key = { value_type = Layer.reference "layer".type1 },
-          },
-        },
+    local record     = Layer.require "cosy/formalism/data.record"
+    local common, rc = Layer.new {}
+    common.type1 = {}
+    common.type2 = {}
+    common [Layer.key.refines] = { record }
+    common [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = rc.type1 },
       },
     }
-    local l1 = Layer.new {
-      name = "l1",
-      data = {
-        [Layer.key.refines] = { common },
-        key = 1,
-      }
-    }
-    local l2 = Layer.new {
-      name = "l2",
-      data = {
-        [Layer.key.refines] = { common },
-        key = {
-          [Layer.key.refines] = { Layer.reference (false).type2 },
-        },
-      }
+    local l1 = Layer.new {}
+    l1 [Layer.key.refines] = { common }
+    l1.key = 1
+    local l2, rl2 = Layer.new {}
+    l2 [Layer.key.refines] = { common }
+    l2.key = {
+      [Layer.key.refines] = { rl2.type2 },
     }
     do
       Layer.Proxy.check (l1)
@@ -124,30 +94,20 @@ describe ("Formalism data.record", function ()
   end)
 
   it ("detects correctly typed key/value (proxy)", function ()
-    local record = Layer.require "cosy/formalism/data.record"
-    local common = Layer.new {
-      name = "record",
-      data = {
-        type1 = {},
-        type2 = {},
-        [Layer.key.labels ] = { record = true },
-        [Layer.key.refines] = { record },
-        [Layer.key.meta   ] = {
-          [record] = {
-            key = { value_type = Layer.reference "record".type1 },
-          },
-        },
+    local record     = Layer.require "cosy/formalism/data.record"
+    local common, rc = Layer.new {}
+    common.type1 = {}
+    common.type2 = {}
+    common [Layer.key.refines] = { record }
+    common [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = rc.type1 },
       },
     }
-    local layer = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.labels ] = { layer = true },
-        [Layer.key.refines] = { common },
-        key = {
-          [Layer.key.refines] = { Layer.reference "layer".type1 },
-        },
-      }
+    local layer, ref = Layer.new {}
+    layer [Layer.key.refines] = { common }
+    layer.key = {
+      [Layer.key.refines] = { ref.type1 },
     }
     Layer.Proxy.check (layer)
     assert.is_nil (Layer.messages (layer) ())
@@ -155,37 +115,29 @@ describe ("Formalism data.record", function ()
 
   it ("allows non declared keys", function ()
     local record = Layer.require "cosy/formalism/data.record"
-    local layer  = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.refines] = { record },
-        [Layer.key.meta   ] = {
-          [record] = {
-            key = { value_type = "string" },
-          },
-        },
-        key = "value",
-        zzz = 1,
+    local layer  = Layer.new {}
+    layer [Layer.key.refines] = { record }
+    layer [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = "string" },
       },
     }
+    layer.key = "value"
+    layer.zzz = 1
     Layer.Proxy.check (layer)
     assert.is_nil (Layer.messages (layer) ())
   end)
 
   it ("forbids non types for value_type", function ()
     local record = Layer.require "cosy/formalism/data.record"
-    local layer  = Layer.new {
-      name = "layer",
-      data = {
-        [Layer.key.refines] = { record },
-        [Layer.key.meta   ] = {
-          [record] = {
-            key = { value_type = true },
-          },
-        },
-        key = true,
+    local layer  = Layer.new {}
+    layer [Layer.key.refines] = { record }
+    layer [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = true },
       },
     }
+    layer.key = true
     Layer.Proxy.check (layer)
     assert.is_not_nil (Layer.messages (layer) ())
   end)

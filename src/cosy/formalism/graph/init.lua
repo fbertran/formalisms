@@ -17,66 +17,56 @@
 return function (Layer, graph, ref)
 
   local defaults = Layer.key.defaults
-  local labels   = Layer.key.labels
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
   local collection = Layer.require "cosy/formalism/data.collection"
   local record     = Layer.require "cosy/formalism/data.record"
 
+  graph [meta] = {}
+
   -- Vertices are empty in base graph.
-  local vertex_type = {}
+  graph [meta].vertex_type = {}
 
   -- Arrows are records with only one predefined field: `vertex`.
   -- It points to the destination of the arrow, that must be a vertex of the
   -- graph.
-  local arrow_type = {
-    [refines] = {
-      record,
-    },
-    [meta] = {
-      [record] = {
-        vertex = {
-          value_type      = ref [meta].vertex_type,
-          value_container = ref.vertices,
-        }
-      }
-    },
-    vertex = nil,
-  }
-
   -- Edges have no label in base graph.
   -- They only contain zero to several arrows. The arrow type is defined for
   -- each edge type.
   -- The `default` key states that all elements within the `arrows` container
   -- are of type `arrow_type`.
-  local current_edge = Layer.reference "cosy/formalism/graph:edge"
-  local edge_type = {
+  graph [meta].edge_type = {
     [meta] = {
-      arrow_type = arrow_type,
-    },
-    [labels] = {
-      ["cosy/formalism/graph:edge"] = true,
-    },
-    arrows = {
-      [refines] = {
-        collection,
-      },
-      [meta] = {
-        [collection] = {
-          value_type = current_edge [meta].arrow_type,
-        }
-      },
-      [defaults] = {
-        current_edge [meta].arrow_type,
+      arrow_type = {
+        [refines] = {
+          record,
+        },
+        [meta] = {
+          [record] = {
+            vertex = {
+              value_type      = ref [meta].vertex_type,
+              value_container = ref.vertices,
+            }
+          }
+        },
+        vertex = nil,
       },
     },
   }
-
-  -- A graph defines the type of its vertices, and the type of its edges.
-  graph [meta] = {
-    vertex_type = vertex_type,
-    edge_type   = edge_type,
+  local current_edge = Layer.reference (graph [meta].edge_type)
+  graph [meta].edge_type.arrows = {
+    [refines] = {
+      collection,
+    },
+    [meta] = {
+      [collection] = {
+        value_type = current_edge [meta].arrow_type,
+      }
+    },
+    [defaults] = {
+      current_edge [meta].arrow_type,
+    },
   }
 
   -- A graph contains a collection of vertices.

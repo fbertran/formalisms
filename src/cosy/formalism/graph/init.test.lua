@@ -13,12 +13,8 @@ describe ("Formalism graph", function ()
 
     it ("can be created", function ()
       local graph = Layer.require "cosy/formalism/graph"
-      local layer = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { graph },
-        },
-      }
+      local layer = Layer.new {}
+      layer [Layer.key.refines] = { graph }
       layer.vertices.a = {}
       layer.vertices.b = {}
       Layer.Proxy.check (layer)
@@ -28,18 +24,14 @@ describe ("Formalism graph", function ()
     end)
 
     it ("refine vertex_type", function ()
-      local graph = Layer.require "cosy/formalism/graph"
-      local layer = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { graph },
-          [Layer.key.meta   ] = {
-            t = {},
-          },
-        },
+      local graph      = Layer.require "cosy/formalism/graph"
+      local layer, ref = Layer.new {}
+      layer [Layer.key.refines] = { graph }
+      layer [Layer.key.meta   ] = {
+        t = {},
       }
       layer.vertices.a = {
-        [Layer.key.refines] = { Layer.reference (false) [Layer.key.meta].t }
+        [Layer.key.refines] = { ref [Layer.key.meta].t }
       }
       assert.is_true (layer [Layer.key.meta].t <= layer.vertices.a)
       assert.is_true (layer [Layer.key.meta].vertex_type <= layer.vertices.a)
@@ -47,12 +39,8 @@ describe ("Formalism graph", function ()
 
     it ("are iterable", function ()
       local graph = Layer.require "cosy/formalism/graph"
-      local layer = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { graph },
-        },
-      }
+      local layer = Layer.new {}
+      layer [Layer.key.refines] = { graph }
       layer.vertices.a = {}
       layer.vertices.b = {}
       local found = {}
@@ -70,13 +58,9 @@ describe ("Formalism graph", function ()
   describe ("edges", function ()
 
     it ("can be created", function ()
-      local graph = Layer.require "cosy/formalism/graph"
-      local layer, ref = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { graph },
-        },
-      }
+      local graph      = Layer.require "cosy/formalism/graph"
+      local layer, ref = Layer.new {}
+      layer [Layer.key.refines] = { graph }
       layer.vertices.a = {}
       layer.vertices.b = {}
       layer.edges.ab   = {
@@ -94,12 +78,8 @@ describe ("Formalism graph", function ()
 
     it ("must contain a vertex field", function ()
       local graph = Layer.require "cosy/formalism/graph"
-      local layer = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { graph },
-        },
-      }
+      local layer = Layer.new {}
+      layer [Layer.key.refines] = { graph }
       layer.vertices.a = {}
       layer.vertices.b = {}
       layer.edges.ab   = {
@@ -113,12 +93,8 @@ describe ("Formalism graph", function ()
 
     it ("must contain a vertex field from the vertices container", function ()
       local graph = Layer.require "cosy/formalism/graph"
-      local layer, ref = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { graph },
-        },
-      }
+      local layer, ref = Layer.new {}
+      layer [Layer.key.refines] = { graph }
       layer.vertices.a = {}
       layer.vertices.b = {}
       layer.edges.ab   = {

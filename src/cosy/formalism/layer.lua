@@ -4,14 +4,8 @@ local Layer    = require "layeredata"
 local oldnew = Layer.new
 
 Layer.new = function (t)
-  assert (t.name)
   local layer = oldnew (t)
-  if not layer [Layer.key.labels] then
-    layer [Layer.key.labels] = {}
-  end
-  layer [Layer.key.labels] [t.name] = true
-  local reference = Layer.reference (t.name)
-  return layer, reference
+  return layer, Layer.reference (layer)
 end
 
 Layer.require = function (name)
@@ -22,7 +16,7 @@ Layer.require = function (name)
     local layer = Layer.new {
       name = name,
     }
-    local reference = Layer.reference (name)
+    local reference = Layer.reference (layer)
     layer = require (package) (Layer, layer, reference) or layer
     return layer, reference
   end
