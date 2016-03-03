@@ -19,6 +19,9 @@ dependencies = {
 build = {
   type    = "builtin",
   modules = {
+    ["cosy.formalism.layer"] = "src/cosy/formalism/layer.lua",
+    ["cosy.formalism.tool" ] = "src/cosy/formalism/tool/init.lua",
+
     ["cosy.formalism.data.check_container"] = "src/cosy/formalism/data/check_container.lua",
     ["cosy.formalism.data.check_type"     ] = "src/cosy/formalism/data/check_type.lua",
     ["cosy.formalism.data.collection"     ] = "src/cosy/formalism/data/collection.lua",
@@ -37,7 +40,5 @@ build = {
     ["cosy.formalism.automaton.ita"] = "src/cosy/formalism/automaton/ita.lua",
 
     ["cosy.formalism.petrinet"] = "src/cosy/formalism/petrinet/init.lua",
-
-    ["cosy.formalism.tool"] = "src/cosy/formalism/tool/init.lua",
   },
 }
