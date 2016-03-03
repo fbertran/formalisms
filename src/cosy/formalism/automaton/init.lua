@@ -63,10 +63,10 @@ return function (Layer, automaton, ref)
   }
 
   automaton.states = {
-    [refines] = {
-      ref [meta].vertices,
-    },
     [meta] = {
+      [refines] = {
+        ref [meta].vertices [meta],
+      },
       [collection] = {
         value_type = ref [meta].state_type,
       }
@@ -74,18 +74,22 @@ return function (Layer, automaton, ref)
   }
 
   automaton.transitions = {
-    [refines] = {
-      ref [meta].edges,
-    },
     [meta] = {
+      [refines] = {
+        ref [meta].edges [meta],
+      },
       [collection] = {
         value_type = ref [meta].transition_type,
       }
     }
   }
 
-  automaton.vertices [refines] [#automaton.vertices [refines] + 1] = ref.states
-  automaton.edges    [refines] [#automaton.edges    [refines] + 1] = ref.transitions
+  automaton.vertices [refines] = {
+    ref.states,
+  }
+  automaton.edges    [refines] = {
+    ref.transitions,
+  }
 
   return automaton
 

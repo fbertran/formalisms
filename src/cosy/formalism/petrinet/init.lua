@@ -53,10 +53,10 @@ return function (Layer, petrinet, ref)
   }
 
   petrinet.places = {
-    [refines] = {
-      ref [meta].vertices,
-    },
     [meta] = {
+      [refines] = {
+        ref [meta].vertices [meta],
+      },
       [collection] = {
         value_type = ref [meta].place_type,
       }
@@ -64,10 +64,10 @@ return function (Layer, petrinet, ref)
   }
 
   petrinet.transitions = {
-    [refines] = {
-      ref [meta].vertices,
-    },
     [meta] = {
+      [refines] = {
+        ref [meta].vertices [meta],
+      },
       [collection] = {
         value_type = ref [meta].transition_type,
       }
@@ -75,18 +75,22 @@ return function (Layer, petrinet, ref)
   }
 
   petrinet.arcs = {
-    [refines] = {
-      ref [meta].edges,
-    },
     [meta] = {
+      [refines] = {
+        ref [meta].edges [meta],
+      },
       [collection] = {
         value_type = ref [meta].arc_type,
       }
     }
   }
 
-  petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = ref.places
-  petrinet.vertices [refines] [#petrinet.vertices [refines] + 1] = ref.transitions
-  petrinet.edges    [refines] [#petrinet.edges    [refines] + 1] = ref.arcs
+  petrinet.vertices [refines] = {
+    ref.places,
+    ref.transitions,
+  }
+  petrinet.edges    [refines] = {
+    ref.arcs,
+  }
 
 end

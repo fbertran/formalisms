@@ -139,6 +139,7 @@ local binary_edges = Layer.require "cosy/formalism/graph.binary_edges"
 automaton [refines] = {
   graph,
   binary_edges,
+  ...
 }
 ```
 
@@ -156,19 +157,21 @@ This behavior allows us to mix the ideas of layers and object orientation.
 
 We also want to state that the graph is directed (each edge has an input and
 an output), and has labels on vertices and edges. This can be added within
-the previous `refines` definition of later as below.
-Note that we have also skipped storing the imported modules in a local variable.
+the previous `refines` definition as below.
 
 ```lua
-automaton [refines] [#automaton [refines]+1] = Layer.require "cosy/formalism/graph.directed"
-automaton [refines] [#automaton [refines]+1] = Layer.require "cosy/formalism/graph.labeled.vertices"
-automaton [refines] [#automaton [refines]+1] = Layer.require "cosy/formalism/graph.labeled.edges"
-```
+local directed         = Layer.require "cosy/formalism/graph.directed"
+local labeled_vertices = Layer.require "cosy/formalism/graph.labeled.vertices"
+local labeled_edges    = Layer.require "cosy/formalism/graph.labeled.edges"
 
-The `list [#list+1]` idiom is frequently used in Lua to add an element at the
-end of a list. Arrays start at position 1 in Lua. Their size is given by the
-`#` operator, and computed by finding the first natural key with no value.
-It takes into account the layers and `refines` to compute this number.
+automaton [refines] = {
+  graph,
+  binary_edges,
+  directed,
+  labeled_vertices,
+  labeled_edges,
+}
+```
 
 In an automaton, vertices are called "states", and edges are called
 "transitions". The `graph` stores its vertices in a container named `vertices`,
@@ -182,8 +185,8 @@ We juste have to create two new containers with names adapted to automata
 theory, and change the `graph` containers to refine `automaton` ones.
 
 ```lua
-automaton.vertices [refines] [#automaton.vertices [refines] + 1] = ref.states
-automaton.edges    [refines] [#automaton.edges    [refines] + 1] = ref.transitions
+automaton.vertices [refines] = { ref.states }
+automaton.edges    [refines] = { ref.transitions }
 ```
 
 Updating `vertices` and `edges` does not really impact the `graph` formalism:
@@ -216,9 +219,11 @@ local collection = Layer.require "cosy/formalism/data.collection"
 automaton.states = {
   [refines] = {
     collection,
-    ref [meta].vertices,
   },
   [meta] = {
+    [refines] = {
+      ref [meta].vertices [meta],
+    },
     collection = {
       value_type = ref [meta].state_type,
     }
@@ -227,9 +232,11 @@ automaton.states = {
 automaton.transitions = {
   [refines] = {
     collection,
-    ref [meta].edges,
   },
   [meta] = {
+    [refines] = {
+      ref [meta].edges [meta],
+    },
     collection = {
       value_type = ref [meta].transition_type,
     }
@@ -241,12 +248,10 @@ As we do not have the notions of classes and instances, "have a type" means
 refining the type. For instance, all elements in `states` must refine
 `ref [meta].state_type`.
 
-Note that our containers refine `ref [meta].vertices` and `ref [meta].edges`.
-This is because the `graph`formalsm defines already containers for vertices
+Note that the `[meta]` part of our containers refine `ref [meta].vertices[meta]`
+and `ref [meta].edges[meta]`.
+This is because the `graph` formalism defines already containers for vertices
 and edges, and we would like to import what has already been defined on them.
-It creates a harmless circular refinement with our previous extension of
-`vertices` and `edges`. As these two containers already refine `collection`,
-we could have skipped it.
 
 Now, we still have to define the two types `state_type` and `transition_type`.
 They are prototypes for state and transition instances that will be put within
