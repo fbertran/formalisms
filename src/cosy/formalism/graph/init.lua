@@ -16,7 +16,6 @@
 
 return function (Layer, graph, ref)
 
-  local defaults = Layer.key.defaults
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
@@ -64,9 +63,6 @@ return function (Layer, graph, ref)
         value_type = current_edge [meta].arrow_type,
       }
     },
-    [defaults] = {
-      current_edge [meta].arrow_type,
-    },
   }
 
   -- A graph contains a collection of vertices.
@@ -81,9 +77,6 @@ return function (Layer, graph, ref)
         value_type = ref [meta].vertex_type,
       },
     },
-    [defaults] = {
-      ref [meta].vertex_type,
-    },
   }
 
   -- A graph contains a collection of edges.
@@ -97,9 +90,6 @@ return function (Layer, graph, ref)
       [collection] = {
         value_type = ref [meta].edge_type,
       },
-    },
-    [defaults] = {
-      ref [meta].edge_type,
     },
   }
 

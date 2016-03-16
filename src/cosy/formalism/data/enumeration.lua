@@ -9,7 +9,6 @@
 
 return function (Layer, enumeration, ref)
 
-  local defaults = Layer.key.defaults
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
@@ -26,10 +25,6 @@ return function (Layer, enumeration, ref)
     [collection] = {
       value_type = ref [meta][enumeration].symbol_type,
     },
-  }
-
-  enumeration [defaults] = {
-    ref [meta][enumeration].symbol_type,
   }
 
 end

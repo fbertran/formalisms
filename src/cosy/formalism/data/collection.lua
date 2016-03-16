@@ -15,9 +15,10 @@
 -- representation of the Lua type name (for instance "boolean", "number",
 -- "string"), or a reference to the expected parent type.
 
-return function (Layer, collection --[[, ref]])
+return function (Layer, collection, ref)
 
   local checks   = Layer.key.checks
+  local defaults = Layer.key.defaults
   local meta     = Layer.key.meta
 
   local check_type      = require "cosy.formalism.data.check_type"      (Layer)
@@ -34,6 +35,9 @@ return function (Layer, collection --[[, ref]])
       minimum         = false,
       maximum         = false,
     },
+  }
+  collection [defaults] = {
+    ref [meta] [collection].value_type,
   }
 
   collection [checks] = {}

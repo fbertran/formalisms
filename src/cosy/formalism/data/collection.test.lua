@@ -243,7 +243,7 @@ describe ("Formalism data.collection", function ()
       assert.is_nil (Layer.messages (layer) ())
     end)
 
-    it ("detects wrongly typed value (proxy)", function ()
+    it ("automatically adds value_type (proxy)", function ()
       local collection = Layer.require "cosy/formalism/data.collection"
       local layer, ref = Layer.new {}
       layer [Layer.key.refines] = { collection }
@@ -258,7 +258,7 @@ describe ("Formalism data.collection", function ()
         [Layer.key.refines] = { ref [Layer.key.meta].t2 }
       }
       Layer.Proxy.check (layer)
-      assert.is_not_nil (Layer.messages (layer) ())
+      assert.is_nil (Layer.messages (layer) ())
     end)
 
     it ("detects correctly typed value (proxy)", function ()
