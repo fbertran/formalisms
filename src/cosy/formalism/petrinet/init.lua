@@ -53,36 +53,36 @@ return function (Layer, petrinet, ref)
   }
 
   petrinet.places = {
+    [refines] = {
+      collection,
+    },
     [meta] = {
-      [refines] = {
-        ref [meta].vertices [meta],
-      },
       [collection] = {
         value_type = ref [meta].place_type,
       }
-    }
+    },
   }
 
   petrinet.transitions = {
+    [refines] = {
+      collection,
+    },
     [meta] = {
-      [refines] = {
-        ref [meta].vertices [meta],
-      },
       [collection] = {
         value_type = ref [meta].transition_type,
       }
-    }
+    },
   }
 
   petrinet.arcs = {
+    [refines] = {
+      collection,
+    },
     [meta] = {
-      [refines] = {
-        ref [meta].edges [meta],
-      },
       [collection] = {
         value_type = ref [meta].arc_type,
       }
-    }
+    },
   }
 
   petrinet.vertices [refines] = {
