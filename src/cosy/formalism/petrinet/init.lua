@@ -15,8 +15,6 @@ return function (Layer, petrinet, ref)
   local collection       = Layer.require "cosy/formalism/data.collection"
   local record           = Layer.require "cosy/formalism/data.record"
   local graph            = Layer.require "cosy/formalism/graph"
-  local labeled_edges    = Layer.require "cosy/formalism/graph.labeled.edges"
-  local labeled_vertices = Layer.require "cosy/formalism/graph.labeled.vertices"
   local directed         = Layer.require "cosy/formalism/graph.directed"
   local binary_edges     = Layer.require "cosy/formalism/graph.binary_edges"
 
@@ -24,8 +22,6 @@ return function (Layer, petrinet, ref)
     graph,
     directed,
     binary_edges,
-    labeled_vertices,
-    labeled_edges,
   }
 
   petrinet [meta].place_type = {

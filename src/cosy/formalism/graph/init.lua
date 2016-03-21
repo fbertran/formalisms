@@ -25,7 +25,11 @@ return function (Layer, graph, ref)
   graph [meta] = {}
 
   -- Vertices are empty in base graph.
-  graph [meta].vertex_type = {}
+  graph [meta].vertex_type = {
+    [refines] = {
+      record,
+    }
+  }
 
   -- Arrows are records with only one predefined field: `vertex`.
   -- It points to the destination of the arrow, that must be a vertex of the
@@ -36,6 +40,9 @@ return function (Layer, graph, ref)
   -- The `default` key states that all elements within the `arrows` container
   -- are of type `arrow_type`.
   graph [meta].edge_type = {
+    [refines] = {
+      record,
+    },
     [meta] = {
       arrow_type = {
         [refines] = {
@@ -53,6 +60,7 @@ return function (Layer, graph, ref)
       },
     },
   }
+  
   local current_edge = Layer.reference (graph [meta].edge_type)
   graph [meta].edge_type.arrows = {
     [refines] = {
