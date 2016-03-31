@@ -13,7 +13,7 @@ Layer.require = function (name)
   if Layer.loaded [package] then
     return Layer.loaded [package]
   else
-    local layer     = Layer.new {
+    local layer = Layer.new {
       name = name,
     }
     local reference = Layer.reference (layer)
