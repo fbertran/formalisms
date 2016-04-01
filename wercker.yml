@@ -7,6 +7,7 @@ build:
           for dir in /home/lua/lua*; do
             if [ -d "${dir}" ]; then
               echo "Installing in ${dir}..."
+              "${dir}/bin/luarocks" install compat52 || true
               "${dir}/bin/luarocks" make rockspec/*-master-1.rockspec
             fi
           done
