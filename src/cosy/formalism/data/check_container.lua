@@ -1,6 +1,6 @@
-return function (Layer)
+return function (Layer, check_container)
 
-  return function (value, container, where)
+  check_container.apply = function (value, container, where)
     if getmetatable (value) ~= Layer.Proxy then
       Layer.coroutine.yield (where.prefix .. ".not-proxy", {
         proxy    = where.proxy,

@@ -1,9 +1,9 @@
-return function (Layer)
+return function (Layer, check)
 
   local type_ = Layer.require "cosy/formalism/type"
   local meta  = Layer.key.meta
 
-  return function (value, oftype, where)
+  check.apply = function (value, oftype, where)
     if value == nil then
       Layer.coroutine.yield (where.prefix .. ".missing", {
         proxy    = where.proxy,

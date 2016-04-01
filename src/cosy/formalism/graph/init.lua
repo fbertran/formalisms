@@ -9,11 +9,6 @@
 -- [hypergraph](https://en.wikipedia.org/wiki/Hypergraph) and
 -- [multigraph](https://en.wikipedia.org/wiki/Multigraph).
 
-
--- For me: Petri net containers should set their graph container to refine them!
--- This inversion allows to create sub-containers with specific defaults,
--- one for places, one for transitions... and the graph container for all vertices.
-
 return function (Layer, graph, ref)
 
   local meta     = Layer.key.meta
@@ -21,6 +16,10 @@ return function (Layer, graph, ref)
 
   local collection = Layer.require "cosy/formalism/data.collection"
   local record     = Layer.require "cosy/formalism/data.record"
+
+  graph [refines] = {
+    record,
+  }
 
   graph [meta] = {}
 
@@ -60,7 +59,7 @@ return function (Layer, graph, ref)
       },
     },
   }
-  
+
   local current_edge = Layer.reference (graph [meta].edge_type)
   graph [meta].edge_type.arrows = {
     [refines] = {

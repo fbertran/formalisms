@@ -70,14 +70,64 @@ return function (Layer, petrinet, ref)
     },
   }
 
-  petrinet.arcs = {
+  petrinet [meta].pre_arc_type = {
+    [refines] = {
+      ref [meta].arc_type,
+    },
+    [meta] = {
+      [record] = {
+        source = {
+          value_container = ref.places,
+        },
+        target = {
+          value_container = ref.transitions,
+        },
+      },
+    },
+  }
+
+  petrinet [meta].post_arc_type = {
+    [refines] = {
+      ref [meta].arc_type,
+    },
+    [meta] = {
+      [record] = {
+        source = {
+          value_container = ref.transitions,
+        },
+        target = {
+          value_container = ref.places,
+        },
+      },
+    },
+  }
+
+  petrinet.pre_arcs = {
     [refines] = {
       collection,
     },
     [meta] = {
       [collection] = {
-        value_type = ref [meta].arc_type,
+        value_type = ref [meta].pre_arc_type,
       }
+    },
+  }
+
+  petrinet.post_arcs = {
+    [refines] = {
+      collection,
+    },
+    [meta] = {
+      [collection] = {
+        value_type = ref [meta].post_arc_type,
+      }
+    },
+  }
+
+  petrinet.arcs = {
+    [refines] = {
+      ref.pre_arcs,
+      ref.post_arcs,
     },
   }
 

@@ -1,6 +1,7 @@
 -- These lines are required to correctly run tests.
 require "busted.runner" ()
 
+-- collectgarbage ("setpause", 1000)
 local Layer = require "cosy.formalism.layer"
 
 describe ("Formalism petrinet", function ()
@@ -37,7 +38,7 @@ describe ("Formalism petrinet", function ()
       assert.is_true (layer [Layer.key.meta].place_type <= layer.places.a)
     end)
 
-    it ("refine vertex_type #current", function ()
+    it ("refine vertex_type", function ()
       local petrinet   = Layer.require "cosy/formalism/petrinet"
       local layer, ref = Layer.new {}
       layer [Layer.key.refines] = { petrinet }
@@ -47,12 +48,6 @@ describe ("Formalism petrinet", function ()
       layer.places.a = {
         [Layer.key.refines] = { ref [Layer.key.meta].t }
       }
-      print (layer.places.a, layer.vertices.a)
-      print (layer.vertices [Layer.key.refines])
-      for i, x in ipairs (layer.vertices [Layer.key.refines]) do
-        print (i, x)
-      end
-      print "==="
       assert.is_true (layer [Layer.key.meta].t <= layer.vertices.a)
       assert.is_true (layer [Layer.key.meta].vertex_type <= layer.vertices.a)
     end)
@@ -173,51 +168,45 @@ describe ("Formalism petrinet", function ()
       local petrinet   = Layer.require "cosy/formalism/petrinet"
       local layer, ref = Layer.new {}
       layer [Layer.key.refines] = { petrinet }
-      layer.places.a = {}
+      layer.places.a      = {}
       layer.transitions.b = {}
-      layer.arcs.ab   = {
-        arrows = {
-          a = { vertex = ref.places.a },
-          b = { vertex = ref.transitions.b },
-        }
+      layer.pre_arcs.ab   = {
+        source = ref.places.a,
+        target = ref.transitions.b,
       }
       Layer.Proxy.check (layer)
       assert.is_nil (Layer.messages (layer) ())
       assert.is_true (layer [Layer.key.meta].arc_type <= layer.arcs.ab)
-      assert.is_true (layer.arcs.ab [Layer.key.meta].arrow_type <= layer.arcs.ab.arrows.a)
-      assert.is_true (layer.arcs.ab [Layer.key.meta].arrow_type <= layer.arcs.ab.arrows.b)
+      assert.is_true (layer.arcs.ab [Layer.key.meta].arrow_type <= layer.arcs.ab.arrows.source)
+      assert.is_true (layer.arcs.ab [Layer.key.meta].arrow_type <= layer.arcs.ab.arrows.target)
     end)
 
-    it ("can be seen as edges", function ()
+    it ("can be seen as edges #current", function ()
       local petrinet   = Layer.require "cosy/formalism/petrinet"
       local layer, ref = Layer.new {}
       layer [Layer.key.refines] = { petrinet }
-      layer.places.a = {}
+      layer.places.a      = {}
       layer.transitions.b = {}
-      layer.arcs.ab   = {
-        arrows = {
-          a = { vertex = ref.places.a },
-          b = { vertex = ref.transitions.b },
-        }
+      layer.pre_arcs.ab   = {
+        source = ref.places.a,
+        target = ref.transitions.b,
       }
       Layer.Proxy.check (layer)
       assert.is_nil (Layer.messages (layer) ())
       assert.is_true (layer [Layer.key.meta].edge_type <= layer.edges.ab)
-      assert.is_true (layer.edges.ab [Layer.key.meta].arrow_type <= layer.edges.ab.arrows.a)
-      assert.is_true (layer.edges.ab [Layer.key.meta].arrow_type <= layer.edges.ab.arrows.b)
+      assert.is_true (layer.edges.ab [Layer.key.meta].arrow_type <= layer.edges.ab.arrows.source)
+      assert.is_true (layer.edges.ab [Layer.key.meta].arrow_type <= layer.edges.ab.arrows.target)
     end)
 
     it ("cannot link two places", function ()
       local petrinet   = Layer.require "cosy/formalism/petrinet"
       local layer, ref = Layer.new {}
       layer [Layer.key.refines] = { petrinet }
-      layer.places.a = {}
-      layer.places.b = {}
-      layer.arcs.ab   = {
-        arrows = {
-          a = { vertex = ref.places.a },
-          b = { vertex = ref.places.b },
-        }
+      layer.places.a    = {}
+      layer.places.b    = {}
+      layer.pre_arcs.ab = {
+        source = ref.places.a,
+        target = ref.places.b,
       }
       Layer.Proxy.check (layer)
       assert.is_not_nil (Layer.messages (layer) ())
@@ -229,11 +218,9 @@ describe ("Formalism petrinet", function ()
       layer [Layer.key.refines] = { petrinet }
       layer.transitions.a = {}
       layer.transitions.b = {}
-      layer.arcs.ab   = {
-        arrows = {
-          a = { vertex = ref.transitions.a },
-          b = { vertex = ref.transitions.b },
-        }
+      layer.pre_arcs.ab   = {
+        source = ref.transitions.a,
+        target = ref.transitions.b,
       }
       Layer.Proxy.check (layer)
       assert.is_not_nil (Layer.messages (layer) ())
@@ -243,13 +230,11 @@ describe ("Formalism petrinet", function ()
       local petrinet   = Layer.require "cosy/formalism/petrinet"
       local layer, ref = Layer.new {}
       layer [Layer.key.refines] = { petrinet }
-      layer.places.a = {}
+      layer.places.a      = {}
       layer.transitions.b = {}
-      layer.arcs.ab   = {
-        arrows = {
-          a = { vertex = ref.places.a },
-          b = { vertex = ref.transitions.b },
-        }
+      layer.pre_arcs.ab   = {
+        source = ref.places.a,
+        target = ref.transitions.b,
       }
       local found = {}
       for k in pairs (layer.arcs) do
@@ -264,13 +249,11 @@ describe ("Formalism petrinet", function ()
       local petrinet   = Layer.require "cosy/formalism/petrinet"
       local layer, ref = Layer.new {}
       layer [Layer.key.refines] = { petrinet }
-      layer.places.a = {}
+      layer.places.a      = {}
       layer.transitions.b = {}
-      layer.arcs.ab   = {
-        arrows = {
-          a = { vertex = ref.places.a },
-          b = { vertex = ref.transitions.b },
-        }
+      layer.pre_arcs.ab   = {
+        source = ref.places.a,
+        target = ref.transitions.b,
       }
       local found = {}
       for k in pairs (layer.edges) do
