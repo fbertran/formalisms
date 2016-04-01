@@ -23,7 +23,7 @@ install:
 
 script:
   - luacheck --std max+busted src/ test/
-  - busted --verbose --coverage --pattern=".test.lua" --recursive src/
+  - busted --verbose --coverage src/
 
 after_success:
   - luacov-coveralls --exclude "test" --exclude "lua_install"
