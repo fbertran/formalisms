@@ -26,9 +26,13 @@ build:
           for dir in /home/lua/lua*; do
             if [ -d "${dir}" ]; then
               echo "Testing in ${dir}..."
-              "${dir}/bin/busted" --coverage --verbose src/
+              "${dir}/bin/busted" --verbose src/
             fi
           done
+    - script:
+        name: "run coverage"
+        code: |
+          /home/lua/lua52/bin/busted --coverage --verbose src/
   after-steps:
     - script:
         name: "export to coveralls"
