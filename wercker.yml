@@ -23,7 +23,7 @@ build:
     - script:
         name: "run tests"
         code: |
-          for dir in /home/lua/lua*; do
+          for dir in /home/lua/lua5*; do
             if [ -d "${dir}" ]; then
               echo "Testing in ${dir}..."
               "${dir}/bin/busted" --verbose src/
