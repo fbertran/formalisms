@@ -10,10 +10,10 @@ end
 
 Layer.require = function (name)
   local package = name:gsub ("/", ".")
-  if Layer.loaded [package] then
-    return Layer.loaded [package]
+  if Layer.loaded [name] then
+    return Layer.loaded [name]
   else
-    local layer     = Layer.new {
+    local layer = Layer.new {
       name = name,
     }
     local reference = Layer.reference (layer)

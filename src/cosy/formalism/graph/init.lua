@@ -9,11 +9,6 @@
 -- [hypergraph](https://en.wikipedia.org/wiki/Hypergraph) and
 -- [multigraph](https://en.wikipedia.org/wiki/Multigraph).
 
-
--- For me: Petri net containers should set their graph container to refine them!
--- This inversion allows to create sub-containers with specific defaults,
--- one for places, one for transitions... and the graph container for all vertices.
-
 return function (Layer, graph, ref)
 
   local meta     = Layer.key.meta
@@ -22,10 +17,18 @@ return function (Layer, graph, ref)
   local collection = Layer.require "cosy/formalism/data.collection"
   local record     = Layer.require "cosy/formalism/data.record"
 
+  graph [refines] = {
+    record,
+  }
+
   graph [meta] = {}
 
   -- Vertices are empty in base graph.
-  graph [meta].vertex_type = {}
+  graph [meta].vertex_type = {
+    [refines] = {
+      record,
+    }
+  }
 
   -- Arrows are records with only one predefined field: `vertex`.
   -- It points to the destination of the arrow, that must be a vertex of the
@@ -36,6 +39,9 @@ return function (Layer, graph, ref)
   -- The `default` key states that all elements within the `arrows` container
   -- are of type `arrow_type`.
   graph [meta].edge_type = {
+    [refines] = {
+      record,
+    },
     [meta] = {
       arrow_type = {
         [refines] = {
@@ -53,6 +59,7 @@ return function (Layer, graph, ref)
       },
     },
   }
+
   local current_edge = Layer.reference (graph [meta].edge_type)
   graph [meta].edge_type.arrows = {
     [refines] = {
