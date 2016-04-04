@@ -29,10 +29,10 @@ build:
               "${dir}/bin/busted" --verbose src/
             fi
           done
-    - script:
-        name: "run coverage"
-        code: |
-          /home/lua/lua52/bin/busted --coverage --verbose src/
+    # - script:
+    #     name: "run coverage"
+    #     code: |
+    #       /home/lua/lua52/bin/busted --coverage --verbose src/
   after-steps:
     - script:
         name: "export to coveralls"
