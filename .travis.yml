@@ -5,7 +5,7 @@ sudo: false
 
 env:
   - LUA="lua=5.2 --compat=none"
-  - LUA="lua=5.3 --compat=none"
+  - LUA="lua=5.3 --compat=5.2"
   - LUA="luajit=2.0 --compat=5.2"
   - LUA="luajit=2.1 --compat=5.2"
 
