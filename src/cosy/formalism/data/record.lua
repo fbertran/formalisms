@@ -38,7 +38,8 @@ return function (Layer, record)
       return
     end
     for key, description in pairs (proxy [meta][record]) do
-      if description.value_type ~= nil then
+      if  getmetatable (description) == Layer.Proxy
+      and description.value_type ~= nil then
         if  type (description.value_type) ~= "string"
         and getmetatable (description.value_type) ~= Layer.Proxy then
           Layer.coroutine.yield (prefix .. ".value_type.invalid", {
@@ -62,7 +63,8 @@ return function (Layer, record)
       return
     end
     for key, description in pairs (proxy [meta][record]) do
-      if description.value_container ~= nil then
+      if  getmetatable (description) == Layer.Proxy
+      and description.value_container ~= nil then
         if  getmetatable (description.value_container) ~= Layer.Proxy then
           Layer.coroutine.yield (prefix .. ".value_container.invalid", {
             proxy = proxy,
