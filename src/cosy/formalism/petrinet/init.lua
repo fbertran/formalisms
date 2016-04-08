@@ -15,8 +15,6 @@ return function (Layer, petrinet, ref)
   local collection       = Layer.require "cosy/formalism/data.collection"
   local record           = Layer.require "cosy/formalism/data.record"
   local graph            = Layer.require "cosy/formalism/graph"
-  local labeled_edges    = Layer.require "cosy/formalism/graph.labeled.edges"
-  local labeled_vertices = Layer.require "cosy/formalism/graph.labeled.vertices"
   local directed         = Layer.require "cosy/formalism/graph.directed"
   local binary_edges     = Layer.require "cosy/formalism/graph.binary_edges"
 
@@ -24,8 +22,6 @@ return function (Layer, petrinet, ref)
     graph,
     directed,
     binary_edges,
-    labeled_vertices,
-    labeled_edges,
   }
 
   petrinet [meta].place_type = {
@@ -53,36 +49,86 @@ return function (Layer, petrinet, ref)
   }
 
   petrinet.places = {
+    [refines] = {
+      collection,
+    },
     [meta] = {
-      [refines] = {
-        ref [meta].vertices [meta],
-      },
       [collection] = {
         value_type = ref [meta].place_type,
       }
-    }
+    },
   }
 
   petrinet.transitions = {
+    [refines] = {
+      collection,
+    },
     [meta] = {
-      [refines] = {
-        ref [meta].vertices [meta],
-      },
       [collection] = {
         value_type = ref [meta].transition_type,
       }
-    }
+    },
+  }
+
+  petrinet [meta].pre_arc_type = {
+    [refines] = {
+      ref [meta].arc_type,
+    },
+    [meta] = {
+      [record] = {
+        source = {
+          value_container = ref.places,
+        },
+        target = {
+          value_container = ref.transitions,
+        },
+      },
+    },
+  }
+
+  petrinet [meta].post_arc_type = {
+    [refines] = {
+      ref [meta].arc_type,
+    },
+    [meta] = {
+      [record] = {
+        source = {
+          value_container = ref.transitions,
+        },
+        target = {
+          value_container = ref.places,
+        },
+      },
+    },
+  }
+
+  petrinet.pre_arcs = {
+    [refines] = {
+      collection,
+    },
+    [meta] = {
+      [collection] = {
+        value_type = ref [meta].pre_arc_type,
+      }
+    },
+  }
+
+  petrinet.post_arcs = {
+    [refines] = {
+      collection,
+    },
+    [meta] = {
+      [collection] = {
+        value_type = ref [meta].post_arc_type,
+      }
+    },
   }
 
   petrinet.arcs = {
-    [meta] = {
-      [refines] = {
-        ref [meta].edges [meta],
-      },
-      [collection] = {
-        value_type = ref [meta].arc_type,
-      }
-    }
+    [refines] = {
+      ref.pre_arcs,
+      ref.post_arcs,
+    },
   }
 
   petrinet.vertices [refines] = {

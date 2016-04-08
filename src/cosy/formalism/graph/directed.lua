@@ -6,9 +6,8 @@
 --
 -- See [this article](http://link.springer.com/chapter/10.1007/3-540-45446-2_20).
 
-return function (Layer, directed)
+return function (Layer, directed, ref)
 
-  local checks   = Layer.key.checks
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
 
@@ -21,46 +20,24 @@ return function (Layer, directed)
     binary_edges,
   }
 
-  directed [meta].edge_type [meta].arrow_type = {
-    [meta] = {
-      [record] = {
-        input  = {
-          value_type = "boolean",
-        },
-        output = {
-          value_type = "boolean",
-        },
-      },
+  directed [meta].edge_type [meta] [record] = {
+    source = {
+      value_container = ref.vertices,
     },
-    input  = false,
-    output = false,
+    target = {
+      value_container = ref.vertices,
+    },
   }
 
-  local edge_type = directed [meta].edge_type
-  edge_type [checks] = {}
-  edge_type [checks] [directed] = function (edge)
-    local inputs  = {}
-    local outputs = {}
-    for _, arrow in pairs (edge.arrows) do
-      if arrow.input == arrow.output then
-        Layer.coroutine.yield ("directed.invalid", {
-          proxy = edge,
-          arrow = arrow,
-        })
-      end
-      if arrow.input then
-        inputs [#inputs+1] = arrow
-      elseif arrow.output then
-        outputs [#outputs+1] = arrow
-      end
-    end
-    for _, container in ipairs { inputs, outputs } do
-      if #container ~= 1 then
-        Layer.coroutine.yield ("directed.invalid", {
-          proxy = edge,
-        })
-      end
-    end
-  end
+  local edge = Layer.reference (directed [meta].edge_type)
+
+  directed [meta].edge_type.arrows = {
+    source = {
+      vertex = edge.source,
+    },
+    target = {
+      vertex = edge.target,
+    },
+  }
 
 end

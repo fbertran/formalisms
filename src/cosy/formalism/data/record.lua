@@ -17,8 +17,8 @@ return function (Layer, record)
   local checks   = Layer.key.checks
   local meta     = Layer.key.meta
 
-  local check_type      = require "cosy/formalism/data.check_type"      (Layer)
-  local check_container = require "cosy/formalism/data.check_container" (Layer)
+  local check_type      = Layer.require "cosy/formalism/type.check"          .apply
+  local check_container = Layer.require "cosy/formalism/data.check_container".apply
 
   local prefix = "cosy/formalism/data.record"
 

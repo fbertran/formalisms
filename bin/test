@@ -1,0 +1,23 @@
+#! /usr/bin/env bash
+
+set -e
+
+root=${1:-$PWD}
+
+for dir in "${root}"/lua*; do
+  if [ -d "${dir}" ]; then
+    echo "Installing in ${dir}..."
+    "${dir}/bin/luarocks" make rockspec/*-master-1.rockspec
+  fi
+done
+
+"${root}"/lua52/bin/luacheck --std=max+busted src/
+
+for _ in {1..10}; do
+  for dir in "${root}"/lua*; do
+    if [ -d "${dir}" ]; then
+      echo "Testing in ${dir}..."
+      "${dir}/bin/busted" src/
+    fi
+  done
+done
