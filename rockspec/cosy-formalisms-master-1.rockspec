@@ -39,7 +39,6 @@ build = {
 
     ["cosy.formalism.automaton"    ] = "src/cosy/formalism/automaton/init.lua",
 
-    ["cosy.formalism.petrinet"] = "src/cosy/formalism/petrinet/init.lua",
 
     ["cosy.formalism.alphabet"] = "src/cosy/formalism/alphabet/init.lua",
     ["cosy.formalism.alphabet.synchronized"] = "src/cosy/formalism/alphabet/synchronized.lua",
