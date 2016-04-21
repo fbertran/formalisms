@@ -2,14 +2,12 @@
 
 return function (Layer, identifier)
 
-  local checks    =  Layer.key.checks
   local meta    =  Layer.key.meta
   local refines =  Layer.key.refines
   
-  local record  =  Layer.require "cosy/formalism/data.record"
-  local literal =  Layer.require "cosy/formalism/literal"
-  local prefix  =  Layer.require "cosy/formalism/literal.identifier"
 
+  local literal =  Layer.require "cosy/formalism/literal"
+  local record  =  Layer.require "cosy/formalism/data.record"
 
  
   identifier [refines] = {

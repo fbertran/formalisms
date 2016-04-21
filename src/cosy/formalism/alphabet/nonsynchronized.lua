@@ -1,15 +1,12 @@
 -- Non Synchronized
 
-return function (Layer, nonsynchronized, ref)
+return function (Layer, nonsynchronized)
 
-  local meta     =  Layer.key.meta
   local refines  =  Layer.key.refines
   local alphabet =  Layer.require "cosy/formalism/alphabet"
   
-  nonsynchronized = {
-    [refines] = {
-      alphabet,
-    },
+  nonsynchronized [refines] = {
+    alphabet,
   }
 
   return nonsynchronized

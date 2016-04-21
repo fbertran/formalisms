@@ -1,19 +1,18 @@
 -- Arithmetic expression
 
-return function (Layer, arithmetic_expression, ref)
+return function (Layer, arithmetic_expression)
 
   local meta                 =  Layer.key.meta
   local refines              =  Layer.key.refines
-  
-  local record               =  Layer.require "cosy/formalism/data.record"
+ 
   local collection           =  Layer.require "cosy/formalism/data.collection"
-  local operation            =  Layer.require "cosy/formalism/operation"
   local expression           =  Layer.require "cosy/formalism/expression"
   local arithmetic_operation =  Layer.require "cosy/formalism/operation/arithmetic_operation"
 
-  arithmetic_expression = {
-    [refines] = {expression},
+  arithmetic_expression [refines] = {
+    expression
   }
+  
 
   arithmetic_expression.operations = {
     [meta]={

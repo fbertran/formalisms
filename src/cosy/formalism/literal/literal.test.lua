@@ -1,9 +1,8 @@
 -- These lines are required to correctly run tests.
 require "busted.runner" ()
-local i=0
+
 local Layer = require "cosy.formalism.layer"
-local meta    =  Layer.key.meta
-local refines =  Layer.key.refines
+
 
 describe ("Formalism literal.literal", function ()
 
@@ -25,7 +24,7 @@ describe ("Formalism literal.literal", function ()
               value = {value_type="number"},
             },       
 			   	},
-          value = "lololol",  
+          value = "test",  
         },
       }
       Layer.Proxy.check (layer)

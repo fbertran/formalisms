@@ -1,6 +1,6 @@
 -- Synchronized
 
-return function (Layer, synchronized, ref)
+return function (Layer, synchronized)
 
   local meta      =  Layer.key.meta
   local refines   =  Layer.key.refines
@@ -8,18 +8,16 @@ return function (Layer, synchronized, ref)
   local string    =  Layer.require "cosy/formalism/literal.string"
   local record    =  Layer.require "cosy/formalism/data.record"
   
-  synchronized = {
-    [refines] = {
-      alphabet,
-    },
+  synchronized [refines] = {
+    alphabet,
+  }
 
-    [meta]={
-      [record]={--I don't know if I should put record or alphabet
-        type={
+  synchronized [meta] = {
+      [record] = {
+        type = {
           value_type=string,
           value_container={"send","recv"},
         },
-      },
     },
   }
 

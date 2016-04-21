@@ -13,11 +13,8 @@ describe ("Formalism operation.operation", function ()
 
     it ("forbids a different type for operator", function ()
       local operation = Layer.require "cosy/formalism/operation"
-      local record = Layer.require "cosy/formalism/data.record" 
       local refines =  Layer.key.refines
-      local meta =  Layer.key.meta
       local value_string= Layer.require "cosy/formalism/literal.string"
-      local val_number = Layer.require "cosy/formalism/literal.number"
 
       local operator     = Layer.new {
         name = "operator",

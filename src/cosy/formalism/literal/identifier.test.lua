@@ -14,8 +14,6 @@ describe ("Formalism literal.literal", function ()
     it ("forbids a different type", function ()
       local record = Layer.require "cosy/formalism/data.record"
       local identifier = Layer.require "cosy/formalism/literal.identifier"  
-      local meta    =  Layer.key.meta
-      local refines =  Layer.key.refines
       local layer      = Layer.new {
         name = "layer",
         data = {

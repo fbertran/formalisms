@@ -13,8 +13,6 @@ describe ("Formalism literal.literal", function ()
 
     it ("forbids a different type", function ()
       local string = Layer.require "cosy/formalism/literal.string"  
-      local meta    =  Layer.key.meta
-      local refines =  Layer.key.refines
       local layer      = Layer.new {
         name = "layer",
         data = {
