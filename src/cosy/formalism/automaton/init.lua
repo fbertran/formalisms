@@ -4,7 +4,6 @@ return function (Layer, automaton, ref)
   local refines  = Layer.key.refines
   
   local collection       = Layer.require "cosy/formalism/data.collection"
-  local enumeration      = Layer.require "cosy/formalism/data.enumeration"
   local record           = Layer.require "cosy/formalism/data.record"
   local graph            = Layer.require "cosy/formalism/graph"
  
@@ -36,23 +35,23 @@ return function (Layer, automaton, ref)
   automaton.alphabets = {
     [refines] = {
     collection,
-    },
-    [meta][collection]={
+    }
+    
+  }
+  automaton.alphabets [meta][collection] = {
       value_type=alphabet,
 
-    }
-}
+  }
   automaton [meta].transition_type = {
     [refines] = {
       ref [meta].edge_type,
     },
-    [meta][record]={
+  }
+  automaton [meta].transition_type [meta][record] = {
       letter={
         value_type=alphabet,
         value_container = ref.alphabets,
        }
-
-    }
   }
 
   automaton.states = {

@@ -34,7 +34,7 @@ Layer.messages = function (proxy)
       if x [messages] then
         coroutine.yield (x)
       end
-      for k, v in pairs (x) do
+      for _, v in pairs (x) do
         if not seen [v] then
           iterate (v)
         end

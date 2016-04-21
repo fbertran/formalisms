@@ -57,11 +57,30 @@ build = {
     ["cosy.formalism.expression.relational_expression"] = "src/cosy/formalism/expression/relational_expression.lua",
 
     ["cosy.formalism.operation"] = "src/cosy/formalism/operation/init.lua",
-    ["cosy.formalism.operation.arithmetic_operation"] = "src/cosy/formalism/operation/arithmetic_operation.lua",
+
+	["cosy.formalism.operation.arithmetic_operation"] = "src/cosy/formalism/operation/arithmetic_operation.lua",
+    ["cosy.formalism.operation.addition_operation"] = "src/cosy/formalism/operation/addition_operation.lua",
+    ["cosy.formalism.operation.substraction_operation"] = "src/cosy/formalism/operation/substraction_operation.lua",
+    ["cosy.formalism.operation.multiplication_operation"] = "src/cosy/formalism/operation/multiplication_operation.lua",
+    ["cosy.formalism.operation.division_operation"] = "src/cosy/formalism/operation/division_operation.lua",
+
     ["cosy.formalism.operation.logical_operation"] = "src/cosy/formalism/operation/logical_operation.lua",
+    ["cosy.formalism.operation.and_operation"] = "src/cosy/formalism/operation/and_operation.lua",
+    ["cosy.formalism.operation.or_operation"] = "src/cosy/formalism/operation/or_operation.lua",
+    ["cosy.formalism.operation.xor_operation"] = "src/cosy/formalism/operation/xor_operation.lua",
+
     ["cosy.formalism.operation.boolean_operation"] = "src/cosy/formalism/operation/boolean_operation.lua",
+    ["cosy.formalism.operation.not_operation"] = "src/cosy/formalism/operation/not_operation.lua",
+    
+    
+    
     ["cosy.formalism.operation.relational_operation"] = "src/cosy/formalism/operation/relational_operation.lua",
- 
+    ["cosy.formalism.operation.superiorequal_operation"] = "src/cosy/formalism/operation/superiorequal_operation.lua",
+    ["cosy.formalism.operation.superior_operation"] = "src/cosy/formalism/operation/superior_operation.lua",
+    ["cosy.formalism.operation.equal_operation"] = "src/cosy/formalism/operation/equal_operation.lua",
+    ["cosy.formalism.operation.different_operation"] = "src/cosy/formalism/operation/different_operation.lua",
+    ["cosy.formalism.operation.inferiorequal_operation"] = "src/cosy/formalism/operation/inferiorequal_operation.lua",
+    ["cosy.formalism.operation.inferior_operation"] = "src/cosy/formalism/operation/inferior_operation.lua",
 
 
   },
