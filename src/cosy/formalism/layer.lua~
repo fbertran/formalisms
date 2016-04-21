@@ -8,7 +8,7 @@ Layer.new = function (t)
   return layer, Layer.reference (layer)
 end
 
---[[Layer.require = function (name)
+Layer.require = function (name)
   print ("Require : "..name)
   local package = name:gsub ("/", ".")
  print (Layer.loaded [package])
@@ -22,7 +22,7 @@ end
     layer = require (package) (Layer, layer, reference) or layer
     return layer, reference
   end
-end]]--
+end
 
 Layer.messages = function (proxy)
   local coroutine = Coromake ()

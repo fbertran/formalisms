@@ -46,7 +46,7 @@ describe ("Formalism data.record", function ()
     layer [Layer.key.refines] = { record }
     layer [Layer.key.meta   ] = {
       [record] = {
-        key = { value_type = "boolean" },
+        key = { value_type = "string" },
       },
     }
     layer.key = 1

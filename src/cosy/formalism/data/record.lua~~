@@ -34,27 +34,20 @@ return function (Layer, record)
   record [checks] = {}
 
   record [checks] [prefix .. ".value_type"] = function (proxy)
-
     if Layer.Proxy.has_meta (proxy) then
       return
     end
-    
     for key, description in pairs (proxy [meta][record]) do
-     
-
       if  getmetatable (description) == Layer.Proxy
       and description.value_type ~= nil then
-      
-       if type (description.value_type) ~= "string"
-        and getmetatable (description.value_type) ~= Layer.Proxy then 
+        if  type (description.value_type) ~= "string"
+        and getmetatable (description.value_type) ~= Layer.Proxy then
           Layer.coroutine.yield (prefix .. ".value_type.invalid", {
             proxy = proxy,
             key   = key,
             used  = description.value_type,
           })
         else
-        --  print("RECORD :"..description.value_type) 
-
           check_type (proxy [key], description.value_type, {
             proxy  = proxy,
             key    = key,
@@ -70,6 +63,9 @@ return function (Layer, record)
       return
     end
     for key, description in pairs (proxy [meta][record]) do
+			print("Meta key : "..key)
+			print(getmetatable (description))
+				print(Layer.Proxy)
       if  getmetatable (description) == Layer.Proxy
       and description.value_container ~= nil then
         if  getmetatable (description.value_container) ~= Layer.Proxy then
@@ -88,5 +84,5 @@ return function (Layer, record)
       end
     end
   end
- 
+
 end

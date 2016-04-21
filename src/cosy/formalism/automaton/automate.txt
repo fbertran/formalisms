@@ -12,7 +12,7 @@ return function (Layer, automaton, ref)
   local binary_edges     = Layer.require "cosy/formalism/graph.binary_edges"
 
   local alphabet         = Layer.require "cosy/formalism/alphabet"
-  local identifier       = Layer.require "cosy/formalism/literal.identifier"
+  local identifier       = Layer.require "cosy/formalism/identifier"
 
   automaton [refines] = {
     graph,
