@@ -12,7 +12,11 @@ description = {
   maintainer  = "Alban Linard <alban@linard.fr>",
 }
 
-
+dependencies = {
+  "lua >= 5.1",
+  "layeredata",
+  "coronest",
+}
 
 build = {
   type    = "builtin",
