@@ -1,0 +1,435 @@
+Installing in /home/cosy/formalisms/lua51...
+Updating manifest for /home/cosy/formalisms/lua51/lib/luarocks/rocks
+cosy-formalisms master-1 is now built and installed in /home/cosy/formalisms/lua51 (license: MIT/X11)
+
+Installing in /home/cosy/formalisms/lua52...
+Updating manifest for /home/cosy/formalisms/lua52/lib/luarocks/rocks
+cosy-formalisms master-1 is now built and installed in /home/cosy/formalisms/lua52 (license: MIT/X11)
+
+Installing in /home/cosy/formalisms/lua52c...
+Updating manifest for /home/cosy/formalisms/lua52c/lib/luarocks/rocks
+cosy-formalisms master-1 is now built and installed in /home/cosy/formalisms/lua52c (license: MIT/X11)
+
+Installing in /home/cosy/formalisms/lua53...
+Updating manifest for /home/cosy/formalisms/lua53/lib/luarocks/rocks
+cosy-formalisms master-1 is now built and installed in /home/cosy/formalisms/lua53 (license: MIT/X11)
+
+Installing in /home/cosy/formalisms/lua53c...
+Updating manifest for /home/cosy/formalisms/lua53c/lib/luarocks/rocks
+cosy-formalisms master-1 is now built and installed in /home/cosy/formalisms/lua53c (license: MIT/X11)
+
+Installing in /home/cosy/formalisms/luajit20...
+Updating manifest for /home/cosy/formalisms/luajit20/lib/luarocks/rocks
+cosy-formalisms master-1 is now built and installed in /home/cosy/formalisms/luajit20 (license: MIT/X11)
+
+Installing in /home/cosy/formalisms/luajit20c...
+Updating manifest for /home/cosy/formalisms/luajit20c/lib/luarocks/rocks
+cosy-formalisms master-1 is now built and installed in /home/cosy/formalisms/luajit20c (license: MIT/X11)
+
+Installing in /home/cosy/formalisms/luajit21...
+Updating manifest for /home/cosy/formalisms/luajit21/lib/luarocks/rocks
+cosy-formalisms master-1 is now built and installed in /home/cosy/formalisms/luajit21 (license: MIT/X11)
+
+Installing in /home/cosy/formalisms/luajit21c...
+Updating manifest for /home/cosy/formalisms/luajit21c/lib/luarocks/rocks
+cosy-formalisms master-1 is now built and installed in /home/cosy/formalisms/luajit21c (license: MIT/X11)
+
+Checking src/cosy/formalism/alphabet/init.lua     [0m[32m[1mOK[0m
+Checking src/cosy/formalism/alphabet/nonsynchronized.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/alphabet/synchronized.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/init.lua    [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/init.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/literal/bool.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/literal/bool_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/literal/identifier.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/literal/identifier_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/literal/init.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/literal/literal_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/literal/number.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/literal/number_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/literal/string.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/literal/string_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/addition_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/and_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/arithmetic_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/arithmetic_operation_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/boolean_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/different_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/division_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/equal_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/inferior_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/inferiorequal_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/init.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/logical_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/logical_operation.test.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/multiplication_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/not_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/operands_arithmetic_type.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/operands_logical_type.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/operands_relational_type.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/operation_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/or_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/relational_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/substraction_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/superior_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/superiorequal_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/operation/xor_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/addition_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/and_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/arithmetic_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/arithmetic_operation_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/boolean_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/different_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/division_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/equal_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/inferior_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/inferiorequal_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/init.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/logical_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/logical_operation.test.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/multiplication_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/not_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/operands_arithmetic_type.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/operands_logical_type.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/operands_relational_type.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/operation_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/or_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/relational_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/substraction_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/superior_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/superiorequal_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/xor_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/exemple.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/init.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/data/check_container.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/data/collection.lua   [0m[32m[1mOK[0m
+Checking src/cosy/formalism/data/collection_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/data/enumeration.lua  [0m[32m[1mOK[0m
+Checking src/cosy/formalism/data/enumeration_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/data/polynomial.lua   [0m[32m[1mOK[0m
+Checking src/cosy/formalism/data/record.lua       [0m[32m[1mOK[0m
+Checking src/cosy/formalism/data/record.test.lua  [0m[32m[1mOK[0m
+Checking src/cosy/formalism/data/record_spec.lua  [0m[32m[1mOK[0m
+Checking src/cosy/formalism/expression/arithmetic_expression.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/expression/boolean_expression.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/expression/init.lua   [0m[32m[1mOK[0m
+Checking src/cosy/formalism/expression/logical_expression.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/expression/relational_expression.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/graph/binary_edges.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/graph/directed.lua    [0m[32m[1mOK[0m
+Checking src/cosy/formalism/graph/init.lua        [0m[32m[1mOK[0m
+Checking src/cosy/formalism/graph/init_spec.lua   [0m[32m[1mOK[0m
+Checking src/cosy/formalism/graph/unique_edges.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/layer.lua             [0m[32m[1mOK[0m
+Checking src/cosy/formalism/literal/bool.lua      [0m[32m[1mOK[0m
+Checking src/cosy/formalism/literal/bool_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/literal/identifier.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/literal/identifier_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/literal/init.lua      [0m[32m[1mOK[0m
+Checking src/cosy/formalism/literal/literal_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/literal/number.lua    [0m[32m[1mOK[0m
+Checking src/cosy/formalism/literal/number_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/literal/string.lua    [0m[32m[1mOK[0m
+Checking src/cosy/formalism/literal/string_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/addition_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/and_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/arithmetic_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/arithmetic_operation_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/boolean_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/different_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/division_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/equal_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/inferior_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/inferiorequal_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/init.lua    [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/logical_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/logical_operation.test.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/multiplication_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/not_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/operation_spec.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/or_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/relational_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/substraction_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/superior_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/superiorequal_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/operation/xor_operation.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/tool/addition_operation.test.lua [0m[32m[1mOK[0m
+Checking src/cosy/formalism/tool/init.lua         [0m[32m[1mOK[0m
+Checking src/cosy/formalism/type/all_of.lua       [0m[32m[1mOK[0m
+Checking src/cosy/formalism/type/check.lua        [0m[32m[1mOK[0m
+Checking src/cosy/formalism/type/constrained.lua  [0m[32m[1mOK[0m
+Checking src/cosy/formalism/type/init.lua         [0m[32m[1mOK[0m
+Checking src/cosy/formalism/type/one_of.lua       [0m[32m[1mOK[0m
+
+Total: [0m[0m[1m0[0m warnings / [0m[0m[1m0[0m errors in 126 files
+Testing in /home/cosy/formalisms/lua51...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.334809 seconds
+Testing in /home/cosy/formalisms/lua52...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.22379 seconds
+Testing in /home/cosy/formalisms/lua52c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.237842 seconds
+Testing in /home/cosy/formalisms/lua53...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.238574 seconds
+Testing in /home/cosy/formalisms/lua53c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.277172 seconds
+Testing in /home/cosy/formalisms/luajit20...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.120551 seconds
+Testing in /home/cosy/formalisms/luajit20c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.147066 seconds
+Testing in /home/cosy/formalisms/luajit21...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.157609 seconds
+Testing in /home/cosy/formalisms/luajit21c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.146743 seconds
+Testing in /home/cosy/formalisms/lua51...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.319183 seconds
+Testing in /home/cosy/formalisms/lua52...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.222925 seconds
+Testing in /home/cosy/formalisms/lua52c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.259662 seconds
+Testing in /home/cosy/formalisms/lua53...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.246051 seconds
+Testing in /home/cosy/formalisms/lua53c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.274747 seconds
+Testing in /home/cosy/formalisms/luajit20...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.131075 seconds
+Testing in /home/cosy/formalisms/luajit20c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.151862 seconds
+Testing in /home/cosy/formalisms/luajit21...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.222166 seconds
+Testing in /home/cosy/formalisms/luajit21c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.158459 seconds
+Testing in /home/cosy/formalisms/lua51...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.286135 seconds
+Testing in /home/cosy/formalisms/lua52...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.260728 seconds
+Testing in /home/cosy/formalisms/lua52c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.233947 seconds
+Testing in /home/cosy/formalisms/lua53...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.268836 seconds
+Testing in /home/cosy/formalisms/lua53c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.245379 seconds
+Testing in /home/cosy/formalisms/luajit20...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.192961 seconds
+Testing in /home/cosy/formalisms/luajit20c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.191766 seconds
+Testing in /home/cosy/formalisms/luajit21...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.161426 seconds
+Testing in /home/cosy/formalisms/luajit21c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.181476 seconds
+Testing in /home/cosy/formalisms/lua51...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.288627 seconds
+Testing in /home/cosy/formalisms/lua52...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.273446 seconds
+Testing in /home/cosy/formalisms/lua52c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.241372 seconds
+Testing in /home/cosy/formalisms/lua53...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.277055 seconds
+Testing in /home/cosy/formalisms/lua53c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.241086 seconds
+Testing in /home/cosy/formalisms/luajit20...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.123142 seconds
+Testing in /home/cosy/formalisms/luajit20c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.134555 seconds
+Testing in /home/cosy/formalisms/luajit21...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.208007 seconds
+Testing in /home/cosy/formalisms/luajit21c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.151122 seconds
+Testing in /home/cosy/formalisms/lua51...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.291406 seconds
+Testing in /home/cosy/formalisms/lua52...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.220715 seconds
+Testing in /home/cosy/formalisms/lua52c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.218939 seconds
+Testing in /home/cosy/formalisms/lua53...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.335385 seconds
+Testing in /home/cosy/formalisms/lua53c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.238975 seconds
+Testing in /home/cosy/formalisms/luajit20...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.126938 seconds
+Testing in /home/cosy/formalisms/luajit20c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.142471 seconds
+Testing in /home/cosy/formalisms/luajit21...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.149322 seconds
+Testing in /home/cosy/formalisms/luajit21c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.205394 seconds
+Testing in /home/cosy/formalisms/lua51...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.287014 seconds
+Testing in /home/cosy/formalisms/lua52...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.223459 seconds
+Testing in /home/cosy/formalisms/lua52c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.302376 seconds
+Testing in /home/cosy/formalisms/lua53...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.237255 seconds
+Testing in /home/cosy/formalisms/lua53c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.233802 seconds
+Testing in /home/cosy/formalisms/luajit20...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.120111 seconds
+Testing in /home/cosy/formalisms/luajit20c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.200385 seconds
+Testing in /home/cosy/formalisms/luajit21...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.19755 seconds
+Testing in /home/cosy/formalisms/luajit21c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.236471 seconds
+Testing in /home/cosy/formalisms/lua51...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.284831 seconds
+Testing in /home/cosy/formalisms/lua52...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.23619 seconds
+Testing in /home/cosy/formalisms/lua52c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.229149 seconds
+Testing in /home/cosy/formalisms/lua53...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.235808 seconds
+Testing in /home/cosy/formalisms/lua53c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.227378 seconds
+Testing in /home/cosy/formalisms/luajit20...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.125081 seconds
+Testing in /home/cosy/formalisms/luajit20c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.139308 seconds
+Testing in /home/cosy/formalisms/luajit21...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.184208 seconds
+Testing in /home/cosy/formalisms/luajit21c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.204976 seconds
+Testing in /home/cosy/formalisms/lua51...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.320679 seconds
+Testing in /home/cosy/formalisms/lua52...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.224219 seconds
+Testing in /home/cosy/formalisms/lua52c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.230095 seconds
+Testing in /home/cosy/formalisms/lua53...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.238668 seconds
+Testing in /home/cosy/formalisms/lua53c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.24108 seconds
+Testing in /home/cosy/formalisms/luajit20...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.127276 seconds
+Testing in /home/cosy/formalisms/luajit20c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.165029 seconds
+Testing in /home/cosy/formalisms/luajit21...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.166978 seconds
+Testing in /home/cosy/formalisms/luajit21c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.178502 seconds
+Testing in /home/cosy/formalisms/lua51...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.293104 seconds
+Testing in /home/cosy/formalisms/lua52...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.229796 seconds
+Testing in /home/cosy/formalisms/lua52c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.231745 seconds
+Testing in /home/cosy/formalisms/lua53...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.229894 seconds
+Testing in /home/cosy/formalisms/lua53c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.240091 seconds
+Testing in /home/cosy/formalisms/luajit20...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.122782 seconds
+Testing in /home/cosy/formalisms/luajit20c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.142235 seconds
+Testing in /home/cosy/formalisms/luajit21...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.193152 seconds
+Testing in /home/cosy/formalisms/luajit21c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.172114 seconds
+Testing in /home/cosy/formalisms/lua51...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.2881 seconds
+Testing in /home/cosy/formalisms/lua52...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.224828 seconds
+Testing in /home/cosy/formalisms/lua52c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.220338 seconds
+Testing in /home/cosy/formalisms/lua53...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.239198 seconds
+Testing in /home/cosy/formalisms/lua53c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.228954 seconds
+Testing in /home/cosy/formalisms/luajit20...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.120088 seconds
+Testing in /home/cosy/formalisms/luajit20c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.138033 seconds
+Testing in /home/cosy/formalisms/luajit21...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.172056 seconds
+Testing in /home/cosy/formalisms/luajit21c...
++++++++++++++++++++++++++++++++++++++++++++
+43 successes / 0 failures / 0 errors / 0 pending : 0.212023 seconds
+./bin/test : ligne 18 : 10349 Erreur de segmentation  (core dumped) "${dir}/bin/busted" src/
