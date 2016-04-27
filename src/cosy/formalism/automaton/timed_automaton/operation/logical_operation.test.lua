@@ -6,13 +6,13 @@ local Layer = require "cosy.formalism.layer"
 describe ("Formalism operation.logical_operation", function ()
 
   it ("can be loaded", function ()
-    local _ = Layer.require "cosy/formalism/operation.logical_operation"
+    local _ = Layer.require "cosy/formalism/automaton/timed_automaton/operation.logical_operation"
   end)
 
   describe ("with type information", function ()
 
     it ("forbids a different type for operator", function ()
-      local logical_operation = Layer.require "cosy/formalism/operation.logical_operation"  
+      local logical_operation = Layer.require "cosy/formalism/automaton/timed_automaton/operation.logical_operation"  
       local refines =  Layer.key.refines
       local val_test = Layer.require "cosy/formalism/literal.string"
       local val_testn = Layer.require "cosy/formalism/literal.number"

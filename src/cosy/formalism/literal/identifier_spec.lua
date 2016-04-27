@@ -1,9 +1,9 @@
--- These lines are required to correctly run tests.
+--[[ These lines are required to correctly run tests.
 require "busted.runner" ()
 
 local Layer = require "cosy.formalism.layer"
 
-describe ("Formalism literal.literal", function ()
+describe ("Formalism literal.identifier", function ()
 
   it ("can be loaded", function ()
     local _ = Layer.require "cosy/formalism/literal.identifier"
@@ -33,4 +33,4 @@ describe ("Formalism literal.literal", function ()
     end)
 	end)
 
-end)
+end)]]--

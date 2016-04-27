@@ -1,4 +1,4 @@
--- These lines are required to correctly run tests.
+--[[ These lines are required to correctly run tests.
 require "busted.runner" ()
 
 local Layer = require "cosy.formalism.layer"
@@ -63,4 +63,4 @@ describe ("Formalism operation.arithmetic_operation", function ()
     end)
   end)
 
-end)
+end)]]--

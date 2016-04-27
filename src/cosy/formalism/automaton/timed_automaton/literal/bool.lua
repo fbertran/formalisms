@@ -7,13 +7,16 @@ return function (Layer, bool)
   local refines =  Layer.key.refines
   
   local record  =  Layer.require "cosy/formalism/data.record"
-  local literal  =  Layer.require "cosy/formalism/literal"
+  local literal  =  Layer.require "cosy/formalism/automaton/timed_automaton/literal"
   --local lpeg     = require "lpeg" 
 
 
  
   bool [refines] = {
     literal, 
+    Layer.require "cosy/formalism/automaton/timed_automaton/operation/operands_logical_type",
+    Layer.require "cosy/formalism/automaton/timed_automaton/operation/operands_relational_type",
+    Layer.require "cosy/formalism/automaton/timed_automaton/operation/boolean_operaton",
   }
   
   bool [meta] = {
@@ -21,8 +24,7 @@ return function (Layer, bool)
      value = { value_type = "boolean" },
     },
   }
---[[
- bool.instanciate = function(patt)
+--[[ bool.instanciate = function(patt)
    local bool_value=nil
    bool_value=loadstring(patt)
    return bool_value

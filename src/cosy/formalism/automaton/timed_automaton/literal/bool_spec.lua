@@ -3,21 +3,21 @@ require "busted.runner" ()
 
 local Layer = require "cosy.formalism.layer"
 
-describe ("Formalism literal.string", function ()
+describe ("Formalism literal.bool", function ()
 
   it ("can be loaded", function ()
-    local _ = Layer.require "cosy/formalism/literal.string"
+    local _ = Layer.require "cosy/formalism/literal.bool"
   end)
 
   describe ("with type information", function ()
 
     it ("forbids a different type", function ()
-      local string = Layer.require "cosy/formalism/literal.string"  
+      local bool = Layer.require "cosy/formalism/literal.bool"  
       local layer      = Layer.new {
         name = "layer",
         data = {
-          [Layer.key.refines] = { string },
-          value = "test",  
+          [Layer.key.refines] = { bool },
+          value = true,  
         },
       }
       Layer.Proxy.check (layer)
@@ -25,4 +25,4 @@ describe ("Formalism literal.string", function ()
     end)
 	end)
 
-end)]]--
+end) ]]--

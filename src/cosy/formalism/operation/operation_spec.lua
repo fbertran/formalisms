@@ -1,4 +1,4 @@
--- These lines are required to correctly run tests.
+--[[ These lines are required to correctly run tests.
 require "busted.runner" ()
 
 local Layer = require "cosy.formalism.layer"
@@ -16,11 +16,12 @@ describe ("Formalism operation.operation", function ()
       local refines =  Layer.key.refines
       local value_string= Layer.require "cosy/formalism/literal.string"
 
+
       local operator     = Layer.new {
         name = "operator",
         data= {
           [refines] = { value_string },
-           value="AND"
+           value=true
           }
          }
    
@@ -32,13 +33,11 @@ describe ("Formalism operation.operation", function ()
            value="testvalue1"
           }
          }
-      local val_test2     = Layer.new {
-        name = "val_test2",
-        data= {
+      local val_test2 = {
           [refines] = { value_string, },
-           value="testvalue2"
+           
           }
-         }
+     val_test2.value=256
          
       local layer      = Layer.new {
         name = "layer",
@@ -57,4 +56,4 @@ describe ("Formalism operation.operation", function ()
     end)
 	end)
 
-end)
+end)]]--
