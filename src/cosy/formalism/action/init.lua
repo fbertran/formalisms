@@ -1,15 +1,14 @@
--- Alphabet
+-- action
 
-return function (Layer, alphabet)
+return function (Layer, action)
 
   local refines       =  Layer.key.refines
   local identifier    =  Layer.require "cosy/formalism/literal.identifier"
 
-  alphabet [refines] = {
+  action [refines] = {
       identifier,
     }
 
 
-  return alphabet
-
+  return action
 end

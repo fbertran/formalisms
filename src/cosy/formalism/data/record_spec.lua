@@ -68,6 +68,21 @@ describe ("Formalism data.record", function ()
     assert.is_nil (Layer.messages (layer) ())
   end)
 
+
+  it ("detects correctly typed key/value (primitive)", function ()
+    local record = Layer.require "cosy/formalism/data.record"
+    local layer  = Layer.new {}
+    layer [Layer.key.refines] = { record }
+    layer [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = "string",},
+      },
+    }
+    layer.key = "ok"
+    Layer.Proxy.check (layer)
+    assert.is_nil (Layer.messages (layer) ())
+  end)
+
   it ("detects wrongly typed key/value (proxy)", function ()
     local record     = Layer.require "cosy/formalism/data.record"
     local common, rc = Layer.new {}

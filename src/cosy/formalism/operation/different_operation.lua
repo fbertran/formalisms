@@ -14,7 +14,7 @@ return function (Layer, different_operation)
 
   different_operation.operands[meta][collection].minimum = 2
   different_operation.operands[meta][collection].maximum = 2
-  different_operation[meta][record].operator.value = "~="
+  different_operation[meta][record].operator.value = "DIF"
   
   return different_operation
 end

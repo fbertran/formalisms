@@ -6,7 +6,7 @@ return function (Layer, different_operation)
   local refines    =  Layer.key.refines
   local record     =  Layer.require "cosy/formalism/data.record"
   local collection =  Layer.require "cosy/formalism/data.collection"
-  local relational_operation  = Layer.require "cosy/formalism/relational_operation"
+  local relational_operation  = Layer.require "cosy/formalism/automaton/timed_automaton/operation.relational_operation"
 
   different_operation [refines] = {
   relational_operation,

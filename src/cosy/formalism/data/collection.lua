@@ -15,7 +15,7 @@
 -- representation of the Lua type name (for instance "boolean", "number",
 -- "string"), or a reference to the expected parent type.
 
-return function (Layer, collection, ref)
+return function (Layer, collection,ref)
 
   local checks   = Layer.key.checks
   local defaults = Layer.key.defaults
@@ -37,7 +37,7 @@ return function (Layer, collection, ref)
     },
   }
   collection [defaults] = {
-    ref [meta] [collection].value_type,
+   ref [meta] [collection].value_type,
   }
 
   collection [checks] = {}
@@ -56,6 +56,7 @@ return function (Layer, collection, ref)
     end
     if  (size < (proxy [meta][collection].minimum or  math.huge))
     or  (size > (proxy [meta][collection].maximum or -math.huge)) then
+
       Layer.coroutine.yield (prefix .. ".size.illegal", {
         proxy   = proxy,
         minimum = proxy [meta][collection].minimum,
@@ -107,6 +108,12 @@ return function (Layer, collection, ref)
     if type (proxy [meta][collection].value_type) == "string"
     or getmetatable (proxy [meta][collection].value_type) == Layer.Proxy then
       for key, value in pairs (proxy) do
+        --print ("key " .. key)
+        --print ("value ")
+       -- print  (value)
+     --   print ("prefix " .. prefix)
+   --     print (proxy [meta][collection].value_type)
+  --     print (proxy [meta][collection].value_type <= value )
         check_type (value, proxy [meta][collection].value_type, {
           proxy  = proxy,
           key    = key,
@@ -137,7 +144,7 @@ return function (Layer, collection, ref)
     end
   end
 
-  collection [checks] [prefix .. ".value_container"] = function (proxy)
+ collection [checks] [prefix .. ".value_container"] = function (proxy)
     if Layer.Proxy.has_meta (proxy) then
       return
     end
@@ -151,6 +158,7 @@ return function (Layer, collection, ref)
         prefix = prefix .. ".value_container",
       })
     end
-  end
+  
+	end
 
 end

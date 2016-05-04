@@ -4,7 +4,7 @@ return function (Layer, addition_operation)
 
   local meta       =  Layer.key.meta
   local refines    =  Layer.key.refines
-  local collection =  Layer.require "cosy/formalism/data.collection"
+-- local collection =  Layer.require "cosy/formalism/data.collection"
   local record =  Layer.require "cosy/formalism/data.record"
   local arithmetic_operation  = Layer.require "cosy/formalism/operation.arithmetic_operation"
 
@@ -12,9 +12,9 @@ return function (Layer, addition_operation)
      arithmetic_operation,
   }
 
-  addition_operation.operands[meta][collection].minimum = 2
-  addition_operation.operands[meta][collection].maximum = math.huge
-  addition_operation[meta][record].operator.value = "+"
+ -- addition_operation.operands[meta][collection].minimum = 2
+ -- addition_operation.operands[meta][collection].maximum = math.huge
+  addition_operation[meta][record].operator.value = "ADD"
   
   return addition_operation
 end

@@ -10,7 +10,7 @@ return function (Layer, automaton, ref)
   local directed         = Layer.require "cosy/formalism/graph.directed"
   local binary_edges     = Layer.require "cosy/formalism/graph.binary_edges"
 
-  local alphabet         = Layer.require "cosy/formalism/alphabet"
+  local action         = Layer.require "cosy/formalism/action"
   local identifier       = Layer.require "cosy/formalism/literal.identifier"
 
   automaton [refines] = {
@@ -32,14 +32,14 @@ return function (Layer, automaton, ref)
       }
     }
   }
-  automaton.alphabets = {
+  automaton.actions = {
     [refines] = {
     collection,
     }
     
   }
-  automaton.alphabets [meta][collection] = {
-      value_type=alphabet,
+  automaton.actions [meta][collection] = {
+      value_type=action,
 
   }
   automaton [meta].transition_type = {
@@ -49,8 +49,8 @@ return function (Layer, automaton, ref)
   }
   automaton [meta].transition_type [meta][record] = {
       letter={
-        value_type=alphabet,
-        value_container = ref.alphabets,
+        value_type=action,
+        value_container = ref.actions,
        }
   }
 

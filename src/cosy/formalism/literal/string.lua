@@ -9,9 +9,6 @@ return function (Layer, string)
   local record  =  Layer.require "cosy/formalism/data.record"
   local literal  =  Layer.require "cosy/formalism/literal"
  
-
-
- 
   string [refines] = {
     literal, 
   }

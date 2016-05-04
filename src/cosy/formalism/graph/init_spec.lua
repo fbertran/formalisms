@@ -39,6 +39,8 @@ describe ("Formalism graph", function ()
       }
       assert.is_true (layer [Layer.key.meta].t <= layer.vertices.a)
       assert.is_true (layer [Layer.key.meta].vertex_type <= layer.vertices.a)
+			Layer.Proxy.check (layer)
+      assert.is_nil (layer [Layer.key.messages])
     end)
 
     it ("are iterable", function ()

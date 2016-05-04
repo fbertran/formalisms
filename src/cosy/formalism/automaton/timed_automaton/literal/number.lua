@@ -8,14 +8,14 @@ return function (Layer, number)
   
   local record  =  Layer.require "cosy/formalism/data.record"
   local literal  =  Layer.require "cosy/formalism/automaton/timed_automaton/literal"
- 
-
+  local operands_arithmetic_type=Layer.require "cosy/formalism/automaton/timed_automaton/operation/operands_arithmetic_type"
+  local operands_relational_type=Layer.require "cosy/formalism/automaton/timed_automaton/operation/operands_relational_type"
 
  
   number [refines] = {
     literal,
-    Layer.require "cosy/formalism/automaton/timed_automaton/operands_arithmetic_type",
-    Layer.require "cosy/formalism/automaton/timed_automaton/operation/operands_relational_type",
+    operands_arithmetic_type,
+    operands_relational_type,
   }
   
   number [meta] = {

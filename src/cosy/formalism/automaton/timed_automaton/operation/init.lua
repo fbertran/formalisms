@@ -1,36 +1,36 @@
 --Operation
 
-return function (Layer, operation)
+return function (Layer, operation,ref)
 
   local meta       =  Layer.key.meta
   local refines    =  Layer.key.refines
   local record =  Layer.require "cosy/formalism/data.record"
   local collection =  Layer.require "cosy/formalism/data.collection"
-  local value_string = Layer.require "cosy/formalism/literal.string"
+ 
 
   operation [refines] = {record,}
 
   operation[meta] = {
+    operands_type = false,
     [record] = {
       operator = {
-        value_type = value_string,
+        value_type = "string",
       },
-    
-      }
     }
-     operation.operands = {
-      [refines] = {
-          collection,
-          }
+  }
+
+  operation.operands = {
+    [refines] = {
+      collection,
+    },
+    [meta] = {
+      [collection] = {
+        value_type = ref[meta].operands_type,
+        minimum = false,
+        maximum = false
       }
-  
-     operation.operands [meta] = {
-          [collection] = {
-            value_type=false,
-          }
-        }
-    
-       
+    },
+  }       
   
   return operation
 end

@@ -3,10 +3,10 @@
 return function (Layer, nonsynchronized)
 
   local refines  =  Layer.key.refines
-  local alphabet =  Layer.require "cosy/formalism/alphabet"
+  local action =  Layer.require "cosy/formalism/action"
   
   nonsynchronized [refines] = {
-    alphabet,
+    action,
   }
 
   return nonsynchronized

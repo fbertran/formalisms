@@ -34,7 +34,6 @@ return function (Layer, record)
   record [checks] = {}
 
   record [checks] [prefix .. ".value_type"] = function (proxy)
-
     if Layer.Proxy.has_meta (proxy) then
       return
     end
@@ -79,6 +78,8 @@ return function (Layer, record)
             used  = description.value_container,
           })
         else
+			--		print ("key container")
+				--	print (key)
           check_container (proxy [key], description.value_container, {
             proxy  = proxy,
             key    = key,

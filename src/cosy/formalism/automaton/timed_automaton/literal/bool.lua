@@ -16,7 +16,7 @@ return function (Layer, bool)
     literal, 
     Layer.require "cosy/formalism/automaton/timed_automaton/operation/operands_logical_type",
     Layer.require "cosy/formalism/automaton/timed_automaton/operation/operands_relational_type",
-    Layer.require "cosy/formalism/automaton/timed_automaton/operation/boolean_operaton",
+    Layer.require "cosy/formalism/automaton/timed_automaton/operation/boolean_operation",
   }
   
   bool [meta] = {

@@ -38,6 +38,7 @@ return function (Layer, check)
           expected = oftype,
           used     = type (value),
         })
+
       elseif not (oftype <= value) then
         Layer.coroutine.yield (where.prefix .. ".illegal", {
           proxy    = where.proxy,
@@ -46,6 +47,7 @@ return function (Layer, check)
           used     = value,
         })
       end
+   --   print("ok")
     else
       assert (false)
     end

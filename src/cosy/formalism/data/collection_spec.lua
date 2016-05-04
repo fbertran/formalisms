@@ -228,7 +228,7 @@ describe ("Formalism data.collection", function ()
           value_type = "string",
         },
       }
-      layer.key = true
+      layer.key = 42
       Layer.Proxy.check (layer)
       assert.is_not_nil (Layer.messages (layer) ())
     end)
@@ -311,6 +311,38 @@ describe ("Formalism data.collection", function ()
       assert.is_not_nil (Layer.messages (layer) ())
     end)
 
+
+    it ("forbids other types for value_type", function ()
+
+      local collection = Layer.require "cosy/formalism/data.collection"
+      local record = Layer.require "cosy/formalism/data.record"
+			local meta   = Layer.key.meta
+      local layer,ref  = Layer.new {}
+      layer [Layer.key.refines] = { collection }
+			
+      layer [Layer.key.meta   ] = {
+
+				my_type = {
+					[Layer.key.refines] = { record },
+					[meta] = {
+						[record] = {
+							value = {value_type = "string"}
+						}				
+					},
+				},
+	    	[collection] = {
+	        value_type = ref[meta].my_type,
+	      },
+      }
+		
+			layer.op = {
+				[Layer.key.refines] = {ref[meta].my_type},
+				value = "lol"
+			}
+
+      Layer.Proxy.check (layer)
+      assert.is_nil (Layer.messages (layer) ())
+    end)
   end)
 
 end)

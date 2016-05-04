@@ -9,7 +9,5 @@ return function (Layer, arithmetic_operation)
     operation,
   }
 
-  
-
   return arithmetic_operation
 end
