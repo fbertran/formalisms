@@ -44,9 +44,9 @@ build = {
     ["cosy.formalism.automaton"    ] = "src/cosy/formalism/automaton/init.lua",
 
 
-    ["cosy.formalism.alphabet"] = "src/cosy/formalism/alphabet/init.lua",
-    ["cosy.formalism.alphabet.synchronized"] = "src/cosy/formalism/alphabet/synchronized.lua",
-    ["cosy.formalism.alphabet.nonsynchronized"] = "src/cosy/formalism/alphabet/nonsynchronized.lua",
+    ["cosy.formalism.action"] = "src/cosy/formalism/action/init.lua",
+    ["cosy.formalism.action.synchronized"] = "src/cosy/formalism/action/synchronized.lua",
+    ["cosy.formalism.action.nonsynchronized"] = "src/cosy/formalism/action/nonsynchronized.lua",
 
     ["cosy.formalism.literal"] = "src/cosy/formalism/literal/init.lua",
     ["cosy.formalism.literal.string"] = "src/cosy/formalism/literal/string.lua",
