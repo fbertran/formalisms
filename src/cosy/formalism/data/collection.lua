@@ -26,6 +26,15 @@ return function (Layer, collection, ref)
 
   local prefix = "cosy/formalism/data.collection"
 
+  local function has_meta (proxy)
+    for _, key in Layer.Proxy.keys (proxy) do
+      if key == meta then
+        return true
+      end
+    end
+    return false
+  end
+
   collection [meta] = {
     [collection] = {
       key_type        = false,
@@ -43,7 +52,7 @@ return function (Layer, collection, ref)
   collection [checks] = {}
 
   collection [checks] [prefix .. ".size"] = function (proxy)
-    if Layer.Proxy.has_meta (proxy) then
+    if has_meta (proxy) then
       return
     end
     if  not proxy [meta][collection].minimum
@@ -51,7 +60,7 @@ return function (Layer, collection, ref)
       return
     end
     local size = 0
-    for _ in pairs (collection) do
+    for _ in pairs (proxy) do
       size = size+1
     end
     if  (size < (proxy [meta][collection].minimum or  math.huge))
@@ -66,7 +75,7 @@ return function (Layer, collection, ref)
   end
 
   collection [checks] [prefix .. ".key_type"] = function (proxy)
-    if Layer.Proxy.has_meta (proxy) then
+    if has_meta (proxy) then
       return
     end
     if not proxy [meta][collection].key_type then
@@ -98,7 +107,7 @@ return function (Layer, collection, ref)
   end
 
   collection [checks] [prefix .. ".value_type"] = function (proxy)
-    if Layer.Proxy.has_meta (proxy) then
+    if has_meta (proxy) then
       return
     end
     if not proxy [meta][collection].value_type then
@@ -122,7 +131,7 @@ return function (Layer, collection, ref)
   end
 
   collection [checks] [prefix .. ".key_container"] = function (proxy)
-    if Layer.Proxy.has_meta (proxy) then
+    if has_meta (proxy) then
       return
     end
     if not proxy [meta][collection].key_container then
@@ -138,7 +147,7 @@ return function (Layer, collection, ref)
   end
 
   collection [checks] [prefix .. ".value_container"] = function (proxy)
-    if Layer.Proxy.has_meta (proxy) then
+    if has_meta (proxy) then
       return
     end
     if not proxy [meta][collection].value_container then

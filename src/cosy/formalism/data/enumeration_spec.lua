@@ -5,17 +5,17 @@ end
 -- These lines are required to correctly run tests.
 require "busted.runner" ()
 
-local Layer = require "cosy.formalism.layer"
-
 describe ("Formalism data.enumeration", function ()
 
   it ("can be loaded", function ()
-    local _ = Layer.require "cosy/formalism/data.enumeration"
+    local Layer = require "layeredata"
+    local _     = Layer.require "cosy/formalism/data.enumeration"
   end)
 
   it ("detects wrongly typed elements (primitive)", function ()
+    local Layer       = require "layeredata"
     local enumeration = Layer.require "cosy/formalism/data.enumeration"
-    local layer = Layer.new {}
+    local layer       = Layer.new {}
     layer [Layer.key.refines] = { enumeration }
     layer [Layer.key.meta   ] = {
       [enumeration] = {
@@ -23,13 +23,14 @@ describe ("Formalism data.enumeration", function ()
       },
     }
     layer.key = 3
-    Layer.Proxy.check (layer)
-    assert.is_not_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_not_nil (next (Layer.messages))
   end)
 
   it ("detects correctly typed elements (primitive)", function ()
+    local Layer       = require "layeredata"
     local enumeration = Layer.require "cosy/formalism/data.enumeration"
-    local layer = Layer.new {}
+    local layer       = Layer.new {}
     layer [Layer.key.refines] = { enumeration }
     layer [Layer.key.meta   ] = {
       [enumeration] = {
@@ -37,11 +38,12 @@ describe ("Formalism data.enumeration", function ()
       },
     }
     layer.key = "value"
-    Layer.Proxy.check (layer)
-    assert.is_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (next (Layer.messages))
   end)
 
   it ("detects wrongly typed elements (proxy)", function ()
+    local Layer       = require "layeredata"
     local enumeration = Layer.require "cosy/formalism/data.enumeration"
     local layer, ref  = Layer.new {}
     layer [Layer.key.refines] = { enumeration }
@@ -52,11 +54,12 @@ describe ("Formalism data.enumeration", function ()
       }
     }
     layer.key = true
-    Layer.Proxy.check (layer)
-    assert.is_not_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_not_nil (next (Layer.messages))
   end)
 
   it ("detects correctly typed elements (proxy)", function ()
+    local Layer       = require "layeredata"
     local enumeration = Layer.require "cosy/formalism/data.enumeration"
     local layer, ref  = Layer.new {}
     layer [Layer.key.refines] = { enumeration }
@@ -69,11 +72,12 @@ describe ("Formalism data.enumeration", function ()
     layer.key = {
       [Layer.key.refines] = { ref [Layer.key.meta].t }
     }
-    Layer.Proxy.check (layer)
-    assert.is_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (next (Layer.messages))
   end)
 
   it ("sets the value type by default (proxy)", function ()
+    local Layer       = require "layeredata"
     local enumeration = Layer.require "cosy/formalism/data.enumeration"
     local layer, ref  = Layer.new {}
     layer [Layer.key.refines] = { enumeration }
@@ -84,8 +88,8 @@ describe ("Formalism data.enumeration", function ()
       }
     }
     layer.key = {}
-    Layer.Proxy.check (layer)
-    assert.is_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (next (Layer.messages))
   end)
 
 end)

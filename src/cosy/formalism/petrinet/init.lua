@@ -20,8 +20,8 @@ return function (Layer, petrinet, ref)
 
   petrinet [refines] = {
     graph,
-    directed,
     binary_edges,
+    directed,
   }
 
   petrinet [meta].place_type = {

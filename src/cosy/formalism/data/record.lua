@@ -22,6 +22,15 @@ return function (Layer, record)
 
   local prefix = "cosy/formalism/data.record"
 
+  local function has_meta (proxy)
+    for _, key in Layer.Proxy.keys (proxy) do
+      if key == meta then
+        return true
+      end
+    end
+    return false
+  end
+
   record [meta] = {
     [record] = {
       -- key = {
@@ -34,7 +43,7 @@ return function (Layer, record)
   record [checks] = {}
 
   record [checks] [prefix .. ".value_type"] = function (proxy)
-    if Layer.Proxy.has_meta (proxy) then
+    if has_meta (proxy) then
       return
     end
     for key, description in pairs (proxy [meta][record]) do
@@ -59,10 +68,10 @@ return function (Layer, record)
   end
 
   record [checks] [prefix .. ".value_container"] = function (proxy)
-    if Layer.Proxy.has_meta (proxy) then
+    if has_meta (proxy) then
       return
     end
-    for key, description in pairs (proxy [meta][record]) do
+    for key, description in pairs (proxy [meta] [record]) do
       if  getmetatable (description) == Layer.Proxy
       and description.value_container ~= nil then
         if  getmetatable (description.value_container) ~= Layer.Proxy then
