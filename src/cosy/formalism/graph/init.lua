@@ -21,6 +21,8 @@ return function (Layer, graph, ref)
     record,
   }
 
+  graph [meta] = {}
+
   -- Vertices are empty in base graph.
   graph [meta].vertex_type = {
     [refines] = {

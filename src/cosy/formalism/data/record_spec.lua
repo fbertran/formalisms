@@ -5,15 +5,15 @@ end
 -- These lines are required to correctly run tests.
 require "busted.runner" ()
 
-local Layer = require "cosy.formalism.layer"
-
 describe ("Formalism data.record", function ()
 
   it ("can be loaded", function ()
-    local _ = Layer.require "cosy/formalism/data.record"
+    local Layer = require "layeredata"
+    local _     = Layer.require "cosy/formalism/data.record"
   end)
 
   it ("detects missing key (primitive)", function ()
+    local Layer  = require "layeredata"
     local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {}
     layer [Layer.key.refines] = { record }
@@ -22,11 +22,12 @@ describe ("Formalism data.record", function ()
         key = { value_type = "string" },
       },
     }
-    Layer.Proxy.check (layer)
-    assert.is_not_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_not_nil (next (Layer.messages))
   end)
 
   it ("detects missing key (proxy)", function ()
+    local Layer      = require "layeredata"
     local record     = Layer.require "cosy/formalism/data.record"
     local layer, ref = Layer.new {}
     layer.t = {}
@@ -36,25 +37,27 @@ describe ("Formalism data.record", function ()
         key = { value_type = ref.t },
       },
     }
-    Layer.Proxy.check (layer)
-    assert.is_not_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_not_nil (next (Layer.messages))
   end)
 
   it ("detects wrongly typed key/value (primitive)", function ()
+    local Layer  = require "layeredata"
     local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {}
     layer [Layer.key.refines] = { record }
     layer [Layer.key.meta   ] = {
       [record] = {
-        key = { value_type = "boolean" },
+        key = { value_type = "string" },
       },
     }
     layer.key = 1
-    Layer.Proxy.check (layer)
-    assert.is_not_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_not_nil (next (Layer.messages))
   end)
 
   it ("detects correctly typed key/value (primitive)", function ()
+    local Layer  = require "layeredata"
     local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {}
     layer [Layer.key.refines] = { record }
@@ -64,26 +67,12 @@ describe ("Formalism data.record", function ()
       },
     }
     layer.key = "value"
-    Layer.Proxy.check (layer)
-    assert.is_nil (Layer.messages (layer) ())
-  end)
-
-
-  it ("detects correctly typed key/value (primitive)", function ()
-    local record = Layer.require "cosy/formalism/data.record"
-    local layer  = Layer.new {}
-    layer [Layer.key.refines] = { record }
-    layer [Layer.key.meta   ] = {
-      [record] = {
-        key = { value_type = "string",},
-      },
-    }
-    layer.key = "ok"
-    Layer.Proxy.check (layer)
-    assert.is_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (next (Layer.messages))
   end)
 
   it ("detects wrongly typed key/value (proxy)", function ()
+    local Layer      = require "layeredata"
     local record     = Layer.require "cosy/formalism/data.record"
     local common, rc = Layer.new {}
     common.type1 = {}
@@ -103,16 +92,17 @@ describe ("Formalism data.record", function ()
       [Layer.key.refines] = { rl2.type2 },
     }
     do
-      Layer.Proxy.check (l1)
-      assert.is_not_nil (Layer.messages (l1) ())
+      Layer.Proxy.check_all (l1)
+      assert.is_not_nil (Layer.messages [l1])
     end
     do
-      Layer.Proxy.check (l2)
-      assert.is_not_nil (Layer.messages (l2) ())
+      Layer.Proxy.check_all (l2)
+      assert.is_not_nil (Layer.messages [l2])
     end
   end)
 
   it ("detects correctly typed key/value (proxy)", function ()
+    local Layer      = require "layeredata"
     local record     = Layer.require "cosy/formalism/data.record"
     local common, rc = Layer.new {}
     common.type1 = {}
@@ -128,11 +118,12 @@ describe ("Formalism data.record", function ()
     layer.key = {
       [Layer.key.refines] = { ref.type1 },
     }
-    Layer.Proxy.check (layer)
-    assert.is_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (next (Layer.messages))
   end)
 
   it ("allows non declared keys", function ()
+    local Layer  = require "layeredata"
     local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {}
     layer [Layer.key.refines] = { record }
@@ -143,11 +134,12 @@ describe ("Formalism data.record", function ()
     }
     layer.key = "value"
     layer.zzz = 1
-    Layer.Proxy.check (layer)
-    assert.is_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (next (Layer.messages))
   end)
 
   it ("forbids non types for value_type", function ()
+    local Layer  = require "layeredata"
     local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {}
     layer [Layer.key.refines] = { record }
@@ -157,8 +149,8 @@ describe ("Formalism data.record", function ()
       },
     }
     layer.key = true
-    Layer.Proxy.check (layer)
-    assert.is_not_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_not_nil (next (Layer.messages))
   end)
 
 end)

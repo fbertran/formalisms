@@ -22,6 +22,15 @@ return function (Layer, record)
 
   local prefix = "cosy/formalism/data.record"
 
+  local function has_meta (proxy)
+    for _, key in Layer.Proxy.keys (proxy) do
+      if key == meta then
+        return true
+      end
+    end
+    return false
+  end
+
   record [meta] = {
     [record] = {
       -- key = {
@@ -34,26 +43,20 @@ return function (Layer, record)
   record [checks] = {}
 
   record [checks] [prefix .. ".value_type"] = function (proxy)
-    if Layer.Proxy.has_meta (proxy) then
+    if has_meta (proxy) then
       return
     end
-    
     for key, description in pairs (proxy [meta][record]) do
-     
-
       if  getmetatable (description) == Layer.Proxy
       and description.value_type ~= nil then
-      
-       if type (description.value_type) ~= "string"
-        and getmetatable (description.value_type) ~= Layer.Proxy then 
+        if  type (description.value_type) ~= "string"
+        and getmetatable (description.value_type) ~= Layer.Proxy then
           Layer.coroutine.yield (prefix .. ".value_type.invalid", {
             proxy = proxy,
             key   = key,
             used  = description.value_type,
           })
         else
-        --  print("RECORD :"..description.value_type) 
-
           check_type (proxy [key], description.value_type, {
             proxy  = proxy,
             key    = key,
@@ -65,10 +68,10 @@ return function (Layer, record)
   end
 
   record [checks] [prefix .. ".value_container"] = function (proxy)
-    if Layer.Proxy.has_meta (proxy) then
+    if has_meta (proxy) then
       return
     end
-    for key, description in pairs (proxy [meta][record]) do
+    for key, description in pairs (proxy [meta] [record]) do
       if  getmetatable (description) == Layer.Proxy
       and description.value_container ~= nil then
         if  getmetatable (description.value_container) ~= Layer.Proxy then
@@ -78,8 +81,6 @@ return function (Layer, record)
             used  = description.value_container,
           })
         else
-			--		print ("key container")
-				--	print (key)
           check_container (proxy [key], description.value_container, {
             proxy  = proxy,
             key    = key,
@@ -89,5 +90,5 @@ return function (Layer, record)
       end
     end
   end
- 
+
 end
