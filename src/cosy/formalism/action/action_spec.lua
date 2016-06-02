@@ -6,7 +6,7 @@ end
 require "busted.runner" ()
 
 
-local Layer = require "cosy.formalism.layer"
+local Layer = require "layeredata"
 
 describe ("Formalism action", function ()
 
@@ -24,8 +24,8 @@ describe ("Formalism action", function ()
       },
     }
     layer.key = 1
-    Layer.Proxy.check (layer)
-    assert.is_not_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_not_nil ( next (Layer.messages) )
   end)
 
 end)

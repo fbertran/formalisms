@@ -32,8 +32,8 @@ describe ("Formalism action.synchronized", function ()
 			}		
 			layer.value = "Signal"
 			layer.type 		= ref.types.send
-      Layer.Proxy.check (layer)
-      assert.is_nil (Layer.messages (layer) ())
+      Layer.Proxy.check_all (layer)
+      assert.is_nil ( next ( Layer.messages) )
     end)
 
     it ("using a reference to ref.types (recv)", function ()
@@ -51,8 +51,8 @@ describe ("Formalism action.synchronized", function ()
 			}		
 			layer.value = "Signal"
 			layer.type 		= ref.types.recv
-      Layer.Proxy.check (layer)
-      assert.is_nil (Layer.messages (layer) ())
+      Layer.Proxy.check_all (layer)
+      assert.is_nil (next ( Layer.messages) )
     end)
 
 		it ("using a wrong type (primitive)", function ()
@@ -69,8 +69,8 @@ describe ("Formalism action.synchronized", function ()
 			}		
 			layer.value 	= "Signal"
 			layer.type = 42
-      Layer.Proxy.check (layer)
-      assert.is_not_nil (Layer.messages (layer) ())
+      Layer.Proxy.check_all(layer)
+      assert.is_not_nil ( next ( Layer.messages ) )
     end)
 
 		it ("using a wrong type (reference)", function ()
@@ -92,8 +92,8 @@ describe ("Formalism action.synchronized", function ()
 			wrong_ref.value = "send"
 
 			layer.type = wrong_ref
-      Layer.Proxy.check (layer)
-      assert.is_not_nil (Layer.messages (layer) ())
+      Layer.Proxy.check_all (layer)
+      assert.is_not_nil ( next ( Layer.messages ) )
     end)
 	end)
 end)

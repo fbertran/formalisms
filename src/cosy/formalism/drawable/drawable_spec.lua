@@ -7,7 +7,7 @@ require "busted.runner" ()
 
 
 
-local Layer = require "cosy.formalism.layer"
+local Layer = require "layeredata"
 
 describe ("Formalism data.record", function ()
 
@@ -21,8 +21,8 @@ describe ("Formalism data.record", function ()
     local layer  = Layer.new {}
     layer [Layer.key.refines] = { drawable }
     layer.svg_sequence = "SVG SEQUENCE"
-    Layer.Proxy.check (layer)
-    assert.is_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (Layer.messages [ layer.svg_sequence])
   end)
 
 	it ("detects using wrong type for svg_sequence", function ()
@@ -31,8 +31,8 @@ describe ("Formalism data.record", function ()
     local layer  = Layer.new {}
     layer [Layer.key.refines] = { drawable }
     layer.svg_sequence = 18
-    Layer.Proxy.check (layer)
-    assert.is_not_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_not_nil (next ( Layer.messages ))
   end)
 
 	it ("using good type for draw", function ()
@@ -42,8 +42,8 @@ describe ("Formalism data.record", function ()
     layer [Layer.key.refines] = { drawable }
     layer.svg_sequence = "svg sequence"
 		layer.draw = function () print "Function draw" end
-    Layer.Proxy.check (layer)
-    assert.is_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (next ( Layer.messages ))
   end)
 
 	it ("detects using wrong type for svg_sequence", function ()
@@ -53,8 +53,8 @@ describe ("Formalism data.record", function ()
     layer [Layer.key.refines] = { drawable }
     layer.svg_sequence = "svg sequence"
 		layer.draw = "not a function"
-    Layer.Proxy.check (layer)
-    assert.is_not_nil (Layer.messages (layer) ())
+    Layer.Proxy.check_all (layer)
+    assert.is_not_nil (next ( Layer.messages ))
   end)
 
 end)

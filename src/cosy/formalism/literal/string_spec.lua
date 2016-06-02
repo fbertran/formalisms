@@ -7,7 +7,7 @@ end
 
 require "busted.runner" ()
 
-local Layer = require "cosy.formalism.layer"
+local Layer = require "layeredata"
 
 describe ("Formalism literal.string", function ()
 
@@ -26,8 +26,34 @@ describe ("Formalism literal.string", function ()
           value = "test",  
         },
       }
-      Layer.Proxy.check (layer)
-      assert.is_nil (Layer.messages (layer) ())
+      Layer.Proxy.check_all (layer)
+      assert.is_nil ( next ( Layer.messages ) )
+    end)
+
+     it ("forbids a different value (number) ", function ()
+      local string = Layer.require "cosy/formalism/literal.string"
+      local layer      = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { string },
+          value = 42,  
+        },
+      }
+      Layer.Proxy.check_all (layer)
+      assert.is_not_nil ( next ( Layer.messages ) )
+    end)
+
+     it ("forbids a different value (boolean) ", function ()
+      local string = Layer.require "cosy/formalism/literal.string"
+      local layer      = Layer.new {
+        name = "layer",
+        data = {
+          [Layer.key.refines] = { string },
+          value = true,  
+        },
+      }
+      Layer.Proxy.check_all (layer)
+      assert.is_not_nil ( next ( Layer.messages ) )
     end)
 
 	end)

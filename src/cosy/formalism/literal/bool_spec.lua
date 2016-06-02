@@ -5,7 +5,7 @@ end
 --These lines are required to correctly run tests.
 require "busted.runner" ()
 
-local Layer = require "cosy.formalism.layer"
+local Layer = require "layeredata"
 
 describe ("Formalism literal.bool", function ()
 
@@ -24,8 +24,8 @@ describe ("Formalism literal.bool", function ()
           value = 42,  
         },
       }
-      Layer.Proxy.check (layer)
-      assert.is_not_nil (Layer.messages (layer) ())
+      Layer.Proxy.check_all (layer)
+      assert.is_not_nil ( next ( Layer.messages ) )
     end)
 
 		it ("forbids a different type (string)", function ()
@@ -34,11 +34,11 @@ describe ("Formalism literal.bool", function ()
         name = "layer",
         data = {
           [Layer.key.refines] = { bool },
-          value = 42,  
+          value = "test",  
         },
       }
-      Layer.Proxy.check (layer)
-      assert.is_not_nil (Layer.messages (layer) ())
+      Layer.Proxy.check_all (layer)
+      assert.is_not_nil ( next ( Layer.messages ) )
     end)
 
 		it ("forbids a different type (formalism)", function ()
@@ -53,8 +53,8 @@ describe ("Formalism literal.bool", function ()
 					},  
         },
       }
-      Layer.Proxy.check (layer)
-      assert.is_not_nil (Layer.messages (layer) ())
+      Layer.Proxy.check_all (layer)
+      assert.is_not_nil ( next ( Layer.messages ) )
     end)
 
 
@@ -67,8 +67,8 @@ describe ("Formalism literal.bool", function ()
           value = true,  
         },
       }
-      Layer.Proxy.check (layer)
-      assert.is_nil (Layer.messages (layer) ())
+      Layer.Proxy.check_all (layer)
+      assert.is_nil ( next ( Layer.messages ) )
     end)
 
 	end)
