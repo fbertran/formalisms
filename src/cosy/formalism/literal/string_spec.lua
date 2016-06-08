@@ -4,7 +4,6 @@ if #setmetatable ({}, { __len = function () return 1 end }) ~= 1 then
   require "compat52"
 end
 
-
 require "busted.runner" ()
 
 local Layer = require "layeredata"
@@ -12,12 +11,15 @@ local Layer = require "layeredata"
 describe ("Formalism literal.string", function ()
 
   it ("can be loaded", function ()
+    
     local _ = Layer.require "cosy/formalism/literal.string"
+  
   end)
 
   describe ("with type information", function ()
 
     it ("forbids a different type", function ()
+      
       local string = Layer.require "cosy/formalism/literal.string"
       local layer      = Layer.new {
         name = "layer",
@@ -30,7 +32,8 @@ describe ("Formalism literal.string", function ()
       assert.is_nil ( next ( Layer.messages ) )
     end)
 
-     it ("forbids a different value (number) ", function ()
+    it ("forbids a different value (number) ", function ()
+    
       local string = Layer.require "cosy/formalism/literal.string"
       local layer      = Layer.new {
         name = "layer",
@@ -41,9 +44,11 @@ describe ("Formalism literal.string", function ()
       }
       Layer.Proxy.check_all (layer)
       assert.is_not_nil ( next ( Layer.messages ) )
+    
     end)
 
      it ("forbids a different value (boolean) ", function ()
+    
       local string = Layer.require "cosy/formalism/literal.string"
       local layer      = Layer.new {
         name = "layer",
@@ -54,6 +59,7 @@ describe ("Formalism literal.string", function ()
       }
       Layer.Proxy.check_all (layer)
       assert.is_not_nil ( next ( Layer.messages ) )
+    
     end)
 
 	end)

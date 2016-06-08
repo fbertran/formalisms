@@ -9,7 +9,5 @@ return function (Layer, boolean_operation)
     operation,
   }
 
-  
-
   return boolean_operation
 end

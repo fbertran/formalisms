@@ -12,9 +12,9 @@ return function (Layer, equal_operation)
     relational_operation,
   }
 
-  equal_operation.operands[meta][collection].minimum = 2
-  equal_operation.operands[meta][collection].maximum = 2
-  equal_operation[meta][record].operator.value = "EQU"
+  equal_operation.operands [meta][collection].minimum = 2
+  equal_operation.operands [meta][collection].maximum = 2
+  equal_operation [meta][record].operator.value = "EQU"
   
   return equal_operation
 end

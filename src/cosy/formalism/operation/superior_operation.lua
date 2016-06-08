@@ -11,10 +11,9 @@ return function (Layer, superior_operation)
   superior_operation [refines] = {
     relational_operation,
   }
-
-  superior_operation.operands[meta][collection].minimum = 2
-  superior_operation.operands[meta][collection].maximum = 2
-  superior_operation[meta][record].operator.value = "SUP"
+  superior_operation.operands [meta][collection].minimum = 2
+  superior_operation.operands [meta][collection].maximum = 2
+  superior_operation [meta][record].operator.value = "SUP"
   
   return superior_operation
 end

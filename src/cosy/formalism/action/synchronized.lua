@@ -11,33 +11,25 @@ return function (Layer, synchronized,ref)
   synchronized [refines] = {
     action,
   }
-
-
-	synchronized.types = {
-		[refines] = {collection},
-		
-		send={
-			[refines] = {string},
-			value = "send",
-		},	
-		recv={
-			[refines] = {string},
-			value = "recv",
-		},	
-	}
-
- synchronized [meta] = {
-      [record] = {
-        type = {
-					value_container = ref.types,
-        },
-    },
+  synchronized.types = {
+    [refines] = {collection},   
+    send={
+      [refines] = {string},
+      value = "send",
+    },  
+    recv={
+      [refines] = {string},
+      value = "recv",
+    },  
   }
 
-	
-	
-	
-
+  synchronized [meta] = {
+    [record] = {
+      type = {
+        value_container = ref.types,
+      },
+    },
+  }
 
   return synchronized
 

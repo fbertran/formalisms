@@ -11,10 +11,9 @@ return function (Layer, superiorequal_operation)
   superiorequal_operation [refines] = {
     relational_operation,
   }
-
-  superiorequal_operation.operands[meta][collection].minimum = 2
-  superiorequal_operation.operands[meta][collection].maximum = 2
-  superiorequal_operation[meta][record].operator.value = "SUPEQ"
+  superiorequal_operation.operands [meta][collection].minimum = 2
+  superiorequal_operation.operands [meta][collection].maximum = 2
+  superiorequal_operation [meta][record].operator.value = "SUPEQ"
   
   return superiorequal_operation
 end

@@ -11,7 +11,7 @@ return function (Layer, boolean_expression)
   boolean_expression [refines] = {
     expression,
   }
-  boolean_expression.operations [meta] [collection].value_type=boolean_operation
+  boolean_expression.operations [meta] [collection].value_type = boolean_operation
 
   return boolean_expression
 end

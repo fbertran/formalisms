@@ -1,4 +1,4 @@
---Addition Operation
+--Or Operation
 
 return function (Layer, or_operation)
 
@@ -11,10 +11,9 @@ return function (Layer, or_operation)
   or_operation [refines] = {
     logical_operation,
   }
-
-  or_operation.operands[meta][collection].minimum = 2
-  or_operation.operands[meta][collection].maximum = math.huge
-  or_operation[meta][record].operator.value = "OR"
+  or_operation.operands [meta][collection].minimum = 2
+  or_operation.operands [meta][collection].maximum = math.huge
+  or_operation [meta][record].operator.value = "OR"
   
   return or_operation
 end

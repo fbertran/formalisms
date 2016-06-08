@@ -11,10 +11,9 @@ return function (Layer, multiplication_operation)
   multiplication_operation [refines] = {
     arithmetic_operation,
   }
-
-  multiplication_operation.operands[meta][collection].minimum=2
-  multiplication_operation.operands[meta][collection].maximum=math.huge
-  multiplication_operation[meta][record].operator.value="MUL"
+  multiplication_operation.operands [meta][collection].minimum = 2
+  multiplication_operation.operands [meta][collection].maximum = math.huge
+  multiplication_operation [meta][record].operator.value = "MUL"
 
   return multiplication_operation
 end

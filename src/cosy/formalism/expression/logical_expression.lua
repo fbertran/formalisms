@@ -11,7 +11,7 @@ return function (Layer, logical_expression)
   logical_expression [refines] = {
     expression,
   }
-  logical_expression.operations [meta] [collection].value_type=logical_operation
+  logical_expression.operations [meta] [collection].value_type = logical_operation
 
   return logical_expression
 end

@@ -4,7 +4,6 @@ return function (Layer, arithmetic_expression)
 
   local meta                 =  Layer.key.meta
   local refines              =  Layer.key.refines
- 
   local collection           =  Layer.require "cosy/formalism/data.collection"
   local expression           =  Layer.require "cosy/formalism/expression"
   local arithmetic_operation =  Layer.require "cosy/formalism/operation/arithmetic_operation"
@@ -13,9 +12,8 @@ return function (Layer, arithmetic_expression)
     expression
   }
   
-
   arithmetic_expression.operations = {
-    [meta]={
+    [meta] = {
       [collection] = {
         value_type = arithmetic_operation
       },

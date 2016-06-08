@@ -6,10 +6,8 @@ return function (Layer, logical_operation)
   local operation  = Layer.require "cosy/formalism/operation"
 
   logical_operation [refines] = {
-      operation,
-    }
-
-  
+    operation,
+  }
 
   return logical_operation
 end

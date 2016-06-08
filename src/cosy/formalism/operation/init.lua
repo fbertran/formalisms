@@ -8,30 +8,27 @@ return function (Layer, operation, ref)
   local collection =  Layer.require "cosy/formalism/data.collection"
 
   operation [refines] = {record,}
-
   operation[meta] = {
-		operands_type = false,
+    
     [record] = {
+      operands_type = false,
       operator = {
         value_type = "string",
       },
     }
-	}
-
-	operation.operands = {
-  	[refines] = {
+  }
+  operation.operands = {
+    [refines] = {
       collection,
     },
-		[meta] = {
-			[collection] = {
-        value_type = ref[meta].operands_type,
+    [meta] = {
+      [collection] = {
+        value_type = ref [meta].operands_type,
         minimum = false,
         maximum = false
       }
-		},
+    },
   }
-    
-       
-  
+ 
   return operation
 end

@@ -11,10 +11,9 @@ return function (Layer, substraction_operation)
   substraction_operation [refines] = {
     arithmetic_operation,
   }
+  substraction_operation.operands [meta][collection].minimum = 2
+  substraction_operation.operands [meta][collection].maximum = 2
+  substraction_operation [meta][record].operator.value = "SUB"
 
-  substraction_operation.operands[meta][collection].minimum=2
-  substraction_operation.operands[meta][collection].maximum=2
-  substraction_operation[meta][record].operator.value="SUB"
-  
   return substraction_operation
 end

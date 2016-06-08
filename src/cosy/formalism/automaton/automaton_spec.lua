@@ -9,6 +9,8 @@ local Layer = require "layeredata"
 describe ("Formalism automaton", function ()
 
   it ("can be loaded", function ()
+
     local _ = Layer.require "cosy/formalism/automaton"
+
   end)
 end)

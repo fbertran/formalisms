@@ -12,9 +12,9 @@ return function (Layer, xor_operation)
     logical_operation,
   }
 
-  xor_operation.operands[meta][collection].minimum = 2
-  xor_operation.operands[meta][collection].maximum = math.huge
-  xor_operation[meta][record].operator.value = "XOR"
+  xor_operation.operands [meta][collection].minimum = 2
+  xor_operation.operands [meta][collection].maximum = math.huge
+  xor_operation [meta][record].operator.value = "XOR"
   
   return xor_operation
 end

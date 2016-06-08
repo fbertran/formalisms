@@ -11,7 +11,7 @@ return function (Layer, relational_expression)
   relational_expression [refines] = {
     expression,
   }
-  relational_expression.operations [meta] [collection].value_type=relational_operation
+  relational_expression.operations [meta] [collection].value_type = relational_operation
 
   return relational_expression
 end

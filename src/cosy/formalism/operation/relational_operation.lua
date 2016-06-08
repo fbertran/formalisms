@@ -9,7 +9,5 @@ return function (Layer, relational_operation)
     operation,
   }
 
-  
-
   return relational_operation
 end

@@ -2,14 +2,11 @@ return function (Layer, automaton, ref)
 
   local meta     = Layer.key.meta
   local refines  = Layer.key.refines
-  
   local collection       = Layer.require "cosy/formalism/data.collection"
   local record           = Layer.require "cosy/formalism/data.record"
   local graph            = Layer.require "cosy/formalism/graph"
- 
   local directed         = Layer.require "cosy/formalism/graph.directed"
   local binary_edges     = Layer.require "cosy/formalism/graph.binary_edges"
-
   local action         = Layer.require "cosy/formalism/action"
   local identifier       = Layer.require "cosy/formalism/literal.identifier"
 
@@ -75,8 +72,6 @@ return function (Layer, automaton, ref)
       }
     }
   }
-
-
 
   return automaton
 end
