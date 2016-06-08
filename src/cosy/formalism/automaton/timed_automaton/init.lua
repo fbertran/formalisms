@@ -36,7 +36,7 @@ return function (Layer, timed_automaton, ref)
   local and_operation = Layer.require (path .. "/operation/and_operation")
   local different_operation = Layer.require (path .. "/operation/different_operation")
   local equal_operation = Layer.require (path .. "/operation/equal_operation")
-   local inferiorequal_operation = Layer.require (path .. "/operation/inferiorequal_operation")
+  local inferiorequal_operation = Layer.require (path .. "/operation/inferiorequal_operation")
   local inferior_operation = Layer.require (path .. "/operation/inferior_operation")
   local nor_operation = Layer.require (path .. "/operation/nor_operation")
   local not_operation = Layer.require (path .. "/operation/not_operation")
@@ -47,7 +47,7 @@ return function (Layer, timed_automaton, ref)
   local superior_operation = Layer.require (path .. "/operation/superior_operation")
   local xor_operation = Layer.require (path .. "/operation/xor_operation")
 
---[[]]
+
   timed_automaton [refines] = {
     automaton,
   }
@@ -56,7 +56,7 @@ return function (Layer, timed_automaton, ref)
 -not refined because we are using a boolean_operation specific for timed_automaton (no need to inherit it).
 -if we refine we will lose the tree structure of the operations.
 ]]--
-  timed_automaton [meta].guard_type = boolean_operation 
+  timed_automaton [meta].guard_type = boolean_operation
 
   timed_automaton [meta].state_type [meta] = {
     [record] = {
@@ -496,7 +496,7 @@ local function parser (expression,instance)
 
       if(operand_type:match(patt)~=nil) then
         --check if the formalism instance exists in the instance created
-        local val=loadstring("return function (instance)  return instance"..string.sub(patt,string.find(patt,"%."),#patt).." end")()
+        local val=load("return function (instance)  return instance"..string.sub(patt,string.find(patt,"%."),#patt).." end")()
         val=val(formalism_instance)
         if(val) then
           return val

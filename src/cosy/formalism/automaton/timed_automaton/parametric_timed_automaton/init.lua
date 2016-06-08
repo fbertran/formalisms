@@ -27,23 +27,29 @@ return function (Layer, parametric_timed_automaton, ref)
   local operands_relational_type = Layer.require (path .. "/condition_params/operands_relational_type")
   local operands_arithmetic_type_ta = Layer.require ("cosy/formalism/automaton/timed_automaton/operation/operands_arithmetic_type")
   local operands_relational_type_ta = Layer.require ("cosy/formalism/automaton/timed_automaton/operation/operands_relational_type")
+
   local multiplication_operation = Layer.require (path .. "/condition_params/multiplication_operation")
   local division_operation = Layer.require (path .. "/condition_params/division_operation")
-
   local addition_operation = Layer.require (path .. "/condition_params/addition_operation")
-  local and_operation = Layer.require (path .. "/condition_params/and_operation")
+  local substraction_operation = Layer.require (path .. "/condition_params/substraction_operation")
+
+ 
   local different_operation = Layer.require (path .. "/condition_params/different_operation")
   local equal_operation = Layer.require (path .. "/condition_params/equal_operation")
-   local inferiorequal_operation = Layer.require (path .. "/condition_params/inferiorequal_operation")
+  local inferiorequal_operation = Layer.require (path .. "/condition_params/inferiorequal_operation")
   local inferior_operation = Layer.require (path .. "/condition_params/inferior_operation")
-  local nor_operation = Layer.require (path .. "/condition_params/nor_operation")
-  local not_operation = Layer.require (path .. "/condition_params/not_operation")
- 
-  local or_operation = Layer.require (path .. "/condition_params/or_operation")
-  local substraction_operation = Layer.require (path .. "/condition_params/substraction_operation")
   local superiorequal_operation = Layer.require (path .. "/condition_params/superiorequal_operation")
   local superior_operation = Layer.require (path .. "/condition_params/superior_operation")
+  
+  local not_operation = Layer.require (path .. "/condition_params/not_operation")
+
+  local and_operation = Layer.require (path .. "/condition_params/and_operation")
+  local or_operation = Layer.require (path .. "/condition_params/or_operation")
+  local nor_operation = Layer.require (path .. "/condition_params/nor_operation")
   local xor_operation = Layer.require (path .. "/condition_params/xor_operation")
+
+  
+  
 
 
 
@@ -406,7 +412,7 @@ local function parser (expression,instance)
 
       if(operand_type:match(patt)~=nil) then
         --check if the formalism instance exists in the instance created
-        local val=loadstring("return function (instance)  return instance"..string.sub(patt,string.find(patt,"%."),#patt).." end")()
+        local val=load("return function (instance)  return instance"..string.sub(patt,string.find(patt,"%."),#patt).." end")()
         val=val(formalism_instance)
         if(val) then
           return val
