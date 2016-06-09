@@ -20,13 +20,10 @@ describe ("Formalism literal.bool", function ()
     it ("forbids a different type (number)", function ()
  
       local bool = Layer.require "cosy/formalism/literal.bool"  
-      local layer      = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { bool },
-          value = 42,  
-        },
-      }
+      local layer      = Layer.new {}
+
+      layer [Layer.key.refines] = { bool }
+      layer.value = 42
       Layer.Proxy.check_all (layer)
       assert.is_not_nil ( next ( Layer.messages ) )
     
@@ -34,13 +31,10 @@ describe ("Formalism literal.bool", function ()
 
     it ("forbids a different type (string)", function ()
       local bool = Layer.require "cosy/formalism/literal.bool"  
-      local layer      = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { bool },
-          value = "test",  
-        },
-      }
+      local layer      = Layer.new {}
+
+      layer [Layer.key.refines] = { bool }
+      layer.value = "test"
       Layer.Proxy.check_all (layer)
       assert.is_not_nil ( next ( Layer.messages ) )
     
@@ -50,15 +44,16 @@ describe ("Formalism literal.bool", function ()
       
       local bool 		= Layer.require "cosy/formalism/literal.bool" 
       local string	= Layer.require "cosy/formalism/literal.string" 
-      local layer      = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { bool },
+      local record  = Layer.require "cosy/formalism/data.record"
+      local layer      = Layer.new {}
+      layer [Layer.key.refines] = { bool }
+      layer [Layer.key.meta   ] = {
+        [record] = {
           value = {
-          [Layer.key.refines] = { string }						
-          },  
-        },
-      }
+            [Layer.key.refines] = { string }
+          }
+        }
+      }				     
       Layer.Proxy.check_all (layer)
       assert.is_not_nil ( next ( Layer.messages ) )
     

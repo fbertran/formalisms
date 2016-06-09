@@ -21,13 +21,9 @@ describe ("Formalism literal.string", function ()
     it ("forbids a different type", function ()
       
       local string = Layer.require "cosy/formalism/literal.string"
-      local layer      = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { string },
-          value = "test",  
-        },
-      }
+      local layer      = Layer.new {}
+      layer [Layer.key.refines] = { string }
+      layer.value = "test"  
       Layer.Proxy.check_all (layer)
       assert.is_nil ( next ( Layer.messages ) )
     end)
@@ -35,13 +31,9 @@ describe ("Formalism literal.string", function ()
     it ("forbids a different value (number) ", function ()
     
       local string = Layer.require "cosy/formalism/literal.string"
-      local layer      = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { string },
-          value = 42,  
-        },
-      }
+      local layer      = Layer.new {}
+      layer [Layer.key.refines] = { string }
+      layer.value = 42
       Layer.Proxy.check_all (layer)
       assert.is_not_nil ( next ( Layer.messages ) )
     
@@ -50,13 +42,9 @@ describe ("Formalism literal.string", function ()
      it ("forbids a different value (boolean) ", function ()
     
       local string = Layer.require "cosy/formalism/literal.string"
-      local layer      = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { string },
-          value = true,  
-        },
-      }
+      local layer      = Layer.new {}
+      layer [Layer.key.refines] = { string }
+      layer.value = true  
       Layer.Proxy.check_all (layer)
       assert.is_not_nil ( next ( Layer.messages ) )
     

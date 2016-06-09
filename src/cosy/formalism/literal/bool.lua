@@ -13,7 +13,7 @@ return function (Layer, bool)
   
   bool [meta] = {
     [record] = {
-      value = { value_type = "boolean" },
+      value = {value_type = "boolean" },
     },
   }
 

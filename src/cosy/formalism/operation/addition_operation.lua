@@ -6,7 +6,8 @@ return function (Layer, addition_operation)
   local refines    =  Layer.key.refines
   local record =  Layer.require "cosy/formalism/data.record"
   local arithmetic_operation  = Layer.require "cosy/formalism/operation.arithmetic_operation"
-
+  local collection  = Layer.require "cosy/formalism/data.collection"
+  
   addition_operation [refines] = {
     arithmetic_operation,
   }

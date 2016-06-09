@@ -11,8 +11,9 @@ return function (Layer, operation,ref)
   operation [refines] = {record,}
 
   operation[meta] = {
-    operands_type = false,
+    
     [record] = {
+      operands_type = false,
       operator = {
         value_type = "string",
       },

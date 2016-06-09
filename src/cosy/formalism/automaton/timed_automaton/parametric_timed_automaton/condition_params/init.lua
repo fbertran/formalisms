@@ -12,6 +12,7 @@ return function (Layer, operation)
 
   operation[meta] = {
     [record] = {
+      operator_type=false,
       operator = {
         value_type = value_string,
       },

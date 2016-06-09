@@ -21,13 +21,9 @@ describe ("Formalism literal.number", function ()
     it ("using good type", function ()
   
       local number = Layer.require "cosy/formalism/literal.number"  
-      local layer      = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { number },
-          value = 42,  
-        },
-      }
+      local layer      = Layer.new {}
+      layer [Layer.key.refines] = { number }
+      layer.value = 42  
       Layer.Proxy.check_all (layer)
       assert.is_nil ( next ( Layer.messages ) )
    
@@ -36,13 +32,9 @@ describe ("Formalism literal.number", function ()
     it ("forbids a different type (primitive)", function ()
    
       local number = Layer.require "cosy/formalism/literal.number"  
-      local layer      = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { number },
-          value = "test",  
-        },
-      }
+      local layer      = Layer.new {}
+      layer [Layer.key.refines] = { number }
+      layer.value = "test"  
       Layer.Proxy.check_all (layer)
       assert.is_not_nil (next ( Layer.messages ))
    
@@ -53,20 +45,12 @@ describe ("Formalism literal.number", function ()
       local number = Layer.require "cosy/formalism/literal.number" 
       local string = Layer.require "cosy/formalism/literal.string"
       local refines = Layer.key.refines
-      local wrong = Layer.new {
-        name = "wrong",
-        data = {
-          [refines] = {string},
-          value = "test",
-        },			
-      }
-      local layer      = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { number },
-          value = wrong,  
-        },
-      }
+      local wrong = Layer.new {}
+      wrong [refines] = {string}
+      wrong.value = "test"			
+      local layer      = Layer.new {}
+      layer [Layer.key.refines] = { number }
+      layer.value = wrong  
       Layer.Proxy.check_all (layer)
       assert.is_not_nil ( next ( Layer.messages ) )
    

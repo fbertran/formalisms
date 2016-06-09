@@ -1,4 +1,4 @@
---Addition Operation
+--Or Operation
 
 return function (Layer, or_operation)
 
