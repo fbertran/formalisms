@@ -6,14 +6,12 @@ return function (Layer, automaton, ref)
   local record           = Layer.require "cosy/formalism/data.record"
   local graph            = Layer.require "cosy/formalism/graph"
   local directed         = Layer.require "cosy/formalism/graph.directed"
-  local binary_edges     = Layer.require "cosy/formalism/graph.binary_edges"
   local action         = Layer.require "cosy/formalism/action"
   local identifier       = Layer.require "cosy/formalism/literal.identifier"
 
   automaton [refines] = {
     graph,
     directed,
-    binary_edges,
   }
 
 
@@ -53,7 +51,7 @@ return function (Layer, automaton, ref)
 
   automaton.states = {
     [refines] = {
-      ref [meta].vertices,
+      ref [meta].vertices [meta],
     },
     [meta] = {
       [collection] = {
@@ -64,7 +62,7 @@ return function (Layer, automaton, ref)
 
   automaton.transitions = {
     [refines] = {
-      ref [meta].edges,
+      ref [meta].edges [meta],
     },
     [meta] = {
       [collection] = {
