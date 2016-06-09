@@ -12,9 +12,9 @@ return function (Layer, nor_operation)
     boolean_operation,
   }
 
-  nor_operation.operands[meta][collection].minimum = 1
-  nor_operation.operands[meta][collection].maximum = 1
-  nor_operation[meta][record].operator.value = "NOR"
+  nor_operation.operands [meta][collection].minimum = 1
+  nor_operation.operands [meta][collection].maximum = 1
+  nor_operation [meta][record].operator.value = "NOR"
   
   return nor_operation
 end

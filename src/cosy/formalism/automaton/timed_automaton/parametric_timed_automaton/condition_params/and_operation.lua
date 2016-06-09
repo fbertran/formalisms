@@ -11,9 +11,9 @@ return function (Layer, and_operation)
   and_operation [refines] = {logical_operation}
   
 
-  and_operation.operands[meta][collection].minimum = 2
-  and_operation.operands[meta][collection].maximum = math.huge
-  and_operation[meta][record].operator.value = "AND"
+  and_operation.operands [meta][collection].minimum = 2
+  and_operation.operands [meta][collection].maximum = math.huge
+  and_operation [meta][record].operator.value = "AND"
   
   return and_operation
 end

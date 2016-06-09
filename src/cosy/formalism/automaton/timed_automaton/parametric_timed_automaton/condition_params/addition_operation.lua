@@ -12,9 +12,9 @@ return function (Layer, addition_operation)
      arithmetic_operation,
   }
 
-  addition_operation.operands[meta][collection].minimum = 2
-  addition_operation.operands[meta][collection].maximum = math.huge
-  addition_operation[meta][record].operator.value = "+"
+  addition_operation.operands [meta][collection].minimum = 2
+  addition_operation.operands [meta][collection].maximum = math.huge
+  addition_operation [meta][record].operator.value = "+"
   
   return addition_operation
 end

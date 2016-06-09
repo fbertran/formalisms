@@ -12,9 +12,9 @@ return function (Layer, superior_operation)
     relational_operation,
   }
 
-  superior_operation.operands[meta][collection].minimum = 2
-  superior_operation.operands[meta][collection].maximum = 2
-  superior_operation[meta][record].operator.value = ">"
+  superior_operation.operands [meta][collection].minimum = 2
+  superior_operation.operands [meta][collection].maximum = 2
+  superior_operation [meta][record].operator.value = ">"
   
   return superior_operation
 end

@@ -9,12 +9,12 @@ return function (Layer, different_operation)
   local relational_operation  = Layer.require "cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/relational_operation"
 
   different_operation [refines] = {
-  relational_operation,
+    relational_operation,
   }
 
-  different_operation.operands[meta][collection].minimum = 2
-  different_operation.operands[meta][collection].maximum = 2
-  different_operation[meta][record].operator.value = "~="
+  different_operation.operands [meta][collection].minimum = 2
+  different_operation.operands [meta][collection].maximum = 2
+  different_operation [meta][record].operator.value = "~="
   
   return different_operation
 end

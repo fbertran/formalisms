@@ -12,9 +12,9 @@ return function (Layer, division_operation)
     arithmetic_operation,
   }
 
-  division_operation.operands[meta][collection].minimum=2
-  division_operation.operands[meta][collection].maximum=2 
-  division_operation[meta][record].operator.value="/"
+  division_operation.operands [meta][collection].minimum = 2
+  division_operation.operands [meta][collection].maximum = 2 
+  division_operation [meta][record].operator.value = "/"
 
   return division_operation
 end

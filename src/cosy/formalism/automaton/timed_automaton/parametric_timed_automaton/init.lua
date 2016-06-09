@@ -20,9 +20,6 @@ return function (Layer, parametric_timed_automaton, ref)
   local operation = Layer.require (path .. "/condition_params")
 
 
-
-
-
   local operands_arithmetic_type = Layer.require (path .. "/condition_params/operands_arithmetic_type")
   local operands_relational_type = Layer.require (path .. "/condition_params/operands_relational_type")
   local operands_arithmetic_type_ta = Layer.require ("cosy/formalism/automaton/timed_automaton/operation/operands_arithmetic_type")
@@ -86,92 +83,92 @@ return function (Layer, parametric_timed_automaton, ref)
     value_type = { ref [meta].parameters_condition_type},
   }
 
-timed_automaton[meta]= {
-  [record]= {
-    printer_params_condition={value_type="function",},
-    parser_params_condition={value_type="function",},
+  parametric_timed_automaton[meta]= {
+    [record ]= {
+      printer_params_condition = {value_type="function",},
+      parser_params_condition = {value_type="function",},
+    }
   }
-}
 
-local function printer_term (expression,stack_fathers,string_expression)
-  
-  -- first call of the function
-  -- We will init the stack_fathers and the string _expression
-
-  if (expression ~= nil and (stack_fathers == nil and string_expression == nil)) then 
-    stack_fathers = {}
-    stack_fathers [#stack_fathers +1] = expression
-    string_expression = "" .. expression.operator .. "("
-    return printer_term(expression,stack_fathers,string_expression)
-
+  local function printer_term (expression,stack_fathers,string_expression)
     
-  elseif (expression ~= nil and (stack_fathers ~= nil and string_expression ~= nil)) then 
-    local new_expression 
-    local last_father = #stack_fathers
+    -- first call of the function
+    -- We will init the stack_fathers and the string _expression
 
-    stack_fathers[last_father].nb_operands_not_done = 0
-    --We look if the last operation add all its operation 
-    for _, operand_curr in pairs(stack_fathers[last_father].operands) do 
-      --if there is an operation not treated yet 
-      if( (literal <= operand_curr or operation <= operand_curr) and operand_curr.printer_done == nil) then
-        stack_fathers[last_father].nb_operands_not_done = stack_fathers[last_father].nb_operands_not_done + 1
-        if(stack_fathers[last_father].nb_operands_not_done == 1) then 
-          operand_curr.printer_done = true
-          new_expression = operand_curr
+    if (expression ~= nil and (stack_fathers == nil and string_expression == nil)) then 
+      stack_fathers = {}
+      stack_fathers [#stack_fathers +1] = expression
+      string_expression = "" .. expression.operator .. "("
+      return printer_term(expression,stack_fathers,string_expression)
+
+      
+    elseif (expression ~= nil and (stack_fathers ~= nil and string_expression ~= nil)) then 
+      local new_expression 
+      local last_father = #stack_fathers
+
+      stack_fathers[last_father].nb_operands_not_done = 0
+      --We look if the last operation add all its operation 
+      for _, operand_curr in pairs(stack_fathers[last_father].operands) do 
+        --if there is an operation not treated yet 
+        if( (literal <= operand_curr or operation <= operand_curr) and operand_curr.printer_done == nil) then
+          stack_fathers[last_father].nb_operands_not_done = stack_fathers[last_father].nb_operands_not_done + 1
+          if(stack_fathers[last_father].nb_operands_not_done == 1) then 
+            operand_curr.printer_done = true
+            new_expression = operand_curr
+          end
+
         end
-
-      end
-    end 
-
-    
-    if(stack_fathers[last_father].nb_operands_not_done > 0) then 
-   
-       -- if the operand is an operation, we add it in the stack and in the string then we will treat its operands
-
-      --if (new_expression.operator) then   
-      if (operation <= new_expression) then   
-        stack_fathers [#stack_fathers +1] = new_expression
-        string_expression = string_expression .. new_expression.operator .. "("
-        return printer_term (new_expression,stack_fathers,string_expression)
-
-      -- if it s a literal we just add it in the string
-     --- elseif (new_expression.value ) then 
-      elseif (literal <= new_expression ) then
-    
-        string_expression = string_expression .. tostring(new_expression.value)
-
-        if (stack_fathers[last_father].nb_operands_not_done > 1) then string_expression = string_expression .. "," end
-
-        return printer_term (expression,stack_fathers,string_expression)
-      else
-        print "Error : this is not a valid operand"
-        return nil,nil,nil        
       end 
 
+      
+      if(stack_fathers[last_father].nb_operands_not_done > 0) then 
+     
+         -- if the operand is an operation, we add it in the stack and in the string then we will treat its operands
 
-    else
-        -- If we have done with this operation we unstack it from the stack_fathers and we close the string with a )
-      stack_fathers [last_father] = nil
-      string_expression = string_expression .. ")" 
+        --if (new_expression.operator) then   
+        if (operation <= new_expression) then   
+          stack_fathers [#stack_fathers +1] = new_expression
+          string_expression = string_expression .. new_expression.operator .. "("
+          return printer_term (new_expression,stack_fathers,string_expression)
 
-      if ( stack_fathers[last_father-1] and stack_fathers[last_father-1].nb_operands_not_done > 1) then string_expression = string_expression .. "," end      
+        -- if it s a literal we just add it in the string
+       --- elseif (new_expression.value ) then 
+        elseif (literal <= new_expression ) then
+      
+          string_expression = string_expression .. tostring(new_expression.value)
+
+          if (stack_fathers[last_father].nb_operands_not_done > 1) then string_expression = string_expression .. "," end
+
+          return printer_term (expression,stack_fathers,string_expression)
+        else
+          print "Error : this is not a valid operand"
+          return nil,nil,nil        
+        end 
 
 
-      --We clean all the entry we add for this function
-      for _, operand_curr in pairs(expression.operands) do 
-        operand_curr.nb_operands_not_done = nil 
-        operand_curr.printer_done = nil
+      else
+          -- If we have done with this operation we unstack it from the stack_fathers and we close the string with a )
+        stack_fathers [last_father] = nil
+        string_expression = string_expression .. ")" 
+
+        if ( stack_fathers[last_father-1] and stack_fathers[last_father-1].nb_operands_not_done > 1) then string_expression = string_expression .. "," end      
+
+
+        --We clean all the entry we add for this function
+        for _, operand_curr in pairs(expression.operands) do 
+          operand_curr.nb_operands_not_done = nil 
+          operand_curr.printer_done = nil
+        end
+        expression.nb_operands_not_done = nil     
+        return printer_term (stack_fathers[last_father-1],stack_fathers,string_expression)
       end
-      expression.nb_operands_not_done = nil     
-      return printer_term (stack_fathers[last_father-1],stack_fathers,string_expression)
+
+    --We have end 
+    else 
+      return string_expression
     end
 
-  --We have end 
-  else 
-    return string_expression
-  end
-
-end 
+  end 
 
 --parser
 
@@ -180,37 +177,37 @@ local function parser (expression,instance)
   --verify the pattern of the expression
   local equalcount = lpeg.C {
     "Bool",
-    Bool = (lpeg.V "Not" + lpeg.V"Logical" + lpeg.V "Relational") ,
+    Bool = ( lpeg.V "Not" + lpeg.V"Logical" + lpeg.V "Relational" ) ,
 
-    Not  = (lpeg.P"NOT(" * (lpeg.V "Bool" * (lpeg.P","^0)) * lpeg.P")") ,
+    Not  = ( lpeg.P"NOT(" * ( lpeg.V "Bool" * ( lpeg.P","^0 ) ) * lpeg.P")" ) ,
 
-    Logical = ((lpeg.P"AND(" + lpeg.P"OR(" + lpeg.P"NOR(" + lpeg.P"XOR(") * (lpeg.V "Bool" * (lpeg.P","^0))^2 * lpeg.P ")") ,
+    Logical = ( ( lpeg.P"AND(" + lpeg.P"OR(" + lpeg.P"NOR(" + lpeg.P"XOR(" ) * ( lpeg.V "Bool" * ( lpeg.P","^0 ) )^2 * lpeg.P ")" ) ,
 
-    Relational = ((lpeg.P"INF(" + lpeg.P"INFEQ(" + lpeg.P"EQ(" + lpeg.P"NOTEQ(" + lpeg.P"SUPEQ(" + lpeg.P"SUP(") * (lpeg.V "Operands_Relational" * (lpeg.P","^0))^2 * lpeg.P")") ,   
-      Operands_Relational = (lpeg.V "Number"  + lpeg.V "Arithmetic" + lpeg.V "Relational"+ lpeg.V "Identifier"),
+    Relational = ( ( lpeg.P"INF(" + lpeg.P"INFEQ(" + lpeg.P"EQ(" + lpeg.P"NOTEQ(" + lpeg.P"SUPEQ(" + lpeg.P"SUP(" ) * ( lpeg.V "Operands_Relational" * ( lpeg.P","^0) )^2 * lpeg.P")") ,   
+      Operands_Relational = ( lpeg.V "Number"  + lpeg.V "Arithmetic" + lpeg.V "Relational"+ lpeg.V "Identifier" ),
 
-      Arithmetic = ((lpeg.P"ADD(" + lpeg.P"SUB(" + lpeg.P"MUL(" + lpeg.P"DIV(") * (lpeg.V "Operands_Arithmetic" * (lpeg.P","^0))^2 * lpeg.P")") ,
-      Operands_Arithmetic = (lpeg.V "Number"  + lpeg.V "Arithmetic"+ lpeg.V "Identifier") ,
+      Arithmetic = ( ( lpeg.P"ADD(" + lpeg.P"SUB(" + lpeg.P"MUL(" + lpeg.P"DIV(" ) * ( lpeg.V "Operands_Arithmetic" * ( lpeg.P","^0 ) )^2 * lpeg.P")" ) ,
+      Operands_Arithmetic = ( lpeg.V "Number"  + lpeg.V "Arithmetic"+ lpeg.V "Identifier" ) ,
 
-    Number = (lpeg.R "09"^1) ,
-    Identifier = ((lpeg.R "az" + lpeg.R "AZ" + "_") * (lpeg.R "az" + lpeg.R "AZ" + "_" + "." + lpeg.R "09")^0) ,
+    Number = ( lpeg.R "09"^1 ) ,
+    Identifier = ( (lpeg.R "az" + lpeg.R "AZ" + "_") * (lpeg.R "az" + lpeg.R "AZ" + "_" + "." + lpeg.R "09")^0 ) ,
   }
 
   --find the operands
   local opcount = lpeg.C {
     "OP",
-    OP = (lpeg.V "Number" + lpeg.V "Operation" + lpeg.V "Identifier" + lpeg.V "String") * lpeg.P ","^0,
+    OP = ( lpeg.V "Number" + lpeg.V "Operation" + lpeg.V "Identifier" + lpeg.V "String") * lpeg.P ","^0,
     Operation = lpeg.R "AZ"^1 * lpeg.P "(" * lpeg.V "OP"^1 * lpeg.P ")" ,
-    Number = (lpeg.R "09"^1) ,
-    Identifier = ((lpeg.R "az" + lpeg.R "AZ" + "_") * (lpeg.R "az" + lpeg.R "AZ" +"."+ "_" + lpeg.R "09")^0) ,
-    String = lpeg.P "\"" *(lpeg.R "az" + lpeg.R "AZ" + "_" + lpeg.R "09")^1 * lpeg.P "\"",
+    Number = ( lpeg.R "09"^1 ) ,
+    Identifier = ( (lpeg.R "az" + lpeg.R "AZ" + "_") * (lpeg.R "az" + lpeg.R "AZ" +"."+ "_" + lpeg.R "09")^0 ) ,
+    String = lpeg.P "\"" * ( lpeg.R "az" + lpeg.R "AZ" + "_" + lpeg.R "09" )^1 * lpeg.P "\"",
   }
   --transform the expression to an instance 
-  local function string_to_operation(patt,formalism_instance)
+  local function string_to_operation (patt,formalism_instance)
 
     local operand_type
-    local operation_expression = lpeg.C{lpeg.R"AZ"^1* lpeg.P "("}
-    local operation_string = operation_expression:match(patt)
+    local operation_expression = lpeg.C {lpeg.R"AZ"^1* lpeg.P "("}
+    local operation_string = operation_expression:match (patt)
     local oper
     local i = 1
 
@@ -237,12 +234,12 @@ local function parser (expression,instance)
       elseif operation_string == "MUL(" then
         oper = Layer.new {}
         oper [refines] = {
-               multiplication_operation
+              multiplication_operation
             }
       elseif operation_string == "DIV(" then
         oper = Layer.new {}
         oper [refines] = {
-               division_operation
+              division_operation
             }
 
       --logical
@@ -295,7 +292,7 @@ local function parser (expression,instance)
               superiorequal_operation
             }
       elseif operation_string == "SUP(" then
-        oper = Layer.new{}
+        oper = Layer.new {}
         oper [refines] = {
               superior_operation
             }
@@ -307,7 +304,7 @@ local function parser (expression,instance)
     while operation_string ~= nil do
 
       patt = string.sub (patt, #operation_string+1, #patt)
-      operation_string = opcount:match(patt) 
+      operation_string = opcount:match (patt) 
       if operation_string ~= nil then
         --get rid of the commas and parenthesis
         while(string.sub (operation_string,1,1) == ',' or string.sub (operation_string, 1, 1) == ')') do
@@ -341,12 +338,12 @@ local function parser (expression,instance)
       end
     end
     --Identifier
-    operand_type = ((lpeg.R "az" + lpeg.R "AZ" + "_") * (lpeg.R "az" + lpeg.R "AZ" + "_" +"."+ lpeg.R "09")^0)
+    operand_type = ( (lpeg.R "az" + lpeg.R "AZ" + "_") * (lpeg.R "az" + lpeg.R "AZ" + "_" +"."+ lpeg.R "09")^0)
 
-      if(operand_type:match(patt) ~= nil) then
+      if(operand_type:match (patt) ~= nil) then
         --check if the formalism instance exists in the instance created
-        local val = load("return function (instance)  return instance"..string.sub (patt,string.find (patt,"%."), #patt).." end")()
-        val = val(formalism_instance)
+        local val = load ("return function (instance)  return instance"..string.sub (patt,string.find (patt,"%."), #patt).." end") ()
+        val = val (formalism_instance)
         if(val) then
           return val
         end
@@ -354,18 +351,18 @@ local function parser (expression,instance)
       else
       --number
         operand_type = lpeg.R "09"^1
-        if(operand_type:match(patt) ~= nil) then
+        if(operand_type:match (patt) ~= nil) then
           local tmp = Layer.new {}
           tmp [refines] = {
                 number_f
                }
-          tmp.value = tonumber(patt)
+          tmp.value = tonumber (patt)
           return tmp
         end
       --String
         operand_type = lpeg.P "\"" * (lpeg.R "az" + lpeg.R "AZ" + "_" + lpeg.R "09")^1 * lpeg.P "\""
         if(operand_type:match(patt) ~= nil) then
-          local tmp = Layer.new{}
+          local tmp = Layer.new {}
           tmp[refines] = {string_f}
           tmp.value = patt
           return tmp
@@ -374,12 +371,13 @@ local function parser (expression,instance)
 
       return oper
     end
-    if(equalcount:match(expression) ~= nil) then
-      return  string_to_operation(expression, instance)
+    if(equalcount:match (expression) ~= nil) then
+      return  string_to_operation (expression, instance)
     end  
   end
   
   parametric_timed_automaton.parser_params_condition=parser
   parametric_timed_automaton.printer_params_condition=printer_term
+  
   return parametric_timed_automaton
 end

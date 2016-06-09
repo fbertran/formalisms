@@ -12,9 +12,9 @@ return function (Layer, not_operation)
     boolean_operation,
   }
 
-  not_operation.operands[meta][collection].minimum = 1
-  not_operation.operands[meta][collection].maximum = 1
-  not_operation[meta][record].operator.value = "NOT"
+  not_operation.operands [meta][collection].minimum = 1
+  not_operation.operands [meta][collection].maximum = 1
+  not_operation [meta][record].operator.value = "NOT"
   
   return not_operation
 end

@@ -12,7 +12,7 @@ return function (Layer, operation)
 
   operation[meta] = {
     [record] = {
-      operator_type=false,
+      operator_type = false,
       operator = {
         value_type = value_string,
       },
@@ -27,7 +27,7 @@ return function (Layer, operation)
   
      operation.operands [meta] = {
           [collection] = {
-            value_type=false,
+            value_type = false,
           }
         }
     

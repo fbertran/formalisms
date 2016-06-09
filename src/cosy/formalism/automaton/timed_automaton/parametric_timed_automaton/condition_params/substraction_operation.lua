@@ -12,9 +12,9 @@ return function (Layer, substraction_operation)
     arithmetic_operation,
   }
 
-  substraction_operation.operands[meta][collection].minimum=2
-  substraction_operation.operands[meta][collection].maximum=2
-  substraction_operation[meta][record].operator.value="-"
+  substraction_operation.operands [meta][collection].minimum = 2
+  substraction_operation.operands [meta][collection].maximum = 2
+  substraction_operation [meta][record].operator.value = "-"
   
   return substraction_operation
 end
