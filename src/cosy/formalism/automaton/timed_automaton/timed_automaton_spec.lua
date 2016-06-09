@@ -24,10 +24,10 @@ describe ("Formalism timed_automaton", function ()
   
       --layer.invariants={}
       layer.clocks.c1={value="x1"}
-      print(layer.clocks.c1.value)
-      local op=timed_automaton.parser("INF(ADD(layer.clocks.c1,2),1)",layer)
+     -- print(layer.clocks.c1.value)
+      local op=layer.parser("INF(ADD(layer.clocks.c1,2),1)",layer)
       --print(op.operands[1].operator)
-      print(timed_automaton.printer(op))
+      print(layer.printer(op))
       -- Layer.Proxy.check_all (layer)
       -- assert.is_nil (Layer.messages[layer])
     end)

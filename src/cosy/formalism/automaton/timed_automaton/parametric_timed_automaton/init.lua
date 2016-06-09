@@ -105,7 +105,7 @@ local function printer_term (expression,stack_fathers,string_expression)
     return printer_term(expression,stack_fathers,string_expression)
 
     
-  elseif (expression ~= nil and (stack_fathers ~= nil and string_expression ~=nil)) then 
+  elseif (expression ~= nil and (stack_fathers ~= nil and string_expression ~= nil)) then 
     local new_expression 
     local last_father = #stack_fathers
 
@@ -178,7 +178,7 @@ end
 local function parser (expression,instance)
   
   --verify the pattern of the expression
-  local equalcount=lpeg.C{
+  local equalcount = lpeg.C {
     "Bool",
     Bool = (lpeg.V "Not" + lpeg.V"Logical" + lpeg.V "Relational") ,
 
@@ -197,258 +197,188 @@ local function parser (expression,instance)
   }
 
   --find the operands
-  local opcount=lpeg.C{
+  local opcount = lpeg.C {
     "OP",
     OP = (lpeg.V "Number" + lpeg.V "Operation" + lpeg.V "Identifier" + lpeg.V "String") * lpeg.P ","^0,
     Operation = lpeg.R "AZ"^1 * lpeg.P "(" * lpeg.V "OP"^1 * lpeg.P ")" ,
     Number = (lpeg.R "09"^1) ,
     Identifier = ((lpeg.R "az" + lpeg.R "AZ" + "_") * (lpeg.R "az" + lpeg.R "AZ" +"."+ "_" + lpeg.R "09")^0) ,
-    String =lpeg.P "\"" *(lpeg.R "az" + lpeg.R "AZ" + "_" + lpeg.R "09")^1 * lpeg.P "\"",
+    String = lpeg.P "\"" *(lpeg.R "az" + lpeg.R "AZ" + "_" + lpeg.R "09")^1 * lpeg.P "\"",
   }
   --transform the expression to an instance 
   local function string_to_operation(patt,formalism_instance)
 
     local operand_type
-    local operation_expression=lpeg.C{lpeg.R"AZ"^1* lpeg.P "("}
-    local operation_string=operation_expression:match(patt)
+    local operation_expression = lpeg.C{lpeg.R"AZ"^1* lpeg.P "("}
+    local operation_string = operation_expression:match(patt)
     local oper
-    local i=1
+    local i = 1
 
-    if operation_string ~=nil then
+    if operation_string ~= nil then
 
     --boolean
-      if operation_string=="NOT(" then
-        oper = Layer.new{
-          name="NOT",
-          data={
-            [refines]={
+      if operation_string == "NOT(" then
+        oper = Layer.new {}
+        oper [refines] = {
               not_operation
             }
-          }
-        }
       --arithmetic
-      elseif operation_string=="ADD(" then
-        oper = Layer.new{
-          name="ADD",
-          data={
-            [refines]={
+      elseif operation_string == "ADD(" then
+        oper = Layer.new {}
+        oper [refines] = {
               addition_operation
             }
-          }
-        }
         
-      elseif operation_string=="SUB(" then
-        oper = Layer.new{
-          name="SUB",
-          data={
-            [refines]={
+      elseif operation_string == "SUB(" then
+        oper = Layer.new {}
+        oper [refines] = {
               substraction_operation
             }
-          }
-        }
-      elseif operation_string=="MUL(" then
-        oper = Layer.new{
-          name="MUL",
-          data={
-            [refines]={
+      elseif operation_string == "MUL(" then
+        oper = Layer.new {}
+        oper [refines] = {
                multiplication_operation
             }
-          }
-        }
-      elseif operation_string=="DIV(" then
-        oper = Layer.new{
-          name="DIV",
-          data={
-            [refines]={
+      elseif operation_string == "DIV(" then
+        oper = Layer.new {}
+        oper [refines] = {
                division_operation
             }
-          }
-        }
 
       --logical
-      elseif operation_string=="AND(" then
-        oper = Layer.new{
-          name="AND",
-          data={
-            [refines]={
+      elseif operation_string == "AND(" then
+        oper = Layer.new {}
+        oper [refines] = {
                and_operation
             }
-          }
-        }
-      elseif operation_string=="OR(" then
-        oper = Layer.new{
-          name="OR",
-          data={
-            [refines]={
+      elseif operation_string == "OR(" then
+        oper = Layer.new {}
+        oper [refines] = {
                or_operation
             }
-          }
-        }
-      elseif operation_string=="XOR(" then
-        oper = Layer.new{
-          name="XOR",
-          data={
-            [refines]={
+      elseif operation_string == "XOR(" then
+        oper = Layer.new {}
+        oper [refines] = {
                xor_operation
             }
-          }
-        }
-      elseif operation_string=="NOR(" then
-       oper = Layer.new{
-          name="NOR",
-          data={
-            [refines]={
+      elseif operation_string == "NOR(" then
+       oper = Layer.new {}
+       oper [refines] = {
               nor_operation
             }
-          }
-        }
 
 
     --relational
-      elseif operation_string=="INF(" then
-         oper = Layer.new{
-          name="INF",
-          data={
-            [refines]={
+      elseif operation_string == "INF(" then
+         oper = Layer.new{}
+         oper [refines] = {
               inferior_operation
             }
-          }
-        }
-      elseif operation_string=="INFEQ(" then
-        oper = Layer.new{
-          name="INFEQ",
-          data={
-            [refines]={
+      elseif operation_string == "INFEQ(" then
+        oper = Layer.new {}
+        oper [refines] = {
               inferiorequal_operation
             }
-          }
-        }
-      elseif operation_string=="EQ(" then
-        oper = Layer.new{
-          name="EQ",
-          data={
-            [refines]={
+      elseif operation_string == "EQ(" then
+        oper = Layer.new {}
+        oper [refines] = {
               equal_operation
             }
-          }
-        }
-      elseif operation_string=="NOTEQ(" then
-        oper = Layer.new{
-          name="NOTEQ",
-          data={
-            [refines]={
+      elseif operation_string == "NOTEQ(" then
+        oper = Layer.new {}
+        oper [refines] = {
               different_operation
             }
-          }
-        }
-      elseif operation_string=="SUPEQ(" then
-        oper = Layer.new{
-          name="SUPEQ",
-          data={
-            [refines]={
+      elseif operation_string == "SUPEQ(" then
+        oper = Layer.new {}
+        oper [refines] = {
               superiorequal_operation
             }
-          }
-        }
-      elseif operation_string=="SUP(" then
-        oper = Layer.new{
-          name="SUP",
-          data={
-            [refines]={
+      elseif operation_string == "SUP(" then
+        oper = Layer.new{}
+        oper [refines] = {
               superior_operation
             }
-          }
-        }
       end
       --get rid of the parenthesis
-      oper.operator=string.sub(operation_string,1,#operation_string-1)
+      oper.operator=string.sub (operation_string, 1, #operation_string-1)
     end
    --loop as long as you find operands
-    while operation_string~=nil do
+    while operation_string ~= nil do
 
-      patt=string.sub(patt,#operation_string+1,#patt)
-      operation_string=opcount:match(patt) 
-      if operation_string~=nil then
+      patt = string.sub (patt, #operation_string+1, #patt)
+      operation_string = opcount:match(patt) 
+      if operation_string ~= nil then
         --get rid of the commas and parenthesis
-        while(string.sub(operation_string,1,1)==',' or string.sub(operation_string,1,1)==')') do
-          operation_string=string.sub(operation_string,1,#operation_string-1)
-
+        while(string.sub (operation_string,1,1) == ',' or string.sub (operation_string, 1, 1) == ')') do
+          operation_string = string.sub (operation_string, 1, #operation_string-1)
         end
-        local return_value=string_to_operation(operation_string,instance)
-        if(return_value.operator ~=nil or return_value.value~=nil) then
+        local return_value = string_to_operation (operation_string, instance)
+        if(return_value.operator ~= nil or return_value.value ~= nil) then
          -- print(type(operation))
-          oper.operands[i]=return_value
+          oper.operands[i] = return_value
           i=i+1
         end
       end
     end
     --get rid of the commas and parenthesis
-    while(string.sub(patt,#patt,#patt)==',' or string.sub(patt,#patt,#patt)==')') do
-      patt=string.sub(patt,1,#patt-1)
-
+    while(string.sub (patt, #patt, #patt) == ',' or string.sub (patt, #patt, #patt) == ')') do
+      patt = string.sub (patt, 1, #patt-1)
     end
    
-    if #patt>0 then
+    if #patt > 0 then
     --boolean
-      operand_type=lpeg.P "true" + lpeg.P "false"
-      if(operand_type:match(patt)) then  
-        local bool=
-          Layer.new{
-            name = "bool",
-            data = {
-              [refines] = { boolean_f}
-            }
-          }
-        if (patt=="true") then      
-          bool.value=true
+      operand_type = lpeg.P "true" + lpeg.P "false"
+      if(operand_type:match (patt)) then  
+        local bool = Layer.new {}
+        bool [refines] = { boolean_f}
+        if (patt == "true") then      
+          bool.value = true
         else      
-          bool.value=false
+          bool.value = false
         end
         return bool
       end
     end
     --Identifier
-    operand_type=((lpeg.R "az" + lpeg.R "AZ" + "_") * (lpeg.R "az" + lpeg.R "AZ" + "_" +"."+ lpeg.R "09")^0)
+    operand_type = ((lpeg.R "az" + lpeg.R "AZ" + "_") * (lpeg.R "az" + lpeg.R "AZ" + "_" +"."+ lpeg.R "09")^0)
 
-      if(operand_type:match(patt)~=nil) then
+      if(operand_type:match(patt) ~= nil) then
         --check if the formalism instance exists in the instance created
-        local val=load("return function (instance)  return instance"..string.sub(patt,string.find(patt,"%."),#patt).." end")()
-        val=val(formalism_instance)
+        local val = load("return function (instance)  return instance"..string.sub (patt,string.find (patt,"%."), #patt).." end")()
+        val = val(formalism_instance)
         if(val) then
           return val
         end
 
       else
       --number
-        operand_type=lpeg.R "09"^1
-        if(operand_type:match(patt)~=nil) then
-          local tmp =Layer.new{
-            name="number",
-            data={
-              [refines] = {
+        operand_type = lpeg.R "09"^1
+        if(operand_type:match(patt) ~= nil) then
+          local tmp = Layer.new {}
+          tmp [refines] = {
                 number_f
                }
-            }
-          }
-          tmp.value=tonumber(patt)
+          tmp.value = tonumber(patt)
           return tmp
         end
       --String
-        operand_type=lpeg.P "\"" *(lpeg.R "az" + lpeg.R "AZ" + "_" + lpeg.R "09")^1 * lpeg.P "\""
-        if(operand_type:match(patt)~=nil) then
-          local tmp=Layer.new{}
+        operand_type = lpeg.P "\"" * (lpeg.R "az" + lpeg.R "AZ" + "_" + lpeg.R "09")^1 * lpeg.P "\""
+        if(operand_type:match(patt) ~= nil) then
+          local tmp = Layer.new{}
           tmp[refines] = {string_f}
-          tmp.value=patt
+          tmp.value = patt
           return tmp
         end
       end
 
       return oper
     end
-    if(equalcount:match(expression)~=nil) then
-      return  string_to_operation(expression,instance)
+    if(equalcount:match(expression) ~= nil) then
+      return  string_to_operation(expression, instance)
     end  
   end
+  
   parametric_timed_automaton.parser_params_condition=parser
   parametric_timed_automaton.printer_params_condition=printer_term
   return parametric_timed_automaton

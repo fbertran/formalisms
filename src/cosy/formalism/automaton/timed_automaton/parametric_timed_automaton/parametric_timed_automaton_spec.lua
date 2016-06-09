@@ -17,21 +17,18 @@ describe ("Formalism timed_automaton", function ()
       --local literal = Layer.require "cosy/formalism/automaton/timed_automaton/literal"
       local refines =  Layer.key.refines
       --local meta =  Layer.key.meta
-
-
-      local layer=Layer.new {
-        name="p_timed_automaton",
-        data = {
-          [refines] = {
+      local layer=Layer.new {}
+      layer [refines] = {
             parametric_timed_automaton,
-          },
-        }
-      }
+          }
+      
+      --lorsque j'execute ces deux lignes ci-dessous, parametric_timed_automaton.parser devient nulle
+      layer.clocks.c1 = { value = "x1"}
+      --print(layer.clocks.c1.value)
 
-      local op=parametric_timed_automaton.parser(layer)
-
-
-      print(parametric_timed_automaton.printer(op))
+      --print(parametric_timed_automaton.parser)
+      local op=layer.parser("INF(ADD(layer.clocks.c1,2),1)",layer)
+      print(layer.printer(op))
   
 
 

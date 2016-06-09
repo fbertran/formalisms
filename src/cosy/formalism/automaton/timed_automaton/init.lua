@@ -287,147 +287,87 @@ local function parser (expression,instance)
 
     --boolean
       if operation_string == "NOT(" then
-        oper = Layer.new{
-          name = "NOT",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
               not_operation
             }
-          }
-        }
       --arithmetic
       elseif operation_string == "ADD(" then
-        oper = Layer.new{
-          name = "ADD",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
               addition_operation
             }
-          }
-        }
         
       elseif operation_string == "SUB(" then
-        oper = Layer.new{
-          name = "SUB",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
               substraction_operation
             }
-          }
-        }
       elseif operation_string == "MUL(" then
-        oper = Layer.new{
-          name = "MUL",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
                multiplication_operation
             }
-          }
-        }
       elseif operation_string == "DIV(" then
-        oper = Layer.new{
-          name = "DIV",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
                division_operation
             }
-          }
-        }
 
       --logical
       elseif operation_string == "AND(" then
-        oper = Layer.new{
-          name = "AND",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
                and_operation
             }
-          }
-        }
       elseif operation_string == "OR(" then
-        oper = Layer.new{
-          name = "OR",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
                or_operation
             }
-          }
-        }
       elseif operation_string == "XOR(" then
-        oper = Layer.new{
-          name = "XOR",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
                xor_operation
             }
-          }
-        }
       elseif operation_string == "NOR(" then
-       oper = Layer.new{
-          name = "NOR",
-          data = {
-            [refines] = {
+       oper = Layer.new {}
+       oper [refines] = {
               nor_operation
             }
-          }
-        }
 
 
     --relational
       elseif operation_string == "INF(" then
-         oper = Layer.new{
-          name = "INF",
-          data = {
-            [refines] = {
+         oper = Layer.new{}
+         oper [refines] = {
               inferior_operation
             }
-          }
-        }
       elseif operation_string == "INFEQ(" then
-        oper = Layer.new{
-          name = "INFEQ",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
               inferiorequal_operation
             }
-          }
-        }
       elseif operation_string == "EQ(" then
-        oper = Layer.new{
-          name = "EQ",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
               equal_operation
             }
-          }
-        }
       elseif operation_string == "NOTEQ(" then
-        oper = Layer.new{
-          name = "NOTEQ",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
               different_operation
             }
-          }
-        }
       elseif operation_string == "SUPEQ(" then
-        oper = Layer.new{
-          name = "SUPEQ",
-          data = {
-            [refines] = {
+        oper = Layer.new {}
+        oper [refines] = {
               superiorequal_operation
             }
-          }
-        }
       elseif operation_string == "SUP(" then
-        oper = Layer.new{
-          name = "SUP",
-          data = {
-            [refines] = {
+        oper = Layer.new{}
+        oper [refines] = {
               superior_operation
             }
-          }
-        }
       end
       --get rid of the parenthesis
       oper.operator=string.sub (operation_string, 1, #operation_string-1)
@@ -459,13 +399,8 @@ local function parser (expression,instance)
     --boolean
       operand_type = lpeg.P "true" + lpeg.P "false"
       if(operand_type:match (patt)) then  
-        local bool =
-          Layer.new{
-            name = "bool",
-            data = {
-              [refines] = { boolean_f}
-            }
-          }
+        local bool = Layer.new {}
+        bool [refines] = { boolean_f}
         if (patt == "true") then      
           bool.value = true
         else      
@@ -489,14 +424,10 @@ local function parser (expression,instance)
       --number
         operand_type = lpeg.R "09"^1
         if(operand_type:match(patt) ~= nil) then
-          local tmp = Layer.new{
-            name = "number",
-            data = {
-              [refines] = {
+          local tmp = Layer.new {}
+          tmp [refines] = {
                 number_f
                }
-            }
-          }
           tmp.value = tonumber(patt)
           return tmp
         end
