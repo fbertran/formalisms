@@ -123,8 +123,10 @@ build = {
     ["cosy.formalism.automaton.timed_automaton.operation.different_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/different_operation.lua",
     ["cosy.formalism.automaton.timed_automaton.operation.superior_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/superior_operation.lua",
     ["cosy.formalism.automaton.timed_automaton.operation.superiorequal_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/superiorequal_operation.lua",
- 
-
+    
+    ["cosy.formalism.automaton.timed_automaton.operation.operands_logical_type"] = "src/cosy/formalism/automaton/timed_automaton/operation/operands_logical_type.lua",
+    ["cosy.formalism.automaton.timed_automaton.operation.operands_arithmetic_type"] = "src/cosy/formalism/automaton/timed_automaton/operation/operands_arithmetic_type.lua",
+    ["cosy.formalism.automaton.timed_automaton.operation.operands_relational_type"] = "src/cosy/formalism/automaton/timed_automaton/operation/operands_relational_type.lua",
 
 
  
@@ -156,5 +158,8 @@ build = {
     ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.superior_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/superior_operation.lua",
     ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.superiorequal_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/superiorequal_operation.lua",
 
+    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.operation.operands_logical_type"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/operands_logical_type.lua",
+    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.operation.operands_arithmetic_type"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/operands_arithmetic_type.lua",
+    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.operation.operands_relational_type"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/operands_relational_type.lua",
   },
 }
