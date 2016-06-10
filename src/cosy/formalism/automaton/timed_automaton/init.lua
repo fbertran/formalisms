@@ -154,12 +154,9 @@ return function (Layer, timed_automaton, ref)
   
 --printer
 
-  timed_automaton [meta] = {
-    [record] = {
-      printer = {value_type = "function",},
-      parser = {value_type = "function",},
-    }
-  }
+  timed_automaton [meta] [record].printer = {value_type = "function",}
+  timed_automaton [meta] [record].parser = {value_type = "function",}
+
 
 
   local function printer_term (expression,stack_fathers,string_expression)

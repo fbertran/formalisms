@@ -5,7 +5,7 @@ return function (Layer, parametric_timed_automaton, ref)
   local meta               = Layer.key.meta
   local refines            = Layer.key.refines
   local collection         = Layer.require "cosy/formalism/data.collection"
-  --local record         = Layer.require "cosy/formalism/data.record"
+  local record         = Layer.require "cosy/formalism/data.record"
   local timed_automaton    = Layer.require "cosy/formalism/automaton/timed_automaton"
  -- local identifier         = Layer.require "cosy/formalism/literal.identifier"
   local boolean_operation_parameter = Layer.require "cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params.boolean_operation"
@@ -83,8 +83,8 @@ return function (Layer, parametric_timed_automaton, ref)
     value_type = { ref [meta].parameters_condition_type},
   }
 
-  parametric_timed_automaton [meta].printer_params_condition = {value_type="function"}
-  parametric_timed_automaton [meta].parser_params_condition = {value_type="function"}
+  parametric_timed_automaton [meta][record].printer_params_condition = {value_type="function"}
+  parametric_timed_automaton [meta][record].parser_params_condition = {value_type="function"}
 
   local function printer_term (expression,stack_fathers,string_expression)
     
