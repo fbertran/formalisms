@@ -5,10 +5,10 @@ return function (Layer, parametric_timed_automaton, ref)
   local meta               = Layer.key.meta
   local refines            = Layer.key.refines
   local collection         = Layer.require "cosy/formalism/data.collection"
-  local record         = Layer.require "cosy/formalism/data.record"
+  --local record         = Layer.require "cosy/formalism/data.record"
   local timed_automaton    = Layer.require "cosy/formalism/automaton/timed_automaton"
  -- local identifier         = Layer.require "cosy/formalism/literal.identifier"
-  local boolean_operation_parameter = Layer.require "cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/boolean_operation"
+  local boolean_operation_parameter = Layer.require "cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params.boolean_operation"
 
    local identifier         = Layer.require ("cosy/formalism/literal.identifier")
 
@@ -20,30 +20,30 @@ return function (Layer, parametric_timed_automaton, ref)
   local operation = Layer.require (path .. "/condition_params")
 
 
-  local operands_arithmetic_type = Layer.require (path .. "/condition_params/operands_arithmetic_type")
-  local operands_relational_type = Layer.require (path .. "/condition_params/operands_relational_type")
-  local operands_arithmetic_type_ta = Layer.require ("cosy/formalism/automaton/timed_automaton/operation/operands_arithmetic_type")
-  local operands_relational_type_ta = Layer.require ("cosy/formalism/automaton/timed_automaton/operation/operands_relational_type")
+  local operands_arithmetic_type = Layer.require (path .. "/condition_params.operands_arithmetic_type")
+  local operands_relational_type = Layer.require (path .. "/condition_params.operands_relational_type")
+  local operands_arithmetic_type_ta = Layer.require ("cosy/formalism/automaton/timed_automaton/operation.operands_arithmetic_type")
+  local operands_relational_type_ta = Layer.require ("cosy/formalism/automaton/timed_automaton/operation.operands_relational_type")
 
-  local multiplication_operation = Layer.require (path .. "/condition_params/multiplication_operation")
-  local division_operation = Layer.require (path .. "/condition_params/division_operation")
-  local addition_operation = Layer.require (path .. "/condition_params/addition_operation")
-  local substraction_operation = Layer.require (path .. "/condition_params/substraction_operation")
+  local multiplication_operation = Layer.require (path .. "/condition_params.multiplication_operation")
+  local division_operation = Layer.require (path .. "/condition_params.division_operation")
+  local addition_operation = Layer.require (path .. "/condition_params.addition_operation")
+  local substraction_operation = Layer.require (path .. "/condition_params.substraction_operation")
 
  
-  local different_operation = Layer.require (path .. "/condition_params/different_operation")
-  local equal_operation = Layer.require (path .. "/condition_params/equal_operation")
-  local inferiorequal_operation = Layer.require (path .. "/condition_params/inferiorequal_operation")
-  local inferior_operation = Layer.require (path .. "/condition_params/inferior_operation")
-  local superiorequal_operation = Layer.require (path .. "/condition_params/superiorequal_operation")
-  local superior_operation = Layer.require (path .. "/condition_params/superior_operation")
+  local different_operation = Layer.require (path .. "/condition_params.different_operation")
+  local equal_operation = Layer.require (path .. "/condition_params.equal_operation")
+  local inferiorequal_operation = Layer.require (path .. "/condition_params.inferiorequal_operation")
+  local inferior_operation = Layer.require (path .. "/condition_params.inferior_operation")
+  local superiorequal_operation = Layer.require (path .. "/condition_params.superiorequal_operation")
+  local superior_operation = Layer.require (path .. "/condition_params.superior_operation")
   
-  local not_operation = Layer.require (path .. "/condition_params/not_operation")
+  local not_operation = Layer.require (path .. "/condition_params.not_operation")
 
-  local and_operation = Layer.require (path .. "/condition_params/and_operation")
-  local or_operation = Layer.require (path .. "/condition_params/or_operation")
-  local nor_operation = Layer.require (path .. "/condition_params/nor_operation")
-  local xor_operation = Layer.require (path .. "/condition_params/xor_operation")
+  local and_operation = Layer.require (path .. "/condition_params.and_operation")
+  local or_operation = Layer.require (path .. "/condition_params.or_operation")
+  local nor_operation = Layer.require (path .. "/condition_params.nor_operation")
+  local xor_operation = Layer.require (path .. "/condition_params.xor_operation")
 
   
   
@@ -83,12 +83,8 @@ return function (Layer, parametric_timed_automaton, ref)
     value_type = { ref [meta].parameters_condition_type},
   }
 
-  parametric_timed_automaton[meta]= {
-    [record ]= {
-      printer_params_condition = {value_type="function",},
-      parser_params_condition = {value_type="function",},
-    }
-  }
+  parametric_timed_automaton [meta].printer_params_condition = {value_type="function"}
+  parametric_timed_automaton [meta].parser_params_condition = {value_type="function"}
 
   local function printer_term (expression,stack_fathers,string_expression)
     
@@ -378,6 +374,6 @@ local function parser (expression,instance)
   
   parametric_timed_automaton.parser_params_condition=parser
   parametric_timed_automaton.printer_params_condition=printer_term
-  
+
   return parametric_timed_automaton
 end
