@@ -15,23 +15,36 @@ describe ("Formalism timed_automaton", function ()
   end)
 
   describe ("with type information", function ()
+    describe ("clock tests", function()
+      it ("add clocks in the collection clocks", function()
+        local timed_automaton = Layer.require "cosy/formalism/automaton/timed_automaton"
+        local layer = Layer.new {}
+        layer [Layer.key.refines] = {timed_automaton}
+        layer.clocks = {
+          c1 = {
+            value = "c1",
+          }
+        }
+        Layer.Proxy.check_all(layer)
+        assert.is_nil (next ( Layer.messages ) )
+      end)
+      it ("add wrong type in the collection clocks", function()
+        local timed_automaton = Layer.require "cosy/formalism/automaton/timed_automaton"
+        local number = Layer.require "cosy/formalism/literal.number"
+        local layer = Layer.new {}
+        layer [Layer.key.refines] = {timed_automaton}
+        local c1 = Layer.new {}
+        c1 [Layer.key.refines] = {number}
+        c1.value = 1
+        layer.clocks = {
+          c1,
+        }
+        Layer.Proxy.check_all(layer)
+        assert.is_not_nil (next ( Layer.messages ) )
+      end)
 
-    it ("parsing!!!!", function ()
-      local timed_automaton = Layer.require "cosy/formalism/automaton/timed_automaton"
-      local refines =  Layer.key.refines
-      local layer = Layer.new {}
-      layer [refines] = {timed_automaton}
-  
-      --layer.invariants={}
-      layer.clocks.c1={value="x1"}
-     -- print(layer.clocks.c1.value)
-      local op=layer.parser("INF(ADD(layer.clocks.c1,2),1)",layer)
-      --print(op.operands[1].operator)
-      print(layer.printer(op))
-      -- Layer.Proxy.check_all (layer)
-      -- assert.is_nil (Layer.messages[layer])
     end)
-
+    
   end)
 
 end)

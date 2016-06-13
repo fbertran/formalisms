@@ -39,11 +39,9 @@ describe ("Formalism automaton", function ()
 
       it ("bad type of information", function()
         local automaton = Layer.require "cosy/formalism/automaton"
-       --local record = Layer.require "cosy/formalism/data.record"
-       -- local ref = Layer.reference (automaton)
-       
+        --local record = Layer.require "cosy/formalism/data.record"
+        --local ref = Layer.reference (automaton)
         local layer = Layer.new {}
-        --s1 [Layer.key.meta][record].value ={value_type = ref [Layer.key.meta].state_type}
         layer [Layer.key.refines] = {automaton}
         layer.states = {
           s1 = {
@@ -53,7 +51,7 @@ describe ("Formalism automaton", function ()
           }
         }
         Layer.Proxy.check_all (layer)
-        assert.is_not_nil ( next ( Layer.messages ) )
+        assert.is_not_nil ( next (Layer.messages ) )
         assert.is_true ( layer [Layer.key.meta].state_type <= layer.states.s1 )
       end)
 

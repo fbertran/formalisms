@@ -14,7 +14,7 @@ return function (Layer, addition_operation)
 
   addition_operation.operands [meta][collection].minimum = 2
   addition_operation.operands [meta][collection].maximum = math.huge
-  addition_operation [meta][record].operator.value = "ADD"
+  addition_operation [meta][record].operator = "ADD"
   
   return addition_operation
 end
