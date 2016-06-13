@@ -56,7 +56,7 @@ return function (Layer, graph, ref)
           }
         },
         vertex = nil,
-      },
+      },  
     },
   }
 

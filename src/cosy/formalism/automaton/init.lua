@@ -14,7 +14,7 @@ return function (Layer, automaton, ref)
     directed,
   }
 
-
+  identifier [meta][record].value.value_type = "string"
   automaton [meta].state_type = {
     [refines] = {
       ref [meta].vertex_type,
@@ -42,12 +42,10 @@ return function (Layer, automaton, ref)
       ref [meta].edge_type,
     },
   }
-  automaton [meta].transition_type [meta][record] = {
-      letter={
+  automaton [meta].transition_type [meta][record].letter={
         value_type=action,
         value_container = ref.actions,
        }
-  }
 
   automaton.states = {
     [refines] = {
