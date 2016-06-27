@@ -1,67 +1,17 @@
-if #setmetatable ({}, { __len = function () return 1 end }) ~= 1 then
-  require "compat52"
-end
-
---These lines are required to correctly run tests.
+--[[ These lines are required to correctly run tests.
 require "busted.runner" ()
 
-local Layer = require "layeredata"
+local Layer = require "cosy.formalism.layer"
 
 describe ("Formalism literal.bool", function ()
 
   it ("can be loaded", function ()
- 
     local _ = Layer.require "cosy/formalism/literal.bool"
- 
   end)
 
   describe ("with type information", function ()
 
-    it ("forbids a different type (number)", function ()
- 
-      local bool = Layer.require "cosy/formalism/literal.bool"  
-      local layer      = Layer.new {}
-
-      layer [Layer.key.refines] = { bool }
-      layer.value = 42
-      Layer.Proxy.check_all (layer)
-      assert.is_not_nil ( next ( Layer.messages ) )
-    
-    end)
-
-    it ("forbids a different type (string)", function ()
-      local bool = Layer.require "cosy/formalism/literal.bool"  
-      local layer      = Layer.new {}
-
-      layer [Layer.key.refines] = { bool }
-      layer.value = "test"
-      Layer.Proxy.check_all (layer)
-      assert.is_not_nil ( next ( Layer.messages ) )
-    
-    end)
-
-    it ("forbids a different type (formalism)", function ()
-      
-      local bool 		= Layer.require "cosy/formalism/literal.bool" 
-      local string	= Layer.require "cosy/formalism/literal.string" 
-      local record  = Layer.require "cosy/formalism/data.record"
-      local layer      = Layer.new {}
-      layer [Layer.key.refines] = { bool }
-      layer [Layer.key.meta   ] = {
-        [record] = {
-          value = {
-            [Layer.key.refines] = { string }
-          }
-        }
-      }				     
-      Layer.Proxy.check_all (layer)
-      assert.is_not_nil ( next ( Layer.messages ) )
-    
-    end)
-
-
-    it ("uses the good type", function ()
-      
+    it ("forbids a different type", function ()
       local bool = Layer.require "cosy/formalism/literal.bool"  
       local layer      = Layer.new {
         name = "layer",
@@ -70,11 +20,9 @@ describe ("Formalism literal.bool", function ()
           value = true,  
         },
       }
-      Layer.Proxy.check_all (layer)
-      assert.is_nil ( next ( Layer.messages ) )
-    
+      Layer.Proxy.check (layer)
+      assert.is_nil (Layer.messages (layer) ())
     end)
+	end)
 
-  end)
-
-end) 
+end) ]]--

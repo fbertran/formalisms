@@ -64,102 +64,39 @@ build = {
     ["cosy.formalism.operation"] = "src/cosy/formalism/operation/init.lua",
     
 
-    ["cosy.formalism.operation.arithmetic_operation"] = "src/cosy/formalism/operation/arithmetic_operation.lua",
-    ["cosy.formalism.operation.addition_operation"] = "src/cosy/formalism/operation/addition_operation.lua",
-    ["cosy.formalism.operation.substraction_operation"] = "src/cosy/formalism/operation/substraction_operation.lua",
-    ["cosy.formalism.operation.multiplication_operation"] = "src/cosy/formalism/operation/multiplication_operation.lua",
-    ["cosy.formalism.operation.division_operation"] = "src/cosy/formalism/operation/division_operation.lua",
+    ["cosy.formalism.operation.arithmetic"] = "src/cosy/formalism/operation/arithmetic/init.lua",
+    ["cosy.formalism.operation.arithmetic.addition"] = "src/cosy/formalism/operation/arithmetic/addition.lua",
+    ["cosy.formalism.operation.arithmetic.substraction"] = "src/cosy/formalism/operation/arithmetic/substraction.lua",
+    ["cosy.formalism.operation.arithmetic.multiplication"] = "src/cosy/formalism/operation/arithmetic/multiplication.lua",
+    ["cosy.formalism.operation.arithmetic.division"] = "src/cosy/formalism/operation/arithmetic/division.lua",
 
-    ["cosy.formalism.operation.logical_operation"] = "src/cosy/formalism/operation/logical_operation.lua",
-    ["cosy.formalism.operation.and_operation"] = "src/cosy/formalism/operation/and_operation.lua",
-    ["cosy.formalism.operation.or_operation"] = "src/cosy/formalism/operation/or_operation.lua",
-    ["cosy.formalism.operation.xor_operation"] = "src/cosy/formalism/operation/xor_operation.lua",
-    ["cosy.formalism.operation.nor_operation"] = "src/cosy/formalism/operation/nor_operation.lua",
+    ["cosy.formalism.operation.logical"] = "src/cosy/formalism/operation/logical/init.lua",
+    ["cosy.formalism.operation.logical.and"] = "src/cosy/formalism/operation/logical/and.lua",
+    ["cosy.formalism.operation.logical.or"] = "src/cosy/formalism/operation/logical/or.lua",
+    ["cosy.formalism.operation.logical.xor"] = "src/cosy/formalism/operation/logical/xor.lua",
+    ["cosy.formalism.operation.logical.nor"] = "src/cosy/formalism/operation/logical/nor.lua",
 
-    ["cosy.formalism.operation.boolean_operation"] = "src/cosy/formalism/operation/boolean_operation.lua",
-    ["cosy.formalism.operation.not_operation"] = "src/cosy/formalism/operation/not_operation.lua",
+    ["cosy.formalism.operation.boolean"] = "src/cosy/formalism/operation/boolean/init.lua",
+    ["cosy.formalism.operation.boolean.not"] = "src/cosy/formalism/operation/boolean/not.lua",
 
-    ["cosy.formalism.operation.relational_operation"] = "src/cosy/formalism/operation/relational_operation.lua",
-    ["cosy.formalism.operation.inferior_operation"] = "src/cosy/formalism/operation/inferior_operation.lua",
-    ["cosy.formalism.operation.inferiorequal_operation"] = "src/cosy/formalism/operation/inferiorequal_operation.lua",
-    ["cosy.formalism.operation.equal_operation"] = "src/cosy/formalism/operation/equal_operation.lua",
-    ["cosy.formalism.operation.different_operation"] = "src/cosy/formalism/operation/different_operation.lua",
-    ["cosy.formalism.operation.superior_operation"] = "src/cosy/formalism/operation/superior_operation.lua",
-    ["cosy.formalism.operation.superiorequal_operation"] = "src/cosy/formalism/operation/superiorequal_operation.lua",
+    ["cosy.formalism.operation.relational"] = "src/cosy/formalism/operation/relational/init.lua",
+    ["cosy.formalism.operation.relational.inferior"] = "src/cosy/formalism/operation/relational/inferior.lua",
+    ["cosy.formalism.operation.relational.inferiorequal"] = "src/cosy/formalism/operation/relational/inferiorequal.lua",
+    ["cosy.formalism.operation.relational.equal"] = "src/cosy/formalism/operation/relational/equal.lua",
+    ["cosy.formalism.operation.relational.different"] = "src/cosy/formalism/operation/relational/different.lua",
+    ["cosy.formalism.operation.relational.superior"] = "src/cosy/formalism/operation/relational/superior.lua",
+    ["cosy.formalism.operation.relational.superiorequal"] = "src/cosy/formalism/operation/relational/superiorequal.lua",
 
-
-
-    ["cosy.formalism.automaton.timed_automaton"] = "src/cosy/formalism/automaton/timed_automaton/init.lua",
-
-
-    ["cosy.formalism.automaton.timed_automaton.literal"] = "src/cosy/formalism/automaton/timed_automaton/literal/init.lua",
-    ["cosy.formalism.automaton.timed_automaton.literal.string"] = "src/cosy/formalism/automaton/timed_automaton/literal/string.lua",
-    ["cosy.formalism.automaton.timed_automaton.literal.number"] = "src/cosy/formalism/automaton/timed_automaton/literal/number.lua",
-    ["cosy.formalism.automaton.timed_automaton.literal.bool"] = "src/cosy/formalism/automaton/timed_automaton/literal/bool.lua",
-    ["cosy.formalism.automaton.timed_automaton.literal.identifier"] = "src/cosy/formalism/automaton/timed_automaton/literal/identifier.lua",
-
-    
-    ["cosy.formalism.automaton.timed_automaton.operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/init.lua",
-
-    ["cosy.formalism.automaton.timed_automaton.operation.arithmetic_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/arithmetic_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.addition_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/addition_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.substraction_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/substraction_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.multiplication_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/multiplication_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.division_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/division_operation.lua",
-
-    ["cosy.formalism.automaton.timed_automaton.operation.logical_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/logical_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.and_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/and_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.or_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/or_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.xor_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/xor_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.nor_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/nor_operation.lua",
-
-    ["cosy.formalism.automaton.timed_automaton.operation.boolean_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/boolean_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.not_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/not_operation.lua",
-
-    ["cosy.formalism.automaton.timed_automaton.operation.relational_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/relational_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.inferior_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/inferior_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.inferiorequal_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/inferiorequal_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.equal_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/equal_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.different_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/different_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.superior_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/superior_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.superiorequal_operation"] = "src/cosy/formalism/automaton/timed_automaton/operation/superiorequal_operation.lua",
-    
-    ["cosy.formalism.automaton.timed_automaton.operation.operands_logical_type"] = "src/cosy/formalism/automaton/timed_automaton/operation/operands_logical_type.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.operands_arithmetic_type"] = "src/cosy/formalism/automaton/timed_automaton/operation/operands_arithmetic_type.lua",
-    ["cosy.formalism.automaton.timed_automaton.operation.operands_relational_type"] = "src/cosy/formalism/automaton/timed_automaton/operation/operands_relational_type.lua",
+    ["cosy.formalism.operation.operands_logical_type"] = "src/cosy/formalism/operation/logical/operands_type.lua",
+    ["cosy.formalism.operation.operands_arithmetic_type"] = "src/cosy/formalism/operation/arithmetic/operands_type.lua",
+    ["cosy.formalism.operation.operands_relational_type"] = "src/cosy/formalism/operation/relational/operands_type.lua",
+    ["cosy.formalism.operation.operands_boolean_type"] = "src/cosy/formalism/operation/boolean/operands_type.lua",
 
 
- 
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/init.lua",
+    ["cosy.formalism.automaton.timed"] = "src/cosy/formalism/automaton/timed/init.lua",
 
+     
+    ["cosy.formalism.automaton.timed.parametric"] = "src/cosy/formalism/automaton/timed/parametric/init.lua",
 
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/init.lua",
-
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.arithmetic_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/arithmetic_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.addition_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/addition_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.substraction_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/substraction_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.multiplication_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/multiplication_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.division_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/division_operation.lua",
-
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.logical_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/logical_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.and_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/and_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.or_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/or_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.xor_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/xor_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.nor_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/nor_operation.lua",
-
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.boolean_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/boolean_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.not_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/not_operation.lua",
-
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.relational_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/relational_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.inferior_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/inferior_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.inferiorequal_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/inferiorequal_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.equal_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/equal_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.different_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/different_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.superior_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/superior_operation.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.superiorequal_operation"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/superiorequal_operation.lua",
-
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.operands_logical_type"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/operands_logical_type.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.operands_arithmetic_type"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/operands_arithmetic_type.lua",
-    ["cosy.formalism.automaton.timed_automaton.parametric_timed_automaton.condition_params.operands_relational_type"] = "src/cosy/formalism/automaton/timed_automaton/parametric_timed_automaton/condition_params/operands_relational_type.lua",
   },
 }
