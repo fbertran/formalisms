@@ -56,13 +56,13 @@ return function (Layer, timed_automaton, ref)
   }
   timed_automaton [meta].transition_type [meta][record] = {
     guard = { value_type = ref [meta].guard_type},
-    resets = {
+    clock_update = {
       [refines] = {
         collection,
       },
     },
   }
-  timed_automaton [meta].transition_type [meta][record].resets [meta][collection] = {
+  timed_automaton [meta].transition_type [meta][record].clock_update [meta][collection] = {
     value_type = ref [meta].clock_type,
     value_container = ref.clocks,
   }

@@ -5,10 +5,10 @@ return function (Layer, parametric_timed_automaton, ref)
   local collection         = Layer.require "cosy/formalism/data.collection"
   local timed_automaton    = Layer.require "cosy/formalism/automaton/timed"
  -- local identifier         = Layer.require "cosy/formalism/literal.identifier"
-  local boolean_operation_parameter = Layer.require "cosy/formalism/operation/boolean"
 
-   local identifier         = Layer.require ("cosy/formalism/literal.identifier")
+  local identifier         = Layer.require ("cosy/formalism/literal.identifier")
 
+  local assignment_operation = Layer.require "cosy/formalism/operation/relational.assignment"
 
   local operands_arithmetic_type = Layer.require "cosy/formalism/operation/arithmetic.operands_type"
   local operands_relational_type = Layer.require "cosy/formalism/operation/relational.operands_type"
@@ -43,11 +43,6 @@ return function (Layer, parametric_timed_automaton, ref)
     },
   }
 
-  parametric_timed_automaton [meta].parameters_condition_type = boolean_operation_parameter
-
-  parametric_timed_automaton.parameters_condition = {
-    value_type = { ref [meta].parameters_condition_type},
-  }
 
  return parametric_timed_automaton
 end

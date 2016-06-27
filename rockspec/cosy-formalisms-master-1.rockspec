@@ -87,6 +87,8 @@ build = {
     ["cosy.formalism.operation.relational.superior"] = "src/cosy/formalism/operation/relational/superior.lua",
     ["cosy.formalism.operation.relational.superiorequal"] = "src/cosy/formalism/operation/relational/superiorequal.lua",
 
+    ["cosy.formalism.operation.assignment"] = "src/cosy/formalism/operation/assignment/init.lua",
+
     ["cosy.formalism.operation.operands_logical_type"] = "src/cosy/formalism/operation/logical/operands_type.lua",
     ["cosy.formalism.operation.operands_arithmetic_type"] = "src/cosy/formalism/operation/arithmetic/operands_type.lua",
     ["cosy.formalism.operation.operands_relational_type"] = "src/cosy/formalism/operation/relational/operands_type.lua",
@@ -95,8 +97,11 @@ build = {
 
     ["cosy.formalism.automaton.timed"] = "src/cosy/formalism/automaton/timed/init.lua",
 
-     
     ["cosy.formalism.automaton.timed.parametric"] = "src/cosy/formalism/automaton/timed/parametric/init.lua",
+    ["cosy.formalism.automaton.timed.parametric.network"] = "src/cosy/formalism/automaton/timed/parametric/network.lua",
+
+    ["cosy.formalism.automaton.timed.parametric.imitator"] = "src/cosy/formalism/automaton/timed/parametric/imitator/init.lua",
+    ["cosy.formalism.automaton.timed.parametric.imitator.network"] = "src/cosy/formalism/automaton/timed/parametric/imitator/network.lua",
 
   },
 }
