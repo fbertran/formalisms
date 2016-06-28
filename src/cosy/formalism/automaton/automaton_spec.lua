@@ -51,8 +51,7 @@ describe ("Formalism automaton", function ()
           }
         }
         Layer.Proxy.check_all (layer)
-        assert.is_not_nil ( next (Layer.messages ) )
-        assert.is_true ( layer [Layer.key.meta].state_type <= layer.states.s1 )
+        assert.is_false ( layer [Layer.key.meta].state_type <= layer.states.s1 )
       end)
 
     end)
@@ -160,7 +159,7 @@ describe ("Formalism automaton", function ()
           }
         }
         Layer.Proxy.check_all (layer)
-        assert.is_not_nil( Layer.messages [layer.transitions.t1.letter] )
+        assert.is_false(layer [Layer.key.meta].transition_type <= layer.transitions.t1)
       
       end)
     end)

@@ -8,9 +8,14 @@ return function (Layer, imitator, ref)
   
   local parametric_timed_automaton = Layer.require "cosy/formalism/automaton/timed/parametric"
 
+  local operands_arithmetic_type = Layer.require "cosy/formalism/operation/arithmetic.operands_type"
+  local operands_relational_type = Layer.require "cosy/formalism/operation/relational.operands_type"
+
+  local identifier = Layer.require "cosy/formalism/literal.identifier"
+
   local assignment_operation = Layer.require "cosy/formalism/operation/assignment"
 
-  imitaror [refines] = {
+  imitator [refines] = {
     parametric_timed_automaton,
   }
 
@@ -39,7 +44,7 @@ return function (Layer, imitator, ref)
   imitator.discrete_variables = {
     [refines] = {
       collection,
-    }
+    },
     [meta] = {
       [collection] = {
         value_type = ref [meta].discrete_type,

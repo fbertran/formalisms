@@ -1,7 +1,7 @@
---[[ These lines are required to correctly run tests.
+-- These lines are required to correctly run tests.
 require "busted.runner" ()
 
-local Layer = require "cosy.formalism.layer"
+local Layer = require "layeredata"
 
 
 describe ("Formalism literal.literal", function ()
@@ -15,21 +15,17 @@ describe ("Formalism literal.literal", function ()
     it ("forbids a different type", function ()
       local literal = Layer.require "cosy/formalism/literal"
       local record  = Layer.require "cosy/formalism/data.record"
-      local layer      = Layer.new {
-        name = "layer",
-        data = {
-          [Layer.key.refines] = { literal },
-          [Layer.key.meta   ] = {
+      local layer      = Layer.new {name = "layer"}
+        layer [Layer.key.refines] = { literal }
+        layer [Layer.key.meta] = {
             [record] = {
-              value = {value_type="number"},
+              value = {value_type = "number"},
             },       
-			   	},
-          value = "test",  
-        },
-      }
-      Layer.Proxy.check (layer)
-      assert.is_nil (Layer.messages (layer) ())
+			   	}
+        layer.value = "test"
+      Layer.Proxy.check_all (layer)
+      assert.is_not_nil ( next ( Layer.messages ))
     end)
 	end)
 
-end)]]--
+end)

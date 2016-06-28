@@ -1,5 +1,7 @@
 return function (Layer, assignment_operation)
 
+  local lpeg = require "lpeg"
+
   local refines = Layer.key.refines
   local meta = Layer.key.meta
 

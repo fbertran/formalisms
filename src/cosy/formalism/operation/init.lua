@@ -6,10 +6,9 @@ return function (Layer, operation,ref)
   local refines    =  Layer.key.refines
   local record =  Layer.require "cosy/formalism/data.record"
   local collection =  Layer.require "cosy/formalism/data.collection"
-  local variant = Layer.require "cosy/formalism/variant"
  
 
-  operation [refines] = {record,variant}
+  operation [refines] = {record}
 
   operation [meta] = {
 
@@ -53,6 +52,10 @@ return function (Layer, operation,ref)
       }
     },
   }
+  operation [meta][record].priority = 0
+  operation [meta][record].pattern = function() end
+  operation [meta][record].parser = function() end
+  operation [meta][record].printer = function() end
 --[[
     operation.parser = function (self, expression, instance)
 

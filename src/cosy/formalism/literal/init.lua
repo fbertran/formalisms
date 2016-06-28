@@ -12,18 +12,15 @@ return function (Layer, literal)
   }
   literal [meta] = {
     [record] = {
-      value = { value_type = false },    
+      value = { value_type = false }, 
+      pattern = {value_type = "function"},
+      parser = {value_type = "function"},
+      result = {value_type = false}
     },
   }
-  literal.pattern = {
-        value_type = "function",
-  }
-  literal.parser = {
-        value_type = "function",
-  }
-  literal.result = {
-        value_type = false,
-  }
+
+  literal [meta][record].parser = function() end
+  literal [meta][record].printer = function() end
   literal.pattern = function (instance)
       local number = Layer.require "cosy/formalism/literal.number"
       local string = Layer.require "cosy/formalism/literal.string"

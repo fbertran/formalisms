@@ -6,9 +6,8 @@ return function (Layer, parametric_timed_automaton, ref)
   local timed_automaton    = Layer.require "cosy/formalism/automaton/timed"
  -- local identifier         = Layer.require "cosy/formalism/literal.identifier"
 
-  local identifier         = Layer.require ("cosy/formalism/literal.identifier")
+  local identifier         = Layer.require "cosy/formalism/literal.identifier"
 
-  local assignment_operation = Layer.require "cosy/formalism/operation/relational.assignment"
 
   local operands_arithmetic_type = Layer.require "cosy/formalism/operation/arithmetic.operands_type"
   local operands_relational_type = Layer.require "cosy/formalism/operation/relational.operands_type"

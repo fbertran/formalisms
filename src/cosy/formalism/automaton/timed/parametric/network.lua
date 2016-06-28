@@ -3,7 +3,6 @@ return function (Layer, npta, ref)
   local refines = Layer.key.refines
   local meta = Layer.key.meta
 
-  local record = Layer.require "cosy/formalism/data.record"
   local collection = Layer.require "cosy/formalism/data.collection"
 
   local boolean_operation = Layer.require "cosy/formalism/operation/boolean"

@@ -1,9 +1,8 @@
-return function (Layer, nipta, ref)
+return function (Layer, nipta)
 
   local refines = Layer.key.refines
   local meta = Layer.key.meta
 
-  local record = Layer.require "cosy/formalism/data.record"
   local collection = Layer.require "cosy/formalism/data.collection"
 
   local boolean_operation = Layer.require "cosy/formalism/operation/boolean"
@@ -11,11 +10,12 @@ return function (Layer, nipta, ref)
 
   local ipta = Layer.require "cosy/formalism/automaton/timed/parametric/imitator"
 
+
   nipta [refines] = {
-    npta,
+    ipta,
   }
 
-  npta.parametric_instances = {
+  nipta.parametric_instances = {
     [refines] = {collection},
     [meta] = {
       [collection] = {
@@ -23,11 +23,15 @@ return function (Layer, nipta, ref)
       }
     }
   }
-  npta [meta].init_condition_type = {
-    boolean_operation,
-    assignment_operation
+  nipta [meta].init_condition_type = {
+    [refines] = {
+      boolean_operation,
+      assignment_operation
+    }
+    
   }
+  nipta [meta].initial_state = nil
 
 
-return npta
+return nipta
 end
