@@ -1,61 +1,27 @@
 --Operation
 
-return function (Layer, operation,ref)
+return function (Layer, operation)
 
   local meta       =  Layer.key.meta
   local refines    =  Layer.key.refines
-  local record =  Layer.require "cosy/formalism/data.record"
+  local operator =  Layer.require "cosy/formalism/operator"
+  local ref_operator = Layer.reference (operator)
   local collection =  Layer.require "cosy/formalism/data.collection"
  
 
-  operation [refines] = {record}
-
-  operation [meta] = {
-
-    operands_type = { value_type = false },
-    [record] = {
-      operator = {
-        value_type = "string",
-      },
-      priority = {
-        value_type = "number"
-      },
-      pattern = {
-        value_type = "function",
-      },
-      parser = {
-        value_type = "function",
-      },
-      printer = {
-        value_type = "function",
-      },
-      result = {
-        value_type = false
-      }
-    }
-  }
-
-  
- 
-  
- 
-
-  operation.operands = {
+  operation [refines] = {operator}
+  operation [meta].operators = {
     [refines] = {
       collection,
     },
     [meta] = {
       [collection] = {
-        value_type = ref [meta].operands_type,
-        minimum = false,
-        maximum = false
+        value_type = ref_operator,
+        key_type = ref_operator,
       }
-    },
+    }
   }
-  operation [meta][record].priority = 0
-  operation [meta][record].pattern = function() end
-  operation [meta][record].parser = function() end
-  operation [meta][record].printer = function() end
+   
 --[[
     operation.parser = function (self, expression, instance)
 

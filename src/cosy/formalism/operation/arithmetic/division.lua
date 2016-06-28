@@ -10,10 +10,10 @@ return function (Layer, division_operation)
   local record     =  Layer.require "cosy/formalism/data.record"
   local collection =  Layer.require "cosy/formalism/data.collection"
   
-  local arithmetic_operation  = Layer.require "cosy/formalism/operation/arithmetic"
+  local operator  = Layer.require "cosy/formalism/operator"
 
   division_operation [refines] = { 
-    arithmetic_operation,
+    operator,
   }
 
   division_operation.operands [meta][collection].minimum = 2

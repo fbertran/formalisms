@@ -89,11 +89,13 @@ build = {
 
     ["cosy.formalism.operation.assignment"] = "src/cosy/formalism/operation/assignment/init.lua",
 
-    ["cosy.formalism.operation.operands_logical_type"] = "src/cosy/formalism/operation/logical/operands_type.lua",
-    ["cosy.formalism.operation.operands_arithmetic_type"] = "src/cosy/formalism/operation/arithmetic/operands_type.lua",
-    ["cosy.formalism.operation.operands_relational_type"] = "src/cosy/formalism/operation/relational/operands_type.lua",
-    ["cosy.formalism.operation.operands_boolean_type"] = "src/cosy/formalism/operation/boolean/operands_type.lua",
+    ["cosy.formalism.operation.logical.operands_type"] = "src/cosy/formalism/operation/logical/operands_type.lua",
+    ["cosy.formalism.operation.arithmetic.operands_type"] = "src/cosy/formalism/operation/arithmetic/operands_type.lua",
+    ["cosy.formalism.operation.relational.operands_type"] = "src/cosy/formalism/operation/relational/operands_type.lua",
+    ["cosy.formalism.operation.boolean.operands_type"] = "src/cosy/formalism/operation/boolean/operands_type.lua",
 
+
+    ["cosy.formalism.operator"] = "src/cosy/formalism/operator/init.lua",
 
     ["cosy.formalism.automaton.timed"] = "src/cosy/formalism/automaton/timed/init.lua",
 

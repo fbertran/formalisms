@@ -10,10 +10,10 @@ return function (Layer, addition_operation)
   local collection =  Layer.require "cosy/formalism/data.collection"
   local record     =  Layer.require "cosy/formalism/data.record"
 
-  local arithmetic_operation  = Layer.require "cosy/formalism/operation/arithmetic"
+  local operator  = Layer.require "cosy/formalism/operator"
 
   addition_operation [refines] = {
-     arithmetic_operation,
+     operator,
   }
 
   addition_operation.operands[meta][collection].minimum = 2
