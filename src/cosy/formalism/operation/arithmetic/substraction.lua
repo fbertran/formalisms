@@ -10,10 +10,10 @@ return function (Layer, substraction_operation)
   local record     =  Layer.require "cosy/formalism/data.record"
   local collection =  Layer.require "cosy/formalism/data.collection"
 
-  local operator  = Layer.require "cosy/formalism/operator"
+  local operator_operation  = Layer.require "cosy/formalism/operator.operation"
 
   substraction_operation [refines] = {
-    operator,
+    operator_operation,
   }
 
   substraction_operation.operands [meta][collection].minimum = 2

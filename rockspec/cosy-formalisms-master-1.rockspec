@@ -96,6 +96,7 @@ build = {
 
 
     ["cosy.formalism.operator"] = "src/cosy/formalism/operator/init.lua",
+    ["cosy.formalism.operator.operation"] = "src/cosy/formalism/operator/operation.lua",
 
     ["cosy.formalism.automaton.timed"] = "src/cosy/formalism/automaton/timed/init.lua",
 

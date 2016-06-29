@@ -1,27 +1,27 @@
 --Operation
 
-return function (Layer, operation)
+return function (Layer, operation, ref)
 
   local meta       =  Layer.key.meta
   local refines    =  Layer.key.refines
-  local operator =  Layer.require "cosy/formalism/operator"
+  local operator_operation =  Layer.require "cosy/formalism/operator.operation"
+  local operator = Layer.require "cosy/formalism/operator"
   local ref_operator = Layer.reference (operator)
   local collection =  Layer.require "cosy/formalism/data.collection"
  
 
-  operation [refines] = {operator}
+  operation [refines] = {operator_operation}
   operation [meta].operators = {
     [refines] = {
       collection,
     },
     [meta] = {
       [collection] = {
-        value_type = ref_operator,
+        value_type = ref,
         key_type = ref_operator,
       }
     }
-  }
-   
+}
 --[[
     operation.parser = function (self, expression, instance)
 
