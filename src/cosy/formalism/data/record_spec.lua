@@ -41,7 +41,7 @@ describe ("Formalism data.record", function ()
     assert.is_not_nil (next (Layer.messages))
   end)
 
-  it ("detects wrongly typed key/value (primitive)", function ()
+  it ("detects wrongly typed key/value (string)", function ()
     local Layer  = require "layeredata"
     local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {}
@@ -56,7 +56,37 @@ describe ("Formalism data.record", function ()
     assert.is_not_nil (next (Layer.messages))
   end)
 
-  it ("detects correctly typed key/value (primitive)", function ()
+  it ("detects wrongly typed key/value (number)", function ()
+    local Layer  = require "layeredata"
+    local record = Layer.require "cosy/formalism/data.record"
+    local layer  = Layer.new {}
+    layer [Layer.key.refines] = { record }
+    layer [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = "number" },
+      },
+    }
+    layer.key = "string"
+    Layer.Proxy.check_all (layer)
+    assert.is_not_nil (next (Layer.messages))
+  end)
+
+  it ("detects wrongly typed key/value (boolean)", function ()
+    local Layer  = require "layeredata"
+    local record = Layer.require "cosy/formalism/data.record"
+    local layer  = Layer.new {}
+    layer [Layer.key.refines] = { record }
+    layer [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = "boolean" },
+      },
+    }
+    layer.key = 1
+    Layer.Proxy.check_all (layer)
+    assert.is_not_nil (next (Layer.messages))
+  end)
+
+  it ("detects correctly typed key/value (string)", function ()
     local Layer  = require "layeredata"
     local record = Layer.require "cosy/formalism/data.record"
     local layer  = Layer.new {}
@@ -67,6 +97,39 @@ describe ("Formalism data.record", function ()
       },
     }
     layer.key = "value"
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (next (Layer.messages))
+  end)
+
+  it ("detects correctly typed key/value (number)", function ()
+    local Layer  = require "layeredata"
+    local record = Layer.require "cosy/formalism/data.record"
+    local layer  = Layer.new {}
+    layer [Layer.key.refines] = { record }
+    layer [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = "number" },
+      },
+    }
+    layer.key = 1
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (next (Layer.messages))
+  end)
+
+  it ("detects correctly typed key/value (boolean)", function ()
+    local Layer  = require "layeredata"
+    local record = Layer.require "cosy/formalism/data.record"
+    local layer  = Layer.new {}
+    layer [Layer.key.refines] = { record }
+    layer [Layer.key.meta   ] = {
+      [record] = {
+        key = { value_type = "boolean" },
+      },
+    }
+    layer.key = true
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (next (Layer.messages))
+    layer.key = false
     Layer.Proxy.check_all (layer)
     assert.is_nil (next (Layer.messages))
   end)
