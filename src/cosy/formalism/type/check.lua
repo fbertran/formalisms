@@ -4,14 +4,17 @@ return function (Layer, check)
   local meta  = Layer.key.meta
 
   check.apply = function (value, oftype, where)
+
     if value == nil then
-      Layer.coroutine.yield (where.prefix .. ".missing", {
-        proxy    = where.proxy,
-        key      = where.key,
-        expected = getmetatable (oftype) == Layer.Proxy
-               and oftype
-                or type (oftype),
-      })
+      if where.optional ~= true then 
+        Layer.coroutine.yield (where.prefix .. ".missing", {
+          proxy    = where.proxy,
+          key      = where.key,
+          expected = getmetatable (oftype) == Layer.Proxy
+                 and oftype
+                  or type (oftype),
+        })
+      end
     elseif type (oftype) == "string" then
       if type (value) ~= oftype then
         Layer.coroutine.yield (where.prefix .. ".illegal", {
@@ -38,6 +41,7 @@ return function (Layer, check)
           expected = oftype,
           used     = type (value),
         })
+
       elseif not (oftype <= value) then
         Layer.coroutine.yield (where.prefix .. ".illegal", {
           proxy    = where.proxy,
@@ -46,6 +50,7 @@ return function (Layer, check)
           used     = value,
         })
       end
+   --   print("ok")
     else
       assert (false)
     end

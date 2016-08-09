@@ -19,4 +19,5 @@ for dir in lua*; do
   "${dir}/bin/luarocks" install luacov
   "${dir}/bin/luarocks" install luacov-coveralls
   "${dir}/bin/luarocks" install compat52 || true
+  "${dir}/bin/luarocks" install rockspec/lulpeg-0.1.0-1.rockspec
 done

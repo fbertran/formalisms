@@ -16,7 +16,7 @@ return function (Layer, graph, ref)
 
   local collection = Layer.require "cosy/formalism/data.collection"
   local record     = Layer.require "cosy/formalism/data.record"
-
+  
   graph [refines] = {
     record,
   }
@@ -56,7 +56,7 @@ return function (Layer, graph, ref)
           }
         },
         vertex = nil,
-      },
+      },  
     },
   }
 
