@@ -19,7 +19,6 @@ dependencies = {
 build = {
   type    = "builtin",
   modules = {
-    ["cosy.formalism.layer"] = "src/cosy/formalism/layer.lua",
     ["cosy.formalism.tool" ] = "src/cosy/formalism/tool/init.lua",
 
     ["cosy.formalism.type"            ] = "src/cosy/formalism/type/init.lua",
