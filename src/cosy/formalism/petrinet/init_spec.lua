@@ -176,7 +176,7 @@ describe ("Formalism petrinet", function ()
 
   describe ("arcs", function ()
 
-    it ("can be created #current", function ()
+    it ("can be created", function ()
       -- local ProFi = require "ProFi"
 		  -- ProFi:start ()
       local Layer      = require "layeredata"
