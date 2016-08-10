@@ -1,22 +1,21 @@
+--
 return function (Layer,binary)
 
-  local lpeg = require "lulpeg"
-  local refines = Layer.key.refines
-  local meta = Layer.key.meta
+  local lpeg        = require "lulpeg"
+  local refines     = Layer.key.refines
+  local meta        = Layer.key.meta
   local collection  = Layer.require "cosy/formalism/data.collection"
-  local operator = Layer.require "cosy/formalism/operator"
+  local operator    = Layer.require "cosy/formalism/operator"
 
 
   binary [refines] = {
     operator,    
   }
 
-  binary .operands [meta] [collection]  = {
-    minimum = 2,
-    maximum = 2,
-  }
+  binary .operands [meta] [collection] .minimum = 2
+  binary .operands [meta] [collection] .maximum = 2
 
-  binary [meta].parser = function(ref,exp1, exp2)
+  binary [meta] .parser = function(ref, exp1, exp2)
     local tmp_ignored_character = ""
     local pattern
 
@@ -44,6 +43,12 @@ return function (Layer,binary)
       return layer,trace
     end  
     return pattern
+  end
+
+  binary [meta] .printer = function (root_expression)
+    root_expression.operands [1][meta].printer(root_expression.operands [1]) 
+    io.write(root_expression.operator)
+    root_expression.operands [1][meta].printer(root_expression.operands [2])
   end
   
   return binary

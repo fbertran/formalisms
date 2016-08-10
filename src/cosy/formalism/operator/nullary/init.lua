@@ -1,3 +1,4 @@
+-- Nullary formalism reprensents an operator without operands (usually a constant)
 return function (Layer, nullary)
 
   local refines     = Layer.key.refines

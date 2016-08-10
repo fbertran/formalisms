@@ -13,7 +13,7 @@ return function (Layer, increment_operation)
 
 
   increment_operation.operator = "++ "
-  increment_operation.priority = 14
+  increment_operation.priority = 13
  
   
   return increment_operation
