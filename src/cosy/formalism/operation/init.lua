@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 -- Operation formalism is a formalism which interacts with Operator formalism.
 -- Its purpose is to create the tree structure of the root formalism.
 -- Specifically, it will construct the grammar based on patterns given by each Operator of its list 
