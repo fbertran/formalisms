@@ -18,11 +18,7 @@ return function (Layer, binary_edges)
     graph
   }
 
-  binary_edges [meta].edge_type.arrows [meta] = {
-    [collection] = {
-      minimum = 2,
-      maximum = 2,
-    },
-  }
+  binary_edges [meta].edge_type.arrows [meta] [collection] .minimum = 2
+  binary_edges [meta].edge_type.arrows [meta] [collection] .maximum = 2
 
 end
