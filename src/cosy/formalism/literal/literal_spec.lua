@@ -89,7 +89,7 @@ describe ("Formalism literal.literal", function ()
 
       layer.id1 = Layer.new { name = "id1"}
       layer.id1 [refines] = { inst_identifier }
-      layer.id1 .value = "id1"
+      layer.id1 .id = "id1"
 
       expression   = "id1"
       result_inst  = layer   [meta] .parser(layer, expression, layer)

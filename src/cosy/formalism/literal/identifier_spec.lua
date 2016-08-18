@@ -20,7 +20,7 @@ describe ("Formalism literal.identifier", function ()
       local layer   = Layer.new {}
       
       layer [refines] = { identifier }
-      layer .value    = 42
+      layer .id    = 42
       
       Layer.Proxy.check_all (layer)
       assert.is_not_nil (next (Layer.messages))
@@ -32,7 +32,7 @@ describe ("Formalism literal.identifier", function ()
       local layer   = Layer.new {}
       
       layer [refines] = { identifier }
-      layer .value    = Layer.new {}
+      layer .id    = Layer.new {}
 
       Layer.Proxy.check_all (layer)
       assert.is_not_nil (next (Layer.messages))
@@ -44,7 +44,7 @@ describe ("Formalism literal.identifier", function ()
       local layer   = Layer.new {}
       
       layer [refines] = { identifier }
-      layer .value    = "x1"
+      layer .id    = "x1"
       
       Layer.Proxy.check_all (layer)
       assert.is_nil (next (Layer.messages))
@@ -59,7 +59,7 @@ describe ("Formalism literal.identifier", function ()
       local layer   = Layer.new {}
       
       layer [refines] = { identifier }
-      layer .value    = "x1"
+      layer .id    = "x1"
 
       Layer.Proxy.check_all (layer)
       assert.is_nil (next (Layer.messages))
@@ -71,7 +71,7 @@ describe ("Formalism literal.identifier", function ()
       local layer   = Layer.new {}
       
       layer [refines] = { identifier }
-      layer .value    = "1x"
+      layer .id    = "1x"
 
       Layer.Proxy.check_all (layer)
       assert.is_not_nil (next (Layer.messages))
@@ -83,7 +83,7 @@ describe ("Formalism literal.identifier", function ()
       local layer   = Layer.new {}
       
       layer [refines] = { identifier }
-      layer .value    = "_x"
+      layer .id    = "_x"
 
       Layer.Proxy.check_all (layer)
       assert.is_not_nil (next (Layer.messages))
@@ -105,8 +105,8 @@ describe ("Formalism literal.identifier", function ()
       id1 [refines] = {identifier}
       id2 [refines] = {identifier}
 
-      id1 .value = "id1"
-      id2 .value = "id2"
+      id1 .id = "id1"
+      id2 .id = "id2"
 
       layer [refines] = { collection }
 
@@ -131,8 +131,8 @@ describe ("Formalism literal.identifier", function ()
 
       id1 [refines] = {identifier}
 
-      id1 .value = "id1"
-      id2 .value = "id2"
+      id1 .id = "id1"
+      id2 .id = "id2"
 
       layer [refines] = { collection }
 
@@ -158,8 +158,8 @@ describe ("Formalism literal.identifier", function ()
       id1 [refines] = {identifier}
       id2 [refines] = {identifier}
 
-      id1 .value = "id1"
-      id2 .value = "id2"
+      id1 .id = "id1"
+      id2 .id = "id2"
 
       layer [refines] = { collection }
 

@@ -23,7 +23,7 @@ return function (Layer, identifier)
   identifier.priority = math.huge 
  
   identifier [meta] [record] = {
-    value = { value_type = "string" }
+    id = { value_type = "string" }
   }
   
 
@@ -81,7 +81,7 @@ return function (Layer, identifier)
   end
 
   identifier [meta] .printer = function(reference)
-    return (tostring(reference.value))
+    return (tostring(reference.id))
   end
 
 
@@ -89,21 +89,21 @@ return function (Layer, identifier)
   identifier [checks] = {}
 
   identifier [checks] [prefix .. ".format"] = function (proxy)
-    if type(proxy .value) == "string" then      
-      local i,j = string.find(proxy .value, "%w+")
-      if j == #proxy .value and i == 1 then
-        if string.find(proxy .value, "%d") ~= 1 then
+    if type(proxy .id) == "string" then      
+      local i,j = string.find(proxy .id, "%w+")
+      if j == #proxy .id and i == 1 then
+        if string.find(proxy .id, "%d") ~= 1 then
           return
         end
         Layer.coroutine.yield (prefix .. ".format.invalid", {
           proxy = proxy,
-          key   = "value",
+          key   = "id",
           expected = "First char must be a letter"
         })  
       else
         Layer.coroutine.yield (prefix .. ".format.invalid", {
           proxy = proxy,
-          key   = "value",
+          key   = "id",
           expected = "Only accept alphanumeric characters"
         })
       end
