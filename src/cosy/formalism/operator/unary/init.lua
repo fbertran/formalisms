@@ -18,5 +18,4 @@ return function (Layer, unary)
   unary [meta] [record] .operator .optional = false
   unary [meta] [record] .priority .optional = false
 
-  return unary
 end

@@ -50,7 +50,7 @@ return function (Layer,suffix)
     tmp = root_expression.operands [1][meta] .printer(root_expression.operands [1])
     tmp = tmp..tostring(root_expression.operator)
     return tmp
+
   end
 
-  return suffix
 end

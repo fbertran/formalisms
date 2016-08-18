@@ -22,6 +22,7 @@ describe ("Formalism literal.bool", function ()
       
       layer [refines] = { bool }
       layer .value    = 42
+      
       Layer.Proxy.check_all (layer)
       assert.is_not_nil (next (Layer.messages))
     end)

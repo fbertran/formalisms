@@ -8,6 +8,7 @@ return function (Layer, accolade)
   accolade [refines] = {
     suffix
   }
+  
   accolade .priority = 1
 
   accolade [meta].parser = function (base,ref)

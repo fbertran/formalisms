@@ -14,5 +14,4 @@ return function (Layer, drawable)
   drawable .svg_sequence = "NONE"
 
   drawable [meta] .draw = function() print "NOT IMPLEMENTED YET" end
-  
 end

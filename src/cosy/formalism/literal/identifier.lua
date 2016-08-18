@@ -48,12 +48,12 @@ return function (Layer, identifier)
     return result
   end
 
+
   identifier [meta] .parser = function (reference,instance)
     local pattern = lpeg.C ((lpeg.R "az" + lpeg.R "AZ" + "_") * (lpeg.R "az" + lpeg.R "AZ" +"."+ "_" + lpeg.R "09")^0 - (lpeg.P "true" + lpeg.P "false"))/
       function (patt)
         local layer
-        local a,b = string.find(patt, "%a+%.") 
-        
+        local a,b = string.find(patt, "%a+%.")
         if a ~= nil then
           local ref
           local last_index
@@ -110,6 +110,5 @@ return function (Layer, identifier)
 
     end 
   end
-
-  return identifier
+  
 end

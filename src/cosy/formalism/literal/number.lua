@@ -36,6 +36,4 @@ return function (Layer, number)
   number [meta] .printer = function(reference)
     return (tostring(reference.value))
   end
-
-  return number
 end

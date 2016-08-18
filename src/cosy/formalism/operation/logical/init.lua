@@ -8,6 +8,5 @@ return function (Layer, logical_operation)
   logical_operation [refines] = {
       boolean,
     }
-
-  return logical_operation
+    
 end

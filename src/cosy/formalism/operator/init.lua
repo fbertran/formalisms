@@ -55,5 +55,4 @@ return function (Layer, Operator, ref)
   Operator .operands [meta] [collection] .minimum     = false
   Operator .operands [meta] [collection] .maximum     = false
 
- 
 end

@@ -20,7 +20,6 @@ describe ("Formalism literal.number", function ()
       local refines = Layer.key.refines    
       local layer   = Layer.new {}
 
-
       layer [refines] = { number }
       layer .value    = "lol"
 

@@ -13,5 +13,5 @@ return function (Layer, addnary_operation)
 
   addnary_operation.operator = "+"
   addnary_operation.priority = 13
- 
+
 end

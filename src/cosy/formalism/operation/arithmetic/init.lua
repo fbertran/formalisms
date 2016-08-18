@@ -21,5 +21,4 @@ return function (Layer, arithmetic_operation)
     [division_operation] = division_operation 
   }]]
   
-  return arithmetic_operation
 end

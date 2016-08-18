@@ -39,5 +39,6 @@ return function (Layer, parenthesis)
       end
       return pattern
     end
-  return parenthesis
+
+    
 end

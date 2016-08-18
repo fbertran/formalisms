@@ -7,6 +7,7 @@ return function (Layer, relational_operation)
   
   relational_operation [refines] = {
     boolean,
+
   }
 
  --[[ 
@@ -27,5 +28,4 @@ return function (Layer, relational_operation)
     [superiorequal_operation] = superiorequal_operation
   }]]
 
-  return relational_operation
 end

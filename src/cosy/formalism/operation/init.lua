@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 -- Operation formalism is a formalism which interacts with Operator formalism.
 -- Its purpose is to create the tree structure of the root formalism.
 -- Specifically, it will construct the grammar based on patterns given by each Operator of its list 
@@ -127,7 +128,6 @@ return function (Layer, operation)
           end
         end
 
-
         -- Now we add the expression of the Operator by its parser
         if binary <= oper_curr then 
           pattern [tostring(oper_curr)] = oper_curr [meta] .parser(oper_curr, lpeg.V(tostring(ref)..(exp_index+1)), lpeg.V(tostring(ref)..exp_index))
@@ -161,6 +161,7 @@ return function (Layer, operation)
       -- We do a first match
       --ref [meta] .pattern = pattern
       sub_result,trace = lpeg.P(pattern):match(expression)
+      
       -- Our parser returns us the first left part of expression which matched 
       -- If our expression has a left operand which is an operator using punctuator, 
       -- The left operand will match in first and not the others.
@@ -190,5 +191,6 @@ return function (Layer, operation)
     assert(ref <= result, "wrong type of main operation")
     return result
   end
+
 
 end

@@ -9,6 +9,7 @@ local Layer   = require "layeredata"
 local meta    = Layer.key.meta
 local refines = Layer.key.refines
 
+
 describe ("Formalism literal.literal", function ()
 
   it ("can be loaded", function ()
@@ -26,6 +27,7 @@ describe ("Formalism literal.literal", function ()
       layer [Layer.key.meta] [record] .value = {value_type = "number"}
    
       layer.value = "test"
+
       Layer.Proxy.check_all (layer)
       assert.is_not_nil ( next ( Layer.messages ))
     end)
@@ -118,4 +120,5 @@ describe ("Formalism literal.literal", function ()
       assert.is_nil (next (Layer.messages))
     end)
   end)
+
 end)

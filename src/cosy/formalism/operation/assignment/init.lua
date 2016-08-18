@@ -8,5 +8,4 @@ return function (Layer, assignment_operation)
     operation,
   } 
   
-  return assignment_operation
 end

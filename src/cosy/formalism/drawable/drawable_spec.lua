@@ -25,6 +25,7 @@ describe ("Formalism data.record", function ()
     assert.is_nil (Layer.messages [layer.svg_sequence])
   end)
 
+
 	it ("using wrong type for svg_sequence", function ()
 	  local drawable	= Layer.require "cosy/formalism/drawable"
     local layer  = Layer.new {}

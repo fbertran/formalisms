@@ -2,7 +2,6 @@
 if #setmetatable ({}, { __len = function () return 1 end }) ~= 1 then
   require "compat52"
 end
-
 require "busted.runner" ()
 
 local Layer = require "cosy.formalism.layer"
@@ -22,6 +21,7 @@ describe ("Formalism literal.identifier", function ()
       
       layer [refines] = { identifier }
       layer .value    = 42
+      
       Layer.Proxy.check_all (layer)
       assert.is_not_nil (next (Layer.messages))
     end)

@@ -10,5 +10,4 @@ return function (Layer, punctuator_operation)
     operation,
   }
 
-  return punctuator_operation
 end

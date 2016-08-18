@@ -31,6 +31,7 @@ return function (Layer, parsable)
   end
 
 
+
   -- pattern uses if we doesn't need to generate one more time the pattern's parser
   parsable [meta] .pattern = nil
 
@@ -58,5 +59,5 @@ return function (Layer, parsable)
       end
     end
   end
-  
+
 end

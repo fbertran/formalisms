@@ -10,6 +10,5 @@ return function (Layer, literal)
   }
 
   literal .priority = math.huge
-
-  return literal
+  
 end

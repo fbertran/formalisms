@@ -77,10 +77,12 @@ describe ("Formalism Operator : priority_type", function ()
     local Layer   = require "layeredata"
     local refines = Layer.key.refines
     local operator_formalism  = Layer.require "cosy/formalism/operator"
+
     local layer               = Layer.new {}
 
     layer [refines] = { operator_formalism }
     layer .operator = " "
+
     layer .priority = nil
 
     Layer.Proxy.check_all (layer)
@@ -484,6 +486,7 @@ describe ("Formalism Operator : operands_size with operands_type primitive", fun
 
     layer .operands [1] = 1
     layer .operands [2] = 9
+
 
     Layer.Proxy.check_all (layer)
     assert.is_nil (next (Layer.messages))

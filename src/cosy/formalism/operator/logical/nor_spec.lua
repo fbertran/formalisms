@@ -5,6 +5,7 @@ local Layer   = require "layeredata"
 local path    = "cosy/formalism/operator/logical.nor"
 
 describe ("Formalism nor", function ()
+
   it ("can be loaded", function ()
     local _ = Layer.require (path)
   end)

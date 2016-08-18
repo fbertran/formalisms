@@ -18,5 +18,4 @@ return function (Layer, nullary)
   nullary .operands [meta] [collection] .minimum = 0
   nullary .operands [meta] [collection] .maximum = 0
 
-  return nullary
 end

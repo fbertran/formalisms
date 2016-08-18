@@ -15,6 +15,6 @@ return function (Layer, substraction_operation)
 
   substraction_operation .priority = 11
   substraction_operation .operator = "-"
-   
+  
 end
 

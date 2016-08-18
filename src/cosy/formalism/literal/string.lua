@@ -1,7 +1,6 @@
 -- string
 
 return function (Layer, string)
-
   local lpeg    = require "lulpeg"
   local meta    =  Layer.key.meta
   local refines =  Layer.key.refines
@@ -17,7 +16,7 @@ return function (Layer, string)
   string [meta] [record] .value = { value_type = "string" }
   
   string.priority = math.huge
-  
+
   string [meta] .parser = function (reference)
     local pattern = (lpeg.P "\"" *(lpeg.R "az" + lpeg.R "AZ" + lpeg.P "_" + lpeg.R "09")^1 * lpeg.P "\"")/function (patt)
       local layer = Layer.new{}
@@ -31,6 +30,5 @@ return function (Layer, string)
   string [meta] .printer = function(reference)
     return (tostring(reference.value))
   end
-
-  return string
+  
 end

@@ -6,6 +6,7 @@ return function (Layer,prefix)
 
   local unary   = Layer.require "cosy/formalism/operator/unary"
 
+
   prefix [refines] = {
     unary,    
   }
@@ -47,5 +48,5 @@ return function (Layer,prefix)
     return pattern
   end
   
-  return prefix
+
 end

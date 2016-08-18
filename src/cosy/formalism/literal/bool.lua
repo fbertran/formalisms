@@ -18,6 +18,7 @@ return function (Layer, bool)
   
   bool.priority = math.huge
 
+
   bool [meta] .parser = function (reference)
     local pattern =(lpeg.P "true" + lpeg.P "false")/function (patt)
       local layer = Layer.new {}
@@ -37,6 +38,5 @@ return function (Layer, bool)
   bool [meta] .printer = function(root_expression)
     return (tostring(root_expression.value))
   end
-
-  return bool
+  
 end
