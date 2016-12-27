@@ -1,3 +1,7 @@
+---
+type: ardoises/ardoise
+---
+
 # Standard Formalisms Library for CosyVerif
 
 This repository contains a standard library of formalisms, or pieces or
