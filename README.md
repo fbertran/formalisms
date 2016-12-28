@@ -1,7 +1,3 @@
----
-type: ardoises/ardoise
----
-
 # Standard Formalisms Library for CosyVerif
 
 This repository contains a standard library of formalisms, or pieces or
@@ -326,3 +322,5 @@ automaton.alphabet = {
 
 Congratulations, you have just created your first formalism in CosyVerif!
 Next step is to create an instance of automaton above this formalism.
+
+  # aHR0cHM6Ly9naXRodWIuY29tL29yZ3MvYXJkb2lzZXM=
