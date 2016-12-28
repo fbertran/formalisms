@@ -323,4 +323,7 @@ automaton.alphabet = {
 Congratulations, you have just created your first formalism in CosyVerif!
 Next step is to create an instance of automaton above this formalism.
 
-<!--- aHR0cHM6Ly9naXRodWIuY29tL29yZ3MvYXJkb2lzZXM= -->
+<!---
+  Ardoise tag: aHR0cHM6Ly9naXRodWIuY29tL2FyZG9pc2Vz
+  Base64 "https://github.com/ardoises"
+-->
