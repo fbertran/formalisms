@@ -7,7 +7,7 @@ return function (Layer, Arithmetic)
   Arithmetic [refines] = {
     operator,
   }
-  
+
   Arithmetic [meta].operands_type = "number"
 
   return Arithmetic

@@ -6,6 +6,6 @@ return function (Layer, Infix)
   Infix [refines] = {
     binary,
   }
-  
+
   return Infix
 end

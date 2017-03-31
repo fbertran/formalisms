@@ -1,10 +1,9 @@
-return function (Layer, Nullary, ref)
+return function (Layer, Nullary)
   local refines = Layer.key.refines
   local meta    = Layer.key.meta
 
   local operator   = Layer.require "operator"
   local collection = Layer.require "data.collection"
-  local record     = Layer.require "data.record"
 
   Nullary [refines] = {
     operator,

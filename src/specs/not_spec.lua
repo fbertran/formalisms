@@ -10,10 +10,9 @@ describe ("Not operator", function ()
     assert.True (string.len(layer.operator) > 0)
   end)
 
-  it ("has a string type defined for the token", function () 
+  it ("has a string type defined for the token", function ()
     local Layer = require "layeredata"
     local not_operator = Layer.require "operator.not"
-    local collection = Layer.require "data.collection"
     local layer = Layer.new {}
     layer [Layer.key.refines] = { not_operator }
     layer.operands.op = true
