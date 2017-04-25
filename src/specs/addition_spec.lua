@@ -19,7 +19,7 @@ describe ("Addition operator", function ()
     local layer = Layer.new {}
     layer [refines] = { addition_op }
     layer.operands.left = 5
-    layer.operands.right = "this is not a number"
+    layer.operands.right = 10
     Layer.Proxy.check_all (layer)
     assert.is_nil (next (Layer.messages))
   end)
