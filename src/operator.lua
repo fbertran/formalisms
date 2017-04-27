@@ -1,9 +1,7 @@
-return function (Layer, Operator, ref)
+return function (Layer, Operator)
   local meta    = Layer.key.meta
   local refines = Layer.key.refines
-
-  local record     = Layer.require "data.record"
-  local collection = Layer.require "data.collection"
+  local record  = Layer.require "data.record"
 
   Operator [refines] = {
     record,
@@ -21,23 +19,20 @@ return function (Layer, Operator, ref)
         value_type = "number",
         optional   = true,
       },
-    },
-    operands_type = false,
-  }
-
-  Operator.operands = {}
-
-  Operator.operands [refines] = {
-    collection,
-  }
-
-  Operator.operands [meta] = {
-    [collection] = {
-      value_type = ref [meta].operands_type,
-      minimum  = false,
-      maximum  = false,
+      is_associative = {
+        value_type = "boolean",
+        optional   = false,
+      },
+      is_commutative = {
+        value_type = "boolean",
+        optional   = false,
+      },
+      operands = false,
     },
   }
+
+  Operator.is_associative = false
+  Operator.is_commutative = false
 
   return Operator
 end

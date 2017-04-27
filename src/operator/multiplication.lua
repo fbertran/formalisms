@@ -1,16 +1,24 @@
 return function (Layer, Multiplication)
   local refines = Layer.key.refines
-
-  local infix      = Layer.require "operator.infix"
-  local arithmetic = Layer.require "operator.arithmetic"
+  local collection = Layer.require "data.collection"
+  local operator = Layer.require "operator"
 
   Multiplication [refines] = {
-    infix,
-    arithmetic,
+    operator,
   }
 
   Multiplication.operator = "*"
   Multiplication.priority = 12
+
+  Multiplication.is_associative = true
+  Multiplication.is_commutative = true
+  Multiplication.operands = {
+    [collection] = {
+      minimum = 2,
+      maximum = 2,
+    },
+    type = collection,
+  }
 
   return Multiplication
 end

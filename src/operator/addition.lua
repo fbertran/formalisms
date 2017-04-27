@@ -1,19 +1,26 @@
 return function (Layer, Addition)
   local refines = Layer.key.refines
 
-  local infix      = Layer.require "operator.infix"
-  local arithmetic = Layer.require "operator.arithmetic"
+  local operator = Layer.require "operator"
+
+  local collection = Layer.require "data.collection"
 
   Addition [refines] = {
-    infix,
-    arithmetic,
+    operator
   }
 
   Addition.operator = "+"
-  -- TODO: decide on priority values,
-  -- "+" is less than "*" and "/" which are less than let's say "!" ("not" operator),
-  -- so if "maximum value" for priorities is 13, this should be 11
   Addition.priority = 11
+
+  Addition.is_associative = true
+  Addition.is_commutative = true
+  Addition.operands = {
+    [collection] = {
+      minimum = 2,
+      maximum = 2,
+    },
+    type = collection,
+  }
 
   return Addition
 end
