@@ -74,6 +74,7 @@ local add = white * lpeg.C(lpeg.S(tab2.operator.operator))
   exp            -> addition | multiplication | number
   addition       -> (multiplication | number) '+' exp
   multiplication -> number '*' (multiplication | number)
+  number         -> [0-9]+
 
   This grammar has priority for multiplication
 ]]
