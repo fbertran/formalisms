@@ -17,6 +17,7 @@ return function (Layer, Not)
     [collection] = {
       minimum = 1,
       maximum = 1,
+      value_type = "boolean",
     },
     type = collection,
   }

@@ -8,6 +8,8 @@ return function (Layer, Division)
   }
 
   Division.operator = "/"
+  Division.is_commutative = false
+  Division.is_associative = false
 
   return Division
 end

@@ -16,6 +16,7 @@ return function (Layer, Multiplication)
     [collection] = {
       minimum = 2,
       maximum = 2,
+      value_type = "number",
     },
     type = collection,
   }

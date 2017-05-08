@@ -1,27 +1,26 @@
-return function (Layer, Addition)
+return function (Layer, And)
   local refines = Layer.key.refines
-
   local operator = Layer.require "operator"
-
   local collection = Layer.require "data.collection"
 
-  Addition [refines] = {
+  And [refines] = {
     operator
   }
 
-  Addition.operator = "+"
-  Addition.priority = 11
+  And.operator = "^"
+  And.priority = 12
 
-  Addition.is_associative = true
-  Addition.is_commutative = true
-  Addition.operands = {
+  And.is_associative = true
+  And.is_commutative = true
+  And.operands = {
     [collection] = {
       minimum = 2,
       maximum = 2,
-      value_type = "number"
+      value_type = "boolean"
     },
     type = collection,
   }
 
-  return Addition
+
+  return And
 end

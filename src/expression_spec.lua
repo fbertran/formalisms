@@ -5,7 +5,7 @@ local refines = Layer.key.refines
 
 describe ("Formalism expression", function ()
   describe ("expression", function ()
-    it("has the right operator min - max", function ()
+    it ("has the right operator min - max", function ()
       local layer = Layer.new {}
       local expression = Layer.require "expression"
       local addition_op = Layer.require "operator.addition"
