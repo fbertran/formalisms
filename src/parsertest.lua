@@ -78,7 +78,7 @@ local add = white * lpeg.C(lpeg.S(tab2.operator.operator))
 
   This grammar has priority for multiplication
 ]]
-local function make_nodes()
+local function make_grammar()
   return lpeg.P({
     "input",
     input = lpeg.V("exp") * -1,
@@ -108,6 +108,6 @@ end
 
 local original = "10 * 3 + 5 * 2 + 2"
 
-printr(make_nodes():match(original), true)
+printr(make_grammar():match(original), true)
 print("original: " .. original)
 print("parsed result: " .. str)
