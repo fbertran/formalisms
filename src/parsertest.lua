@@ -70,6 +70,9 @@ tab2 [refines] = { addition_expression }
 local add = white * lpeg.C(lpeg.S(tab2.operator.operator))
 
 --[[
+
+  Example grammar (just testing)
+
   input          -> exp
   exp            -> addition | multiplication | number
   addition       -> (multiplication | number) '+' exp
