@@ -7,8 +7,6 @@ return function (Layer, Operator)
     record,
   }
 
-  Operator [meta] = {}
-
   Operator [meta] = {
     [record] = {
       operator = {
