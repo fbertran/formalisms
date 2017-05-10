@@ -11,7 +11,7 @@ return function (Layer, Grammar)
     [meta] = {
       [collection] = {
         minimum = 1,
-        maximum = 10000,
+        maximum = 65000,
       },
     },
   }

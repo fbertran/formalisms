@@ -1,6 +1,5 @@
-return function (Layer, Arithmetic_Grammar, ref)
+return function (Layer, Arithmetic_Grammar)
   local refines = Layer.key.refines
-  local meta    = Layer.key
 
   local add_expr = Layer.require "expression.addition_expression"
 
@@ -14,7 +13,7 @@ return function (Layer, Arithmetic_Grammar, ref)
     add_expr,
   }
 
-  Arithmetic_Grammar.expressions[1].operator.operands = {
+  Arithmetic_Grammar.expressions[1].operands = {
     10, 20,
   }
 

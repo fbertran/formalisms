@@ -4,13 +4,13 @@ local lpeg = require "lpeg"
 local collection = Layer.require "data.collection"
 
 local refines = Layer.key.refines
-
+local meta    = Layer.key.meta
 
 -- the / operator is overloaded by lpeg
 -- it creates a function capture,
 -- i.e. captures the match and passes it to the function as argument
 -- the ^ operator is used as
--- "^ n" -> the pattern has to appear n or more times
+-- "^ n" -> the pattern has to appear  or more times
 local value_types = {
   ["number"] = ((lpeg.R("09") ^ 1 / tonumber) + (lpeg.R("az") ^ 1 / tostring)),
   ["boolean"] = (lpeg.R("09") ^ 1 / tonumber + lpeg.R("az") ^ 1 / tostring)
@@ -33,17 +33,18 @@ end
 -- it is not captured when matched so it is thrown away
 local white = lpeg.S(" \t") ^ 0
 
-local tab = Layer.new {}
+local multiplication = Layer.new {}
 
-tab [refines] = { mul_expr }
+multiplication [refines] = { mul_expr }
 
-local operand = white * value_types[tab.operator.operands[collection].value_type]
-local mult = white * lpeg.C(lpeg.S(tab.operator.operator))
+local operand = white * value_types[multiplication.operands[meta][collection].value_type]
 
-local tab2 = Layer.new {}
-tab2 [refines] = { addition_expression }
+local mult = white * lpeg.C(lpeg.S(multiplication.operator.operator))
 
-local add = white * lpeg.C(lpeg.S(tab2.operator.operator))
+local addition = Layer.new {}
+addition [refines] = { addition_expression }
+
+local add = white * lpeg.C(lpeg.S(addition.operator.operator))
 
 local and_layer = Layer.new {}
 
