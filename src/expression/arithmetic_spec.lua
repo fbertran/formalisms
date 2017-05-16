@@ -65,7 +65,7 @@ describe("Arithmetic expression", function()
       literal_layer2
     }
 
-    print(tablelength(layer.operator.operands))
+    -- print(tablelength(layer.operator.operands))
 
     -- print("check literal_layer1")
     -- This one passes

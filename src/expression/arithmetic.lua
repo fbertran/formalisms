@@ -30,15 +30,13 @@ return function (Layer, arithmetic, ref)
       [meta] = {
         [collection] = {
           -- this works
-          value_type = arithmetic,
-          -- this causes "linearization fail", uncomment next line and comment out value_type = arithmetic,
-          -- then launch busted src/expression/arithmetic_spec.lua
-          -- value_type = ref,
+          -- value_type = arithmetic,
+          -- this causes "linearization fail"
+          value_type = ref,
         },
       },
     },
   }
-
 
 
   local r_multiplication = {
