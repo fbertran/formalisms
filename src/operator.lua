@@ -1,13 +1,13 @@
-return function (Layer, Operator)
+return function (Layer, operator)
   local meta    = Layer.key.meta
   local refines = Layer.key.refines
   local record  = Layer.require "data.record"
 
-  Operator [refines] = {
+  operator [refines] = {
     record,
   }
 
-  Operator [meta] = {
+  operator [meta] = {
     [record] = {
       operator = {
         value_type = "string",
@@ -29,8 +29,8 @@ return function (Layer, Operator)
     },
   }
 
-  Operator.is_associative = false
-  Operator.is_commutative = false
+  operator.is_associative = false
+  operator.is_commutative = false
 
-  return Operator
+  return operator
 end

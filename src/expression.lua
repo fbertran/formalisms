@@ -1,32 +1,37 @@
-return function (Layer, Expression, ref)
+return function (Layer, expression, ref)
   local refines = Layer.key.refines
   local meta    = Layer.key.meta
 
-  local record   = Layer.require "data.record"
-  local operator = Layer.require "operator"
+  local collection = Layer.require "data.collection"
+  local record     = Layer.require "data.record"
+  local operator   = Layer.require "operator"
 
-  Expression [refines] = {
+  expression [refines] = {
     record,
   }
 
-  Expression [meta] = {
+  expression [meta] = {
+    [expression] = {
+      [refines] = { collection },
+      [meta   ] = {
+        [collection] = {
+          value_type = operator,
+        },
+      },
+    },
     [record] = {
       operator = {
-        value_type = operator,
-        optional   = false,
+        value_container = ref [meta] [expression],
       },
-      operands = {
-        optional = false,
-      },
+      operands = false,
     },
   }
 
-  Expression.operands = {
+  expression.operands = {
     [refines] = {
-      ref.operator.operands.type,
+      ref.operator.operands,
     },
-    [meta] = ref.operator.operands,
   }
 
-  return Expression
+  return expression
 end

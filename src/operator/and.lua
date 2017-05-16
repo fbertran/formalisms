@@ -1,26 +1,25 @@
-return function (Layer, And)
-  local refines = Layer.key.refines
-  local operator = Layer.require "operator"
+return function (Layer, and_op)
+  local refines    = Layer.key.refines
+  local operator   = Layer.require "operator"
   local collection = Layer.require "data.collection"
 
-  And [refines] = {
+  and_op [refines] = {
     operator
   }
 
-  And.operator = "^"
-  And.priority = 12
+  and_op.operator = "^"
+  and_op.priority = 12
 
-  And.is_associative = true
-  And.is_commutative = true
-  And.operands = {
+  and_op.is_associative = true
+  and_op.is_commutative = true
+  and_op.operands    = {
     [collection] = {
       minimum = 2,
       maximum = 2,
-      value_type = "boolean"
     },
     type = collection,
   }
 
 
-  return And
+  return and_op
 end

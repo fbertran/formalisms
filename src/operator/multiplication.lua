@@ -1,25 +1,27 @@
-return function (Layer, Multiplication)
-  local refines = Layer.key.refines
+return function (Layer, multiplication)
+  local refines    = Layer.key.refines
+  local meta       = Layer.key.meta
+  local operator   = Layer.require "operator"
   local collection = Layer.require "data.collection"
-  local operator = Layer.require "operator"
 
-  Multiplication [refines] = {
+  multiplication [refines] = {
     operator,
   }
 
-  Multiplication.operator = "*"
-  Multiplication.priority = 12
+  multiplication.operator = "*"
+  multiplication.priority = 12
 
-  Multiplication.is_associative = true
-  Multiplication.is_commutative = true
-  Multiplication.operands = {
-    [collection] = {
-      minimum = 2,
-      maximum = 2,
-      value_type = "number",
+  multiplication.is_associative = true
+  multiplication.is_commutative = true
+  multiplication.operands = {
+    [refines] = { collection },
+    [meta   ] = {
+      [collection] = {
+        minimum = 2,
+        maximum = 2,
+      },
     },
-    type = collection,
   }
 
-  return Multiplication
+  return multiplication
 end
