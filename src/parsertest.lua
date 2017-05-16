@@ -10,9 +10,11 @@ local meta    = Layer.key.meta
 -- it creates a function capture,
 -- i.e. captures the match and passes it to the function as argument
 -- the ^ operator is used as
--- "^ n" -> the pattern has to appear  or more times
+-- "^ n" -> the pattern has to appear n or more times
+-- "+" is also overloaded, represents | (or),
+-- so the "number" pattern here in regex would be /([0-9]+|[a-z]+)/
 local value_types = {
-  ["number"] = ((lpeg.R("09") ^ 1 / tonumber) + (lpeg.R("az") ^ 1 / tostring)),
+  ["number"]  = ((lpeg.R("09") ^ 1 / tonumber) + (lpeg.R("az") ^ 1 / tostring)),
   ["boolean"] = (lpeg.R("09") ^ 1 / tonumber + lpeg.R("az") ^ 1 / tostring)
 }
 
@@ -75,8 +77,16 @@ local function make_grammar()
   })
 end
 
-local str = ""
+local function other()
+  return lpeg.P({
+    "input",
+    input          = lpeg.V("exp"),
+    exp            = lpeg.V("addition") + operand,
+    addition       = node(operand * (add + mult) * lpeg.V("exp"))
+  })
+end
 
+local str = ""
 local function printrec(t, f)
   if f then
     str = str .. "{"
@@ -93,7 +103,7 @@ local function printrec(t, f)
   str = str .. " }"
 end
 
-local original = "10 * true ^ false ^ 5 * 2 + 2"
+local original = "3 * 2 + 5"
 local parsed_result = make_grammar():match(original)
 
 printrec(parsed_result, true)

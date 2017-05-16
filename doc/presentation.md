@@ -32,7 +32,8 @@ None of these provide the level of parametrisation that Ardoises aims to give to
 # Layeredata
 
 * Implements prototypal inheritance (does not exist in the Lua language)
-* Permits instanciation of the formalisms
+* Model instanciation
+* Model property verification
 
 ---
 
@@ -61,8 +62,6 @@ Describing an operator:
   Operator [refines] = {
     record,
   }
-
-  Operator [meta] = {}
 
   Operator [meta] = {
     [record] = {
@@ -119,7 +118,7 @@ Example: Multiplication operator
 ---
 
 # Defining an expression
-Generic expression:
+Describing an expression:
 
 <pre style="font-size: 13px">
   Expression [refines] = {

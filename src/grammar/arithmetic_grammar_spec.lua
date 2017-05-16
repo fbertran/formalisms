@@ -11,6 +11,10 @@ describe ("Arithmetic Grammar", function ()
 
     layer [refines] = { arithmetic }
 
+    layer.expressions[1].operands = {
+      10, 20,
+    }
+
     Layer.Proxy.check_all (layer)
 
     assert.is_nil (next (Layer.messages))

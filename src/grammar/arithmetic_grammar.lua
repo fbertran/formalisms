@@ -13,9 +13,5 @@ return function (Layer, Arithmetic_Grammar)
     add_expr,
   }
 
-  Arithmetic_Grammar.expressions[1].operands = {
-    10, 20,
-  }
-
   return Arithmetic_Grammar
 end
