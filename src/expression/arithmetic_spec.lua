@@ -21,21 +21,19 @@ describe ("Arithmetic expression", function ()
       }
     }
 
-    local a_type  = ref [meta] .type
-
     local l1 = {
-      [refines] = { a_type },
-      operator  = a_type [meta] [expression] .number,
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression] .number,
       operands  = { 5 },
     }
 
     local l2 = {
-      [refines] = { a_type },
-      operator  = a_type [meta] [expression] .number,
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression] .number,
       operands  = { 5 },
     }
 
-    layer.operator = ref [meta] [expression] .addition
+    layer.operator = layer [meta] [expression] .addition
     layer.operands = {
       l1, l2
     }
