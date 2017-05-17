@@ -5,6 +5,7 @@ local arithmetic = Layer.require "expression.arithmetic"
 local expression = Layer.require "expression"
 local refines    = Layer.key.refines
 local meta       = Layer.key.meta
+local collection = Layer.require "data.collection"
 
 local function tablelength(T)
   local count = 0
@@ -15,7 +16,7 @@ end
 describe ("Arithmetic expression", function ()
   it ("can be instantiated", function ()
 
-    local layer, ref = Layer.new {
+    local layer = Layer.new {
       data = {
         [refines] = { arithmetic }
       }
