@@ -9,9 +9,7 @@ return function (Layer, arithmetic, ref)
   local addition       = Layer.require "operator.addition"
   local multiplication = Layer.require "operator.multiplication"
 
-  arithmetic [refines] = {
-    expression
-  }
+  arithmetic [refines] = { expression }
 
   local r_number = {
     [refines] = { literal },
@@ -29,22 +27,18 @@ return function (Layer, arithmetic, ref)
     operands  = {
       [meta] = {
         [collection] = {
-          -- this works
-          -- value_type = arithmetic,
-          -- this causes "linearization fail"
-          value_type = ref,
+          value_type = ref [meta] .type,
         },
       },
     },
   }
-
 
   local r_multiplication = {
     [refines] = { multiplication },
     operands  = {
       [meta] = {
         [collection] = {
-          value_type = ref,
+          value_type  = ref [meta] .type,
         },
       },
     },
@@ -56,6 +50,7 @@ return function (Layer, arithmetic, ref)
       multiplication = r_multiplication,
       addition       = r_addition,
     },
+    type = arithmetic
   }
 
   -- exercices:

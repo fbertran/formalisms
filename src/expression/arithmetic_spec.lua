@@ -1,12 +1,10 @@
 require "busted.runner" {}
 
-local Layer       = require "layeredata"
-local arithmetic  = Layer.require "expression.arithmetic"
-local expression  = Layer.require "expression"
-local refines     = Layer.key.refines
-local meta        = Layer.key.meta
-local collection  = Layer.require "data.collection"
-
+local Layer      = require "layeredata"
+local arithmetic = Layer.require "expression.arithmetic"
+local expression = Layer.require "expression"
+local refines    = Layer.key.refines
+local meta       = Layer.key.meta
 
 local function tablelength(T)
   local count = 0
@@ -14,70 +12,37 @@ local function tablelength(T)
   return count
 end
 
+describe ("Arithmetic expression", function ()
+  it ("can be instantiated", function ()
 
-describe("Arithmetic expression", function()
-  it("can be instantiated", function ()
-    local layer, rl = Layer.new {}
-
-    local literal_layer1, r1 = Layer.new {}
-    local literal_layer2, r2 = Layer.new {}
-
-    layer [refines] = {
-      arithmetic,
-    }
-
-    literal_layer1 [refines] = {
-      arithmetic,
-    }
-
-    literal_layer2 [refines] = {
-      arithmetic,
-    }
-
-    literal_layer1.operator = {
-      [refines] = {
-        r1[meta][expression].number
+    local layer, ref = Layer.new {
+      data = {
+        [refines] = { arithmetic }
       }
     }
 
-    literal_layer1.operator.operands = {
-      5
+    local a_type  = ref [meta] .type
+
+    local l1 = {
+      [refines] = { a_type },
+      operator  = a_type [meta] [expression] .number,
+      operands  = { 5 },
     }
 
-    literal_layer2.operator = {
-      [refines] = {
-        r2[meta][expression].number
-      }
+    local l2 = {
+      [refines] = { a_type },
+      operator  = a_type [meta] [expression] .number,
+      operands  = { 5 },
     }
 
-    literal_layer2.operator.operands = {
-      2
+    layer.operator = ref [meta] [expression] .addition
+    layer.operands = {
+      l1, l2
     }
-
-    layer.operator = {
-      [refines] = {
-        layer[meta][expression].addition
-      }
-    }
-
-    layer.operator.operands = {
-      literal_layer1,
-      literal_layer2
-    }
-
-    -- print(tablelength(layer.operator.operands))
-
-    -- print("check literal_layer1")
-    -- This one passes
-    -- Layer.Proxy.check_all (literal_layer1)
-
-    -- print("check literal_layer2")
-    -- This one too
-    -- Layer.Proxy.check_all (literal_layer2)
 
     -- print("check layer")
     Layer.Proxy.check_all (layer)
 
-    assert.is_nil (next(Layer.messages))
+    assert.is_nil (next (Layer.messages))
   end)
 end)
