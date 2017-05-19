@@ -6,6 +6,8 @@ local expression     = Layer.require "expression"
 local refines        = Layer.key.refines
 local meta           = Layer.key.meta
 
+-- linearization fail on all tests
+
 describe ("Arithmetic expression with variable", function ()
   it ("can be instantiated", function ()
 
