@@ -1,15 +1,28 @@
-return function (Layer, Substraction)
+return function (Layer, substraction)
   local refines = Layer.key.refines
+  local meta    = Layer.key.meta
 
-  local addition = Layer.require "operator.addition"
+  local operator   = Layer.require "operator"
+  local collection = Layer.require "data.collection"
+  local _, re      = Layer.require "expression"
 
-  Substraction [refines] = {
-    addition,
+  substraction [refines] = {
+    operator,
   }
 
-  Substraction.operator = "-"
-  Substraction.is_associative = false
-  Substraction.is_commutative = false
+  substraction [meta] = {
+    of       = false,
+    operands = {
+      [refines] = { collection },
+      [meta   ] = {
+        [collection] = {
+          minimum    = 2,
+          maximum    = 2,
+          value_type = re.operator [meta].of,
+        },
+      },
+    },
+  }
 
-  return Substraction
+  return substraction
 end

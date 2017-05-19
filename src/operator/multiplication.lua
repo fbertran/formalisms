@@ -4,6 +4,7 @@ return function (Layer, multiplication, ref)
   local meta       = Layer.key.meta
   local operator   = Layer.require "operator"
   local collection = Layer.require "data.collection"
+  local _, re      = Layer.require "expression"
 
   multiplication [refines] = {
     operator,
@@ -13,6 +14,8 @@ return function (Layer, multiplication, ref)
   -- multiplication.priority = 12
   -- multiplication.is_associative = true
   -- multiplication.is_commutative = true
+  -- print (re.operator [meta].of)
+
   multiplication [meta] = {
     of       = false,
     operands = {
@@ -21,7 +24,7 @@ return function (Layer, multiplication, ref)
         [collection] = {
           minimum    = 2,
           maximum    = 2,
-          value_type = ref [meta].of,
+          value_type = re.operator [meta].of,
         },
       },
     },

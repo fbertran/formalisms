@@ -7,6 +7,7 @@ return function (Layer, arithmetic, ref)
   local literal        = Layer.require "operator.literal"
   local addition       = Layer.require "operator.addition"
   local multiplication = Layer.require "operator.multiplication"
+  local substraction   = Layer.require "operator.substraction"
 
   arithmetic [refines] = {
     expression
@@ -22,6 +23,11 @@ return function (Layer, arithmetic, ref)
     [meta   ] = { of = ref },
   }
 
+  local r_substraction = {
+    [refines] = { substraction },
+    [meta   ] = { of = ref },
+  }
+
   local r_multiplication = {
     [refines] = { multiplication },
     [meta   ] = { of = ref },
@@ -32,6 +38,7 @@ return function (Layer, arithmetic, ref)
       number         = r_number,
       multiplication = r_multiplication,
       addition       = r_addition,
+      substraction   = r_substraction
     },
   }
 

@@ -1,5 +1,4 @@
-return function (Layer, literal, ref)
-
+return function (Layer, literal)
   local refines    = Layer.key.refines
   local meta       = Layer.key.meta
   local _, re      = Layer.require "expression"
@@ -14,6 +13,7 @@ return function (Layer, literal, ref)
   -- literal.priority = 12
   -- literal.is_associative = true
   -- literal.is_commutative = true
+
   literal [meta] = {
     of       = false,
     operands = {

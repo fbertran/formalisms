@@ -2,7 +2,6 @@ require "busted.runner" {}
 
 local Layer      = require "layeredata"
 local arithmetic = Layer.require "expression.arithmetic"
-local literal    = Layer.require "operator.literal"
 local expression = Layer.require "expression"
 local refines    = Layer.key.refines
 local meta       = Layer.key.meta
@@ -28,13 +27,87 @@ describe ("Arithmetic expression", function ()
     local l2 = {
       [refines] = { arithmetic },
       operator  = arithmetic [meta] [expression].number,
+      operands  = { 2 },
+    }
+
+
+    layer.operator = arithmetic [meta] [expression].multiplication
+    layer.operands = { l1, l2 }
+
+    Layer.Proxy.check_all (layer)
+    assert.is_nil (next (Layer.messages))
+  end)
+
+  it ("accepts all the defined expressions", function ()
+    local layer = Layer.new {}
+    layer [refines] = { arithmetic }
+
+    local l1 = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].number,
+      operands  = { 1 },
+    }
+
+    local l2 = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].number,
       operands  = { 5 },
     }
 
-    layer.operator  = arithmetic [meta] [expression].addition
-    layer.operands  = { l1, l2, }
+    local sub = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].substraction,
+      operands  = { l1, l2 },
+    }
+
+    local add = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].addition,
+      operands  = { sub, l1 },
+    }
+
+    layer.operator = arithmetic [meta] [expression].multiplication
+    layer.operands = { add, sub }
 
     Layer.Proxy.check_all (layer)
+
+    assert.is_nil (next (Layer.messages))
+
+  end)
+
+  it ("fails on wrong type passed", function ()
+    local layer = Layer.new {}
+    layer [refines] = { arithmetic }
+
+    local l1 = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].number,
+      operands  = { 1 },
+    }
+
+    local l2 = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].number,
+      operands  = { 5 },
+    }
+
+    local sub = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].substraction,
+      operands  = { l1, l2 },
+    }
+
+    local add = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].addition,
+      operands  = { 2, 2 },
+    }
+
+    layer.operator = arithmetic [meta] [expression].multiplication
+    layer.operands = { add, sub }
+
+    Layer.Proxy.check_all (layer)
+
     assert.is_nil (next (Layer.messages))
   end)
 end)

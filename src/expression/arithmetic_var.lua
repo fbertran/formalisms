@@ -6,7 +6,7 @@ return function (Layer, arithmetic_var, ref)
   local expression = Layer.require "expression"
 
   arithmetic_var [refines] = {
-    arithmetic
+    arithmetic,
   }
 
   local r_variable = {
@@ -14,9 +14,7 @@ return function (Layer, arithmetic_var, ref)
     [meta   ] = { of = "string" },
   }
 
-  arithmetic_var [meta] = {
-    [expression] = { variable = r_variable, },
-  }
+  arithmetic_var [meta] [expression].variable = r_variable
 
   return arithmetic_var
 end
