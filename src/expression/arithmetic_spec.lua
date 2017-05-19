@@ -5,7 +5,7 @@ local arithmetic = Layer.require "expression.arithmetic"
 local expression = Layer.require "expression"
 local refines    = Layer.key.refines
 local meta       = Layer.key.meta
-local collection = Layer.require "data.collection"
+--- local collection = Layer.require "data.collection"
 
 local function tablelength(T)
   local count = 0

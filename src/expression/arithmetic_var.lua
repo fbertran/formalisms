@@ -10,8 +10,6 @@ return function (Layer, arithmetic_var, ref)
     arithmetic
   }
 
-  ref [meta] .type = arithmetic_var
-
   local r_variable = {
     [refines] = { literal },
     operands  = {
@@ -26,8 +24,9 @@ return function (Layer, arithmetic_var, ref)
   arithmetic_var [meta] = {
     [expression] = {
        variable = r_variable
-     }
-   }
+     },
+     type = arithmetic_var,
+  }
 
   return arithmetic_var
 end

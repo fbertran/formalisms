@@ -35,10 +35,18 @@ describe ("Arithmetic expression", function ()
       operands  = { l1 },
     }
 
-    layer.operator  = layer [meta] [expression] .addition
-    layer.operands  = { l1, l2 }
+    local l3 = {
+      [refines] = { arithmetic_var },
+      operator  = arithmetic_var [meta] [expression] .multiplication,
+      operands  = { l1, l1 },
+    }
 
-    print (layer [meta] [expression] .addition .operands [meta] [collection] .value_type )
+    layer.operator  = layer [meta] [expression] .addition
+    layer.operands  = { l3, l2 }
+
+    print (ref [meta] .type)
+
+    print (layer [meta] [expression] .multiplication  .operands [meta] [collection] .value_type)
     print (layer [meta] [expression] .variable .operands [meta] [collection] .value_type )
 
     Layer.Proxy.check_all (layer)

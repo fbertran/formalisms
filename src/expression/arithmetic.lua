@@ -53,10 +53,5 @@ return function (Layer, arithmetic, ref)
     type = arithmetic
   }
 
-  -- exercices:
-  -- create the literal operator
-  -- create a new expression above another, adding some operators
-  -- create a new expression above another, removing some operators
-
   return arithmetic
 end
