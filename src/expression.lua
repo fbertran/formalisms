@@ -23,13 +23,12 @@ return function (Layer, expression, ref)
       operator = {
         value_container = ref [meta] [expression],
       },
-      operands = false,
     },
   }
 
   expression.operands = {
     [refines] = {
-      ref.operator.operands,
+      ref.operator [meta].operands,
     },
   }
 

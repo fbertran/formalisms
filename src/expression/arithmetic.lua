@@ -3,45 +3,28 @@ return function (Layer, arithmetic, ref)
   local refines = Layer.key.refines
   local meta    = Layer.key.meta
 
-  local collection     = Layer.require "data.collection"
   local expression     = Layer.require "expression"
   local literal        = Layer.require "operator.literal"
   local addition       = Layer.require "operator.addition"
   local multiplication = Layer.require "operator.multiplication"
 
-  arithmetic [refines] = { expression }
+  arithmetic [refines] = {
+    expression
+  }
 
   local r_number = {
     [refines] = { literal },
-    operands  = {
-      [meta] = {
-        [collection] = {
-          value_type = "number",
-        },
-      },
-    },
+    [meta   ] = { of = "number" },
   }
 
   local r_addition = {
     [refines] = { addition },
-    operands  = {
-      [meta] = {
-        [collection] = {
-          value_type = ref [meta] .type,
-        },
-      },
-    },
+    [meta   ] = { of = ref },
   }
 
   local r_multiplication = {
     [refines] = { multiplication },
-    operands  = {
-      [meta] = {
-        [collection] = {
-          value_type  = ref [meta] .type,
-        },
-      },
-    },
+    [meta   ] = { of = ref },
   }
 
   arithmetic [meta] = {
@@ -50,7 +33,6 @@ return function (Layer, arithmetic, ref)
       multiplication = r_multiplication,
       addition       = r_addition,
     },
-    type = arithmetic
   }
 
   return arithmetic
