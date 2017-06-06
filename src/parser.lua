@@ -1,4 +1,5 @@
-local lp = require("lulpeg")
+-- local lp = require("lulpeg")
+local lp = require("lpeg")
 
 local function node (p)
   return p / function (left, op, right)
@@ -99,6 +100,14 @@ local op_unary = {
   type       = "unary_prefix"
 }
 
+local op_negative = {
+  priority   = 13,
+  operator   = "-",
+  value_type = "number",
+  n_operands = 1,
+  type       = "unary_prefix"
+}
+
 local op_ternary = {
   priority   = 0,
   operator   = {
@@ -118,7 +127,8 @@ local expression = {
   r_not            = op_unary,
   r_variable       = op_variable,
   r_modulo         = op_modulo,
-  op_ternary       = op_ternary
+  r_if             = op_ternary,
+  r_negative       = op_negative
 }
 
 
@@ -131,9 +141,10 @@ local function tlen (t)
 end
 
 
-local function sort_by_priority (t)
+local function sort_by_priority(t)
   local nt = {}
   local i  = 1
+
   for _, v in pairs (t) do
     nt[i] = v
     i = i + 1
@@ -145,9 +156,6 @@ local function sort_by_priority (t)
 
   return nt
 end
-
-
-expression = sort_by_priority(expression)
 
 local patterns = {
   binary = function (operator, around)
@@ -175,6 +183,8 @@ local patterns = {
   end
 }
 
+-- Adds the expression to the corresponding priority
+-- of the expression
 local function add_expr(grammar, expr, priority)
   if grammar[priority] == nil then
     grammar[priority] = expr
@@ -184,8 +194,13 @@ local function add_expr(grammar, expr, priority)
   return grammar
 end
 
+-- Builds the grammar up from the bottom,
+-- i.e. we start with the highest priority operators
+-- and end with the lowest ones
 local function build_grammar(expr)
   local grammar = { "axiom" }
+
+  expr = sort_by_priority(expr)
 
   local prior_exprs       = {}
   local prior_exprs_count = 1
@@ -195,6 +210,9 @@ local function build_grammar(expr)
   for _, v in pairs (expr) do
     local around, stop
 
+    -- We do this because we don't want to include expressions
+    -- that have the same priority in the expressions that are going to left / right
+    -- hand sides of the expression
     if v.priority == old_priority then
       stop = prior_exprs_count - 1
     else
@@ -230,9 +248,10 @@ local function build_grammar(expr)
   return lp.P(grammar)
 end
 
+
+local g4    = build_grammar(expression)
 local input = io.read()
-local g4 = build_grammar(expression)
--- lp.pprint(g4) -- doesn't work with lpeg
+-- lp.pprint(g4) -- doesn't work with lpeg, have to use lulpeg package for this
 while input ~= "d" do
   local result = g4:match(input)
   str = ""
