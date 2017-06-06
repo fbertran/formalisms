@@ -127,7 +127,7 @@ local op_ternary = {
     "else"
   },
   value_type = "",
-  n_operands = 1,
+  n_operands = 3,
   type       = "ternary"
 }
 
@@ -138,8 +138,48 @@ local op_ternary2 = {
     ":"
   },
   value_type = "",
-  n_operands = 1,
+  n_operands = 3,
   type       = "ternary"
+}
+
+local op_equals = {
+  priority   = 10,
+  operator   = "==",
+  value_type = "",
+  n_operands = 2,
+  type       = "binary"
+}
+
+local op_le = {
+  priority   = 10,
+  operator   = "<=",
+  value_type = "",
+  n_operands = 2,
+  type       = "binary"
+}
+
+local op_ge = {
+  priority   = 10,
+  operator   = ">=",
+  value_type = "",
+  n_operands = 2,
+  type       = "binary"
+}
+
+local op_or = {
+  priority   = 8,
+  operator   = "||",
+  value_type = "",
+  n_operands = 2,
+  type       = "binary"
+}
+
+local op_and = {
+  priority   = 9,
+  operator   = "&&",
+  value_type = "",
+  n_operands = 2,
+  type       = "binary"
 }
 
 local expression = {
@@ -152,7 +192,12 @@ local expression = {
   r_modulo         = op_modulo,
   r_if             = op_ternary,
   r_negative       = op_negative,
-  r_ternary        = op_ternary2
+  r_ternary        = op_ternary2,
+  r_equal          = op_equals,
+  r_less_equal     = op_le,
+  r_greater_equal  = op_ge,
+  r_or             = op_or,
+  r_and            = op_and,
 }
 
 
@@ -181,10 +226,17 @@ local function sort_by_priority(t)
   return nt
 end
 
-
 local patterns = {
   binary = function (operator, around)
-    local op_repr = lp.C(lp.S(operator.operator))
+    local s_or_p
+
+    if #(operator.operator) > 1 then
+      s_or_p = lp.P
+    else
+      s_or_p = lp.S
+    end
+
+    local op_repr = lp.C(s_or_p(operator.operator))
     return node(around * white * op_repr * white * (lp.V(operator.priority) + around))
   end,
 
