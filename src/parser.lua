@@ -7,9 +7,21 @@ local function node (p)
   end
 end
 
+local function node_postfix (p)
+  return p / function (left, op)
+    return { op, left }
+  end
+end
+
+local function node_prefix (p)
+  return p / function (op, right)
+    return { op, right }
+  end
+end
+
 local function ternary_node (p)
   return p / function (left, op1, middle, op2, right)
-    return { left, op1,  middle, op2, right}
+    return { left, op1, middle, op2, right}
   end
 end
 
@@ -97,7 +109,7 @@ local op_unary = {
   operator   = "!",
   value_type = "number",
   n_operands = 1,
-  type       = "unary_prefix"
+  type       = "unary_postfix"
 }
 
 local op_negative = {
@@ -119,6 +131,17 @@ local op_ternary = {
   type       = "ternary"
 }
 
+local op_ternary2 = {
+  priority   = 0,
+  operator   = {
+    "?",
+    ":"
+  },
+  value_type = "",
+  n_operands = 1,
+  type       = "ternary"
+}
+
 local expression = {
   r_number         = op_literal,
   r_plus           = op_plus,
@@ -128,17 +151,18 @@ local expression = {
   r_variable       = op_variable,
   r_modulo         = op_modulo,
   r_if             = op_ternary,
-  r_negative       = op_negative
+  r_negative       = op_negative,
+  r_ternary        = op_ternary2
 }
 
 
-local function tlen (t)
-  local i = 0
-  for _ in pairs (t) do
-    i = i + 1
-  end
-  return i
-end
+-- local function tlen (t)
+--   local i = 0
+--   for _ in pairs (t) do
+--     i = i + 1
+--   end
+--   return i
+-- end
 
 
 local function sort_by_priority(t)
@@ -157,6 +181,7 @@ local function sort_by_priority(t)
   return nt
 end
 
+
 local patterns = {
   binary = function (operator, around)
     local op_repr = lp.C(lp.S(operator.operator))
@@ -165,7 +190,7 @@ local patterns = {
 
   unary_prefix = function (operator, around)
     local op_repr = lp.C(lp.S(operator.operator))
-    return node(white * op_repr * white * (lp.V(operator.priority) + around))
+    return node_prefix(white * op_repr * white * (lp.V(operator.priority) + around))
   end,
 
   literal = function (literal)
@@ -179,7 +204,16 @@ local patterns = {
     first  = lp.C(lp.P(first))
     second = lp.C(lp.P(second))
 
-    return ternary_node((around + white) * white * first * white * around * white * second * white * (lp.V(operator.priority) + around))
+    return ternary_node(
+      around * white * first * white * (lp.V(operator.priority) + around)
+      * white * second * white * (lp.V(operator.priority) + around)
+    )
+  end,
+
+  unary_postfix = function (operator, around)
+    local op_repr = lp.C(lp.S(operator.operator))
+
+    return node_postfix(white * around * op_repr * (white + lp.V(operator.priority)))
   end
 }
 
@@ -219,6 +253,8 @@ local function build_grammar(expr)
       stop = prior_exprs_count
     end
 
+    -- Add the prior expressions to put
+    -- on the left / right hand sides of the current operator
     for i = 1, stop, 1 do
       if around ~= nil then
         around = lp.V(prior_exprs[i]) + around
