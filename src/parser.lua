@@ -25,6 +25,12 @@ local function ternary_node (p)
   end
 end
 
+local function nary_node (p)
+  return p / function (...)
+    return { ... }
+  end
+end
+
 local str = ""
 local function printrec (t, f)
   if f then
@@ -89,7 +95,7 @@ local op_multiplication = {
 }
 
 local op_literal = {
-  priority   = 14,
+  priority   = 15,
   operator   = "",
   value_type = "number",
   n_operands = 1,
@@ -182,13 +188,22 @@ local op_and = {
   type       = "binary"
 }
 
+local op_sum = {
+  priority   = 14,
+  operator   = "sum",
+  value_type = "",
+  n_operands = 2,
+  type       = "nary"
+}
+
 local expression = {
   r_number         = op_literal,
+  r_sum            = op_sum,
   r_plus           = op_plus,
   r_minus          = op_minus,
   r_multiplication = op_multiplication,
   r_not            = op_unary,
-  r_variable       = op_variable,
+  -- r_variable       = op_variable,
   r_modulo         = op_modulo,
   r_if             = op_ternary,
   r_negative       = op_negative,
@@ -226,22 +241,17 @@ local function sort_by_priority(t)
   return nt
 end
 
+-- Hashmap for the patterns so we don't need
+-- a ton of `if - else if - else` statements
+-- for the different types of operators
 local patterns = {
   binary = function (operator, around)
-    local s_or_p
-
-    if #(operator.operator) > 1 then
-      s_or_p = lp.P
-    else
-      s_or_p = lp.S
-    end
-
-    local op_repr = lp.C(s_or_p(operator.operator))
+    local op_repr = lp.C(lp.P(operator.operator))
     return node(around * white * op_repr * white * (lp.V(operator.priority) + around))
   end,
 
   unary_prefix = function (operator, around)
-    local op_repr = lp.C(lp.S(operator.operator))
+    local op_repr = lp.C(lp.P(operator.operator))
     return node_prefix(white * op_repr * white * (lp.V(operator.priority) + around))
   end,
 
@@ -263,19 +273,41 @@ local patterns = {
   end,
 
   unary_postfix = function (operator, around)
-    local op_repr = lp.C(lp.S(operator.operator))
+    local op_repr = lp.C(lp.P(operator.operator))
 
     return node_postfix(white * around * op_repr * (white + lp.V(operator.priority)))
-  end
+  end,
+
+  nary = function (operator, around)
+    local op_repr = lp.C(lp.P(operator.operator))
+
+    return nary_node(
+          white *
+          op_repr *
+           white
+           * lp.P("(") * white *
+           ((lp.V(operator.priority) + around) * white * (lp.P(",") + white) * white) ^ 1 *
+            white * lp.P(")") * white *
+            (lp.V(operator.priority) + around + white)
+          )
+  end,
 }
 
 -- Adds the expression to the corresponding priority
 -- of the expression
-local function add_expr(grammar, expr, priority)
-  if grammar[priority] == nil then
-    grammar[priority] = expr
+local function add_expr(grammar, expr, priority, second_pass, it)
+  if not second_pass then
+    if grammar[priority] == nil then
+      grammar[priority] = expr
+    else
+      grammar[priority] = grammar[priority] + expr
+    end
   else
-    grammar[priority] = grammar[priority] + expr
+    if it == 1 then
+      grammar[priority] = expr
+    else
+      grammar[priority] =  grammar[priority] + expr
+    end
   end
   return grammar
 end
@@ -290,6 +322,9 @@ local function build_grammar(expr)
 
   local prior_exprs       = {}
   local prior_exprs_count = 1
+
+  local nary_counter = 0
+  local nary_table   = {}
 
   local old_priority = expr[1].priority
 
@@ -317,12 +352,42 @@ local function build_grammar(expr)
 
     grammar = add_expr(grammar, patterns[v.type](v, around), v.priority)
 
+    if v.type == "nary" then
+      nary_counter             = nary_counter + 1
+      nary_table[nary_counter] = v
+    end
+
     if v.priority ~= old_priority then
       prior_exprs_count = prior_exprs_count + 1
     end
 
     prior_exprs[prior_exprs_count] = v.priority
     old_priority = v.priority
+  end
+
+  -- second pass for naries
+  grammar[nary_table[1].priority] = nil
+  for i = 1, nary_counter, 1 do
+    local stop, around
+
+    local op = nary_table[i]
+
+    stop = prior_exprs_count
+
+    -- Add the prior expressions to put
+    -- on the left / right hand sides of the current operator
+    for j = 1, stop, 1 do
+      if prior_exprs[j] ~= op.priority then
+        if around ~= nil then
+          around = lp.V(prior_exprs[j]) + around
+        else
+          around = lp.V(prior_exprs[j])
+        end
+      end
+      print(prior_exprs[j])
+    end
+
+    grammar = add_expr(grammar, patterns[op.type](op, around), op.priority, true, i)
   end
 
   for i = 1, prior_exprs_count, 1 do
@@ -341,9 +406,15 @@ local g4    = build_grammar(expression)
 local input = io.read()
 -- lp.pprint(g4) -- doesn't work with lpeg, have to use lulpeg package for this
 while input ~= "d" do
+  -- local result = g4:match("sum(20, 30, 40,) + 90")
   local result = g4:match(input)
   str = ""
-  printrec(result)
+  if type(result) == "table" then
+    printrec(result)
+  else
+    str = result
+  end
+
   print(str)
   input = io.read()
 end
