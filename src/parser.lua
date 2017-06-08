@@ -274,21 +274,21 @@ end
 -- a ton of `if - else if - else` statements
 -- for the different types of operators
 local patterns = {
-  binary = function (operator, around)
+  binary = function (operator, expr)
     local op_repr = lp.C(lp.P(operator.operator))
-    return node(around * white * op_repr * white * (lp.V(operator.priority) + around))
+    return node(expr * white * op_repr * white * (lp.V(operator.priority) + expr))
   end,
 
-  unary_prefix = function (operator, around)
+  unary_prefix = function (operator, expr)
     local op_repr = lp.C(lp.P(operator.operator))
-    return node_prefix(white * op_repr * white * (lp.V(operator.priority) + around))
+    return node_prefix(white * op_repr * white * (lp.V(operator.priority) + expr))
   end,
 
   literal = function (literal)
     return value_types[literal.value_type]
   end,
 
-  ternary = function (operator, around)
+  ternary = function (operator, expr)
     local first = operator.operator[1]
     local second = operator.operator[2]
 
@@ -296,15 +296,15 @@ local patterns = {
     second = lp.C(lp.P(second))
 
     return ternary_node(
-      around * white * first * white * lp.V("axiom")
-      * white * second * white * (lp.V(operator.priority) + around)
+      expr * white * first * white * lp.V("axiom")
+      * white * second * white * (lp.V(operator.priority) + expr)
     )
   end,
 
-  unary_postfix = function (operator, around)
+  unary_postfix = function (operator, expr)
     local op_repr = lp.C(lp.P(operator.operator))
 
-    return node_postfix(white * around * op_repr * (white + lp.V(operator.priority)))
+    return node_postfix(white * expr * op_repr * (white + lp.V(operator.priority)))
   end,
 
   nary = function (operator)
@@ -360,7 +360,7 @@ local function build_grammar(expr)
   local old_priority = expr[1].priority
 
   for _, v in pairs(expr) do
-    local around, stop
+    local expr_concat, stop
 
     -- We do this because we don't want to include expressions
     -- that have the same priority in the expressions that are going to left / right
@@ -375,14 +375,14 @@ local function build_grammar(expr)
     -- Add the prior expressions to put
     -- on the left / right hand sides of the current operator
     for i = 1, stop, 1 do
-      if around ~= nil then
-        around = lp.V(prior_exprs[i]) + around
+      if expr_concat ~= nil then
+        expr_concat = lp.V(prior_exprs[i]) + expr_concat
       else
-        around = lp.V(prior_exprs[i])
+        expr_concat = lp.V(prior_exprs[i])
       end
     end
 
-    grammar = add_expr(grammar, patterns[v.type](v, around), v.priority)
+    grammar = add_expr(grammar, patterns[v.type](v, expr_concat), v.priority)
 
     if v.priority ~= old_priority then
       prior_exprs_count = prior_exprs_count + 1
