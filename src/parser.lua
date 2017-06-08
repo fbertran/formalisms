@@ -28,7 +28,7 @@ local white = lp.S(" \t") ^ 0
 
 local value_types = {
   ["number"]   = (lp.R("09") ^ 1 / tonumber),
-  ["variable"] = (lp.R("az") ^ 1 / tostring),
+  ["variable"] = (lp.R("az") ^ 1 * (lp.R("az") + lp.R("09")) ^ 0 / tostring),
   ["boolean"]  = (lp.R("09") ^ 1 / tonumber + lp.R("az") ^ 1 / tostring)
 }
 
@@ -97,7 +97,7 @@ local op_negative = {
 }
 
 local op_ternary = {
-  priority   = 0,
+  priority   = 14,
   operator   = {
     "if",
     "else"
@@ -182,8 +182,6 @@ local op_assignment = {
   type       = "binary"
 }
 
-
-
 local expression = {
   r_number         = op_literal,
   r_sum            = op_sum,
@@ -214,6 +212,7 @@ local function tlen(t)
   return i
 end
 
+
 -- This is so we get a table sorted by priority,
 -- and so the table is structured 1, 2, 3, ... etc.
 -- else when iterating over it with the `pairs` function
@@ -233,6 +232,7 @@ local function sort_by_priority(t)
 
   return nt
 end
+
 
 -- Capture functions for output
 local function node (p)
@@ -296,7 +296,7 @@ local patterns = {
     second = lp.C(lp.P(second))
 
     return ternary_node(
-      around * white * first * white * (lp.V(operator.priority) + around)
+      around * white * first * white * lp.V("axiom")
       * white * second * white * (lp.V(operator.priority) + around)
     )
   end,
@@ -307,7 +307,7 @@ local patterns = {
     return node_postfix(white * around * op_repr * (white + lp.V(operator.priority)))
   end,
 
-  nary = function (operator, around)
+  nary = function (operator)
     local op_repr = lp.C(lp.P(operator.operator))
 
     return nary_node(
@@ -315,9 +315,9 @@ local patterns = {
              op_repr *
              white
              * lp.P("(") * white *
-             ((lp.V(operator.priority) + around) * white * (lp.P(",") + white) * white) ^ 1 *
+             ((lp.V("axiom")) * white * (lp.P(",") + white) * white) ^ 1 *
              white * lp.P(")") * white *
-             (lp.V(operator.priority) + around + white)
+             (lp.V("axiom") + white)
           )
   end,
 }
@@ -357,9 +357,6 @@ local function build_grammar(expr)
   local prior_exprs       = {}
   local prior_exprs_count = 1
 
-  local nary_counter = 0
-  local nary_table   = {}
-
   local old_priority = expr[1].priority
 
   for _, v in pairs(expr) do
@@ -387,44 +384,12 @@ local function build_grammar(expr)
 
     grammar = add_expr(grammar, patterns[v.type](v, around), v.priority)
 
-    -- We need this because we have to do a second pass
-    -- for the nary operators
-    if v.type == "nary" then
-      nary_counter             = nary_counter + 1
-      nary_table[nary_counter] = v
-    end
-
     if v.priority ~= old_priority then
       prior_exprs_count = prior_exprs_count + 1
     end
 
     prior_exprs[prior_exprs_count] = v.priority
     old_priority = v.priority
-  end
-
-  -- second pass for naries
-  if tlen(nary_table) > 0 then
-    for i = 1, nary_counter, 1 do
-      local stop, around
-
-      local op = nary_table[i]
-
-      stop = prior_exprs_count
-
-      -- Add the prior expressions to put
-      -- on the left / right hand sides of the current operator
-      for j = 1, stop, 1 do
-        if prior_exprs[j] ~= op.priority then
-          if around ~= nil then
-            around = lp.V(prior_exprs[j]) + around
-          else
-            around = lp.V(prior_exprs[j])
-          end
-        end
-      end
-
-      grammar = add_expr(grammar, patterns[op.type](op, around), op.priority, true, i)
-    end
   end
 
   for i = 1, prior_exprs_count, 1 do
@@ -443,8 +408,8 @@ local g4    = build_grammar(expression)
 local input = io.read()
 
 while input ~= "d" do
-  -- local result = g4:match("sum(20, 30, 40,) + 90")
   local result = g4:match(input)
+
   str = ""
   if type(result) == "table" then
     printrec(result)
