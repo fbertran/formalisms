@@ -10,6 +10,7 @@ else
   lp = require("lpeg")
 end
 
+local op_map = {}
 
 local str = ""
 local function table_to_string (t, f)
@@ -38,7 +39,7 @@ local white = lp.S(" \t") ^ 0
 
 local value_types = {
   ["number"]   = lp.C(lp.R("09") ^ 1), -- / tonumber),
-  ["variable"] = (lp.R("az") ^ 1 * (lp.R("az") + lp.R("09")) ^ 0 / tostring),
+  ["variable"] = (lp.R("az") ^ 1 * (lp.R("az") + lp.R("09")) ^ 0) / tostring,
   ["boolean"]  = (lp.R("09") ^ 1 / tonumber + lp.R("az") ^ 1 / tostring)
 }
 
@@ -70,6 +71,13 @@ local op_multiplication = {
   type       = "binary",
 }
 
+local op_division = {
+  priority   = 12,
+  operator   = "/",
+  value_type = "",
+  type       = "binary",
+}
+
 local op_literal = {
   priority   = 15,
   operator   = "",
@@ -85,7 +93,7 @@ local op_variable = {
 }
 
 local op_unary = {
-  priority   = 12,
+  priority   = 13,
   operator   = "~",
   type       = "unary_postfix"
 }
@@ -97,7 +105,7 @@ local op_negative = {
 }
 
 local op_ternary = {
-  priority   = 2,
+  priority   = 14,
   operator   = {
     "if",
     "else"
@@ -171,25 +179,33 @@ local op_assignment = {
   type       = "binary"
 }
 
+local exp_op = {
+  priority = 14,
+  type = "binary",
+  operator = "**"
+}
+
 local expression = {
   r_number         = op_literal,
   r_multiplication = op_multiplication,
+  r_division       = op_division,
   r_plus           = op_plus,
   r_minus          = op_minus,
-  r_variable       = op_variable,
-  -- -- -- r_modulo         = op_modulo,
-  r_if             = op_ternary,
+  r_exp            = exp_op
+  -- -- -- r_variable       = op_variable,
+  -- -- -- -- -- r_modulo         = op_modulo,
+  -- r_if             = op_ternary,
   -- r_not            = op_unary,
   -- r_negative       = op_negative,
-  r_ternary        = op_ternary2,
-  -- r_equal          = op_equals,
-  -- r_less_equal     = op_le,
-  -- r_greater_equal  = op_ge,
-  -- r_or             = op_or,
-  r_and            = op_and,
-  r_sum            = op_sum,
+  -- -- -- r_ternary        = op_ternary2,
+  -- -- -- r_equal          = op_equals,
+  -- -- r_less_equal     = op_le,
+  -- -- r_greater_equal  = op_ge,
+  -- -- r_or             = op_or,
+  -- -- r_and            = op_and,
+  -- r_sum            = op_sum,
   -- -- r_pi             = op_pi,
-  r_assignment     = op_assignment,
+  -- r_assignment     = op_assignment,
 }
 
 
@@ -240,7 +256,6 @@ end
 
 local function node_prefix (p)
   return p / function (op, right)
-    print(op, right)
     return { op, right }
   end
 end
@@ -271,24 +286,63 @@ local function nary_node (p)
   end
 end
 
+local function lassoc (p, _op)
+
+  local function fn(left, op, right)
+    if type(right) == "table" then
+      if op_map[right[2]].priority > _op.priority then
+        return { left, op, right }
+      end
+      return fn({ left, op, right[1] }, right[2], right[3])
+    else
+      if type(left) == "table" then
+        left = fn(left[1], left[2], left[3])
+      end
+      return { left, op, right }
+    end
+  end
+
+  return p / fn
+end
+
+local function rassoc(left, op, right)
+  if type(left) == "table" then
+    return rassoc(left[1], left[2], { left[3], op, right })
+  else
+    if type(right) == "table" then
+      right = rassoc(right[1], right[2], right[3])
+    end
+    return { left, op, right }
+  end
+end
+
 -- Hashmap for the patterns so we don't need
 -- a ton of `if - else if - else` statements
 -- for the different types of operators
 local patterns = {
   binary = function (operator, curr_expr, next_expr)
     local op_repr = lp.C(lp.P(operator.operator))
-    return lp.Ct(next_expr * white * (op_repr * white * (curr_expr)))-- + next_expr)))
+
+    if operator.operator == "/" or operator.operator == "*" then
+      return lassoc((white * next_expr * white * op_repr * white * (curr_expr + next_expr) * white), operator)
+    end
+
+    if operator.operator == "**" then
+      return (white * next_expr * white * op_repr * white * (curr_expr + next_expr) * white) / rassoc
+    end
+
+    return lassoc(white * next_expr * white * op_repr * white * (curr_expr + next_expr) * white, operator)
   end,
 
   unary_prefix = function (operator, curr_expr, next_expr)
     local op_repr = lp.C(lp.P(operator.operator))
-    return node_prefix(white * (op_repr * white * (curr_expr + next_expr)))
+    return node_prefix(white * (op_repr * white * (curr_expr + next_expr + white)))
   end,
 
   unary_postfix = function (operator, curr_expr, next_expr)
     local op_repr = lp.C(lp.P(operator.operator))
 
-    return node_postfix(white * next_expr * white * op_repr * white)-- * (curr_expr + next_expr))
+    return node_postfix(white * next_expr * white * op_repr * (white + curr_expr))
   end,
 
   literal = function (literal)
@@ -320,7 +374,6 @@ local patterns = {
   end,
 }
 
-
 -- Adds the expression to the corresponding priority
 -- of the expression
 local function add_expr(grammar, expr, priority)
@@ -344,12 +397,6 @@ local function build_grammar(expr)
 
   expr = sort_by_priority(expr)
 
-  local prior_exprs       = {}
-  local prior_exprs_count = 1
-
-  local nary_counter = 0
-  local nary_table   = {}
-
   local old_priority = expr[1].priority
 
   local op_table = {}
@@ -359,6 +406,9 @@ local function build_grammar(expr)
   local curr_expr, prev_expr
 
   for _, v in ipairs(expr) do
+
+    op_map[v.operator] = v
+
     if v.priority < old_priority then
       counter = counter + 1
       second_counter = 1
@@ -377,11 +427,13 @@ local function build_grammar(expr)
 
   curr_expr = prefix .. op_table[1][1].priority
   prev_expr = curr_expr
+
   local last_expr
 
   for i = 1, tlen(op_table), 1 do
     for j = 1, tlen(op_table[i]), 1 do
       local op = op_table[i][j]
+
       curr_expr = prefix .. op.priority
 
       local e
@@ -390,11 +442,7 @@ local function build_grammar(expr)
         last_expr = lp.V(prev_expr)
         e = patterns[op.type](op, lp.V(curr_expr), last_expr) + lp.V(prev_expr)
       else
-        if op.type ~= "literal" and op.type ~= "nary" then
-          e = patterns[op.type](op, lp.V(curr_expr), last_expr)
-        else
-          e = patterns[op.type](op)
-        end
+        e = patterns[op.type](op, lp.V(curr_expr), last_expr)
       end
 
       grammar = add_expr(grammar, e, prefix .. op.priority)
@@ -412,55 +460,48 @@ local function build_grammar(expr)
   grammar["prefix15"] = grammar["prefix15"] + ("(" * white * lp.V("axiom") * white * ")")
   grammar.axiom = lp.V(prefix .. op_table[tlen(op_table)][1].priority)
 
-  -- lp.pprint(lp.P(grammar))
-
-  -- assert(false)
-
-  -- grammar.axiom = lp.V(prior_exprs[prior_exprs_count])
-
   return lp.P(grammar)
 end
 
 
 local g4 = build_grammar(expression)
 
-local result
-if arg[2] ~= nil then
-  result = g4:match(arg[2])
-else
-  result = g4:match("(50 if 90 + 3 else sum(1, 2, 3, 4, 5, 6, 7, 8))")
-end
+-- local result
+-- if arg[2] ~= nil then
+--   result = g4:match(arg[2])
+-- else
+--   result = g4:match("(50 if 90 + 3 else sum(1, 2, 3, 4, 5, 6, 7, 8))")
+-- end
+--
+-- if arg[1] and arg[1] == "lulpeg" then
+--   lp.pprint(g4)
+-- end
+--
+-- str = ""
+-- if type(result) == "table" then
+--   table_to_string(result)
+-- else
+--   str = result
+-- end
+-- print(str)
+
 
 if arg[1] and arg[1] == "lulpeg" then
   lp.pprint(g4)
 end
 
-str = ""
-if type(result) == "table" then
-  table_to_string(result)
-else
-  str = result
+local input = io.read()
+while input ~= "d" do
+  local result = g4:match(input)
+
+  str = ""
+  if type(result) == "table" then
+    table_to_string(result)
+  else
+    str = result
+  end
+
+  print(str)
+
+  input = io.read()
 end
-
-print(str)
-
--- local g4    = build_grammar(expression)
--- -- lp.pprint(g4)
---
---
--- local input = io.read()
---
--- while input ~= "d" do
---   local result = g4:match(input)
---
---   str = ""
---   if type(result) == "table" then
---     table_to_string(result)
---   else
---     str = result
---   end
---
---   print(str)
---
---   input = io.read()
--- end
