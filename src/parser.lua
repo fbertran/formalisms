@@ -191,7 +191,7 @@ local expression = {
   r_division       = op_division,
   r_plus           = op_plus,
   r_minus          = op_minus,
-  r_exp            = exp_op
+  r_exp            = exp_op,
   -- -- -- r_variable       = op_variable,
   -- -- -- -- -- r_modulo         = op_modulo,
   -- r_if             = op_ternary,
@@ -203,7 +203,7 @@ local expression = {
   -- -- r_greater_equal  = op_ge,
   -- -- r_or             = op_or,
   -- -- r_and            = op_and,
-  -- r_sum            = op_sum,
+  r_sum            = op_sum,
   -- -- r_pi             = op_pi,
   -- r_assignment     = op_assignment,
 }
@@ -286,11 +286,23 @@ local function nary_node (p)
   end
 end
 
+local function find_operator(t)
+  local ctr = 1
+  for _, v in ipairs(t) do
+    if type(v) == "string" then
+      if op_map[v] ~= nil then
+        return ctr
+      end
+    end
+    ctr = ctr + 1
+  end
+end
+
 local function lassoc (p, _op)
 
   local function fn(left, op, right)
     if type(right) == "table" then
-      if op_map[right[2]].priority > _op.priority then
+      if op_map[right[find_operator(right)]].priority > _op.priority then
         return { left, op, right }
       end
       return fn({ left, op, right[1] }, right[2], right[3])
