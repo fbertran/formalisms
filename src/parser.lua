@@ -24,7 +24,7 @@ local function table_to_string (t, f)
       if type(v) == "table" then
         table_to_string(v, false)
       else
-        str = str .. " " .. v
+        str = str .. " " .. tostring(v)
       end
     end
   else
@@ -33,6 +33,11 @@ local function table_to_string (t, f)
   str = str .. " }"
 end
 
+local function ptable(t)
+  str = ""
+  table_to_string(t, true)
+  print(str)
+end
 -- assert(false)
 
 local white = lp.S(" \t") ^ 0
@@ -48,6 +53,7 @@ local op_plus = {
   operator   = "+",
   value_type = "",
   type       = "binary",
+  left_assoc = true
 }
 
 local op_minus = {
@@ -55,6 +61,7 @@ local op_minus = {
   operator   = "-",
   value_type = "",
   type       = "binary",
+  left_assoc = true,
 }
 
 local op_modulo = {
@@ -69,6 +76,7 @@ local op_multiplication = {
   operator   = "*",
   value_type = "",
   type       = "binary",
+  left_assoc = true
 }
 
 local op_division = {
@@ -76,6 +84,7 @@ local op_division = {
   operator   = "/",
   value_type = "",
   type       = "binary",
+  left_assoc = true
 }
 
 local op_literal = {
@@ -93,7 +102,7 @@ local op_variable = {
 }
 
 local op_unary = {
-  priority   = 13,
+  priority   = 14,
   operator   = "~",
   type       = "unary_postfix"
 }
@@ -114,7 +123,7 @@ local op_ternary = {
 }
 
 local op_ternary2 = {
-  priority   = 14,
+  priority   = 2,
   operator   = {
     "?",
     ":"
@@ -180,7 +189,7 @@ local op_assignment = {
 }
 
 local exp_op = {
-  priority = 14,
+  priority = 13,
   type = "binary",
   operator = "**"
 }
@@ -195,12 +204,12 @@ local expression = {
   -- -- -- r_variable       = op_variable,
   -- -- -- -- -- r_modulo         = op_modulo,
   -- r_if             = op_ternary,
-  -- r_not            = op_unary,
-  -- r_negative       = op_negative,
-  -- -- -- r_ternary        = op_ternary2,
+  r_not            = op_unary,
+  r_negative       = op_negative,
+  r_ternary        = op_ternary2,
   -- -- -- r_equal          = op_equals,
   -- -- r_less_equal     = op_le,
-  -- -- r_greater_equal  = op_ge,
+  r_greater_equal  = op_ge,
   -- -- r_or             = op_or,
   -- -- r_and            = op_and,
   r_sum            = op_sum,
@@ -239,17 +248,25 @@ local function sort_by_priority(t)
 end
 
 
--- Capture functions for output
-local function node (p)
-  return p / function (left, op, right)
-    return { left, op, right }
-  end
-end
-
-
 local function node_postfix (p)
-  return p / function (left, op)
-    return { op, left }
+
+  local function construct(...)
+    local list = ...
+
+    local function rec(n, t)
+      if n == tlen(list) then
+        return { list[n] }
+      else
+        t = { list[n], rec(n + 1, { t }) }
+      end
+      return t
+    end
+
+    return rec(1, { })
+  end
+
+  return p / function (value, ...)
+    return { value, construct({ ... }) }
   end
 end
 
@@ -289,27 +306,33 @@ end
 local function find_operator(t)
   local ctr = 1
   for _, v in ipairs(t) do
-    if type(v) == "string" then
-      if op_map[v] ~= nil then
-        return ctr
-      end
+    if type(v) == "string" and op_map[v] ~= nil then
+      return ctr
     end
     ctr = ctr + 1
   end
 end
 
-local function lassoc (p, _op)
+local function lassoc(p, _op)
 
   local function fn(left, op, right)
     if type(right) == "table" then
+      if tlen(right) ~= 3 then
+        -- it's not a binary operator, so left / right associativity doesn't apply
+        return { left, op, right }
+      end
+
+      -- we have to take precedence into account
       if op_map[right[find_operator(right)]].priority > _op.priority then
         return { left, op, right }
       end
+
       return fn({ left, op, right[1] }, right[2], right[3])
     else
       if type(left) == "table" then
         left = fn(left[1], left[2], left[3])
       end
+
       return { left, op, right }
     end
   end
@@ -317,16 +340,6 @@ local function lassoc (p, _op)
   return p / fn
 end
 
-local function rassoc(left, op, right)
-  if type(left) == "table" then
-    return rassoc(left[1], left[2], { left[3], op, right })
-  else
-    if type(right) == "table" then
-      right = rassoc(right[1], right[2], right[3])
-    end
-    return { left, op, right }
-  end
-end
 
 -- Hashmap for the patterns so we don't need
 -- a ton of `if - else if - else` statements
@@ -335,15 +348,15 @@ local patterns = {
   binary = function (operator, curr_expr, next_expr)
     local op_repr = lp.C(lp.P(operator.operator))
 
-    if operator.operator == "/" or operator.operator == "*" then
-      return lassoc((white * next_expr * white * op_repr * white * (curr_expr + next_expr) * white), operator)
+    local pattern = (white * next_expr * white * op_repr * white * (curr_expr + next_expr) * white)
+
+    if operator.left_assoc then
+      pattern = lassoc(pattern, operator)
+    else
+      pattern = lp.Ct(pattern)
     end
 
-    if operator.operator == "**" then
-      return (white * next_expr * white * op_repr * white * (curr_expr + next_expr) * white) / rassoc
-    end
-
-    return lassoc(white * next_expr * white * op_repr * white * (curr_expr + next_expr) * white, operator)
+    return pattern
   end,
 
   unary_prefix = function (operator, curr_expr, next_expr)
@@ -354,7 +367,7 @@ local patterns = {
   unary_postfix = function (operator, curr_expr, next_expr)
     local op_repr = lp.C(lp.P(operator.operator))
 
-    return node_postfix(white * next_expr * white * op_repr * (white + curr_expr))
+    return node_postfix(white * next_expr * white * op_repr^1 * (white + curr_expr))
   end,
 
   literal = function (literal)
@@ -377,22 +390,24 @@ local patterns = {
   nary = function (operator)
     local op_repr = lp.C(lp.P(operator.operator))
 
-    return nary_node(white *
+    return nary_node(
+             white *
              op_repr *
              white
              * lp.P("(") * white *
              lp.V("axiom") * white * ("," * white * lp.V("axiom")) ^ 0 *
-             white * lp.P(")") * white)
+             white * lp.P(")") * white
+           )
   end,
 }
 
 -- Adds the expression to the corresponding priority
 -- of the expression
-local function add_expr(grammar, expr, priority)
-  if grammar[priority] == nil then
-    grammar[priority] = expr
+local function add_expr(grammar, expr, expr_ref)
+  if grammar[expr_ref] == nil then
+    grammar[expr_ref] = expr
   else
-    grammar[priority] = expr + grammar[priority]
+    grammar[expr_ref] = expr + grammar[expr_ref]
   end
   return grammar
 end
@@ -478,25 +493,24 @@ end
 
 local g4 = build_grammar(expression)
 
--- local result
--- if arg[2] ~= nil then
---   result = g4:match(arg[2])
--- else
---   result = g4:match("(50 if 90 + 3 else sum(1, 2, 3, 4, 5, 6, 7, 8))")
--- end
---
--- if arg[1] and arg[1] == "lulpeg" then
---   lp.pprint(g4)
--- end
---
--- str = ""
--- if type(result) == "table" then
---   table_to_string(result)
--- else
---   str = result
--- end
--- print(str)
+local has_input = arg[2] ~= nil
+if has_input then
+  local result = g4:match(arg[2])
 
+  if arg[1] and arg[1] == "lulpeg" then
+    lp.pprint(g4)
+  end
+
+  str = ""
+  if type(result) == "table" then
+    table_to_string(result, true)
+  else
+    str = result
+  end
+  print("input: \t" .. arg[2])
+  print("result:\t" .. str)
+  return
+end
 
 if arg[1] and arg[1] == "lulpeg" then
   lp.pprint(g4)
@@ -506,14 +520,11 @@ local input = io.read()
 while input ~= "d" do
   local result = g4:match(input)
 
-  str = ""
   if type(result) == "table" then
-    table_to_string(result)
+    ptable(result)
   else
-    str = result
+    print(result)
   end
-
-  print(str)
 
   input = io.read()
 end
