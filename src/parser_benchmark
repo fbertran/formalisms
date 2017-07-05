@@ -1,0 +1,10 @@
+#! /bin/bash
+repeats=1000;
+output_file=$1;
+cmd="lua parser.lua lpeg (((((30-20)))))"
+
+for (( i = 0; i < $repeats; i++ ))
+do
+  /usr/bin/time -f "%E,%U,%S" -o ${output_file} -a $cmd > /dev/null 2>&1
+done;
+  
