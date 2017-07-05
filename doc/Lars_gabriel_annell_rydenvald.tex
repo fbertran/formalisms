@@ -1,0 +1,72 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage[margin=2cm, tmargin=2cm, bmargin=2cm]{geometry}
+\usepackage{geometry}
+\usepackage{changepage}
+\usepackage{url}
+\usepackage{gensymb}
+\usepackage{caption}
+\usepackage{subcaption}
+\expandafter\def\csname ver@subfig.sty\endcsname{}
+\usepackage{subfig}
+\usepackage{minted}
+\usepackage[hidelinks]{hyperref}
+\setminted[java]{tabsize=2}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[l]{\small Lars Gabriel \linebreak Annell Rydenvald}
+\fancyhead[c]{
+	UNIGE \linebreak
+}
+\fancyhead[R]{Faculté des Sciences \linebreak Département d'informatique}
+\fancyfoot[C]{
+	\thepage
+}
+
+\lstset{
+	basicstyle=\ttfamily
+}
+
+\captionsetup[subfigure]{labelformat=empty}
+
+
+\begin{document}
+\begin{center}
+	\huge 
+	Ardoises \\
+	Formalismes et expressions
+\end{center}
+\renewcommand{\contentsname}{Sommaire}
+\tableofcontents
+
+\section{Introduction}
+%Le but de ce travail, dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardoises}}, est d'ajouter des formalismes pour les opérateurs ainsi qu'une manière de transformer 
+\section{Ardoises}
+% Ecrire à propos d'ardoises, et des autres logiciels qui existent déjà (c.f. présentation)
+\section{Formalismes des opérateurs}
+% Formalismes des opérateurs
+\section{Analyse grammaticale}
+Nous avons pensé à deux solutions différentes pour effectuer l'analyse grammaticale:
+\begin{enumerate}
+	\item[1)] Utiliser des expressions régulières, qui seraient définies par l'utilisateur pour chaque opérateur.
+	\item[2)] Générer une grammaire à partir de modèles prédéfinis pour différents types d'opérateurs.
+\end{enumerate}
+J'ai choisi d'utiliser la 2$^{\grave{e}me}$ méthode, car même si les expressions régulières auraient pû être un moyen "plus simple", elles posent un problème: les expressions arithmétiques incluant des parenthèses ne sont pas des langages réguliers, puisqu'on peut, en prenant un exemple simple, se retrouver dans un cas comme celui-ci: $\{(\textquoteleft(\textquoteleft^{n}\textquoteleft)\textquoteleft^{n})^{*}, n \ge 0 \}$
+\subsection{Choix de l'outil}
+Il existe plusieurs générateurs d'analyseurs lexicaux, tels que: \begin{enumerate}
+	\item \underline{\href{http://www.antlr.org/about.html}{ANTLR}}, écrit en Java, générant un analyseur $LL(^*)$
+	\item \underline{\href{http://dinosaur.compilertools.net/}{Flex/Bison}}, écrit en C, générant un analyseur $LALR(1)$
+	\item \underline{\href{https://pegjs.org/}{PEGjs}}, écrit en JavaScript, générant un parser $PEG$
+	\item \underline{\href{https://github.com/LuaDist/lpeg}{LPeg}}, écrit en C, compatible avec Lua, générant un parser $PEG$
+	\item \underline{\href{https://github.com/pygy/LuLPeg}{LulPeg}}, écrit en Lua, générant aussi un parser $PEG$
+\end{enumerate}
+Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, j'ai choisi d'utiliser LPeg. LulPeg a aussi été considéré, cependant celui-ci est beaucoup plus lent que LPeg.
+\end{document}
