@@ -68,5 +68,45 @@ Il existe plusieurs générateurs d'analyseurs lexicaux, tels que: \begin{enumer
 	\item \underline{\href{https://github.com/LuaDist/lpeg}{LPeg}}, écrit en C, compatible avec Lua, générant un parser $PEG$
 	\item \underline{\href{https://github.com/pygy/LuLPeg}{LulPeg}}, écrit en Lua, générant aussi un parser $PEG$
 \end{enumerate}
-Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, j'ai choisi d'utiliser LPeg. LulPeg a aussi été considéré, cependant celui-ci est beaucoup plus lent que LPeg.
+Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, j'ai choisi d'utiliser LPeg. LulPeg a aussi été considéré, cependant celui-ci est beaucoup plus lent que LPeg. \\ \textit{TODO: Include justification.} \\ LPeg, par sa modularité, permet aussi de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
+\subsection{Algorithme de génération de grammaire}
+Puisque nous ne connaissons pas en avance les opérateurs disponibles dans une expression, il est nécessaire de générer la grammaire à partir des opérateurs définis par l'utilisateur. \\
+Supposons les opérateurs simples suivants:
+\ \\
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+	\hline
+	\textbf{Opérateur} & \textbf{Représentation} & \textbf{Priorité} &  \textbf{Type} & \textbf{Associativité}\\ \hline
+	Addition & '+' & 11 & binaire & droite \\ \hline
+	Soustraction & '-' & 11 & binaire & droite  \\ \hline
+	Multiplication & '*' & 12 & binaire & droite  \\ \hline
+	Division & '/' & 12 & binaire & droite  \\ \hline
+	Exponentiel & '\textasciicircum' & 13 & binaire & droite  \\ \hline
+	Négation    & '-'  & 14 & unaire préfixe & N / A  \\ \hline 
+\end{tabular}
+\end{center}
+Partons de ce que je vais appeler une "grammaire de base", construite comme ceci: \\ \\
+\begin{math}
+S \rightarrow S'
+\ \\
+P15 \rightarrow number \ | \ \textrm{'}(\textrm{'} \ S' \ \textrm{'})\textrm{'}
+\end{math} \\ \\
+On va ensuite rajouter un à un les opérateurs dans cette grammaire, de la manière  suivante:
+
+\begin{enumerate}
+	\item On trie la table des opérateurs, par priorité, dans l'ordre décroissant.
+	\item Pour chaque type d'opérateur, on crée le pattern. Par exemple, l'opérateur unaire préfixe dans notre table, aura le pattern \\ $P14 \rightarrow\textrm{'}-\textrm{'} \ P15$
+	\item On rajoute le nouveau pattern crée dans la grammaire de base
+\end{enumerate}
+Pour finir, on se retrouve avec une grammaire telle que ceci: \\ \\
+\begin{math}
+S \rightarrow S' \\
+S' \rightarrow P11 \\
+P11 \rightarrow Addition \ | \ Soustraction \ | \ P12 \\
+P12 \rightarrow Division \ | \ Multiplication \ | \ P13 \\
+P13 \rightarrow Exponentiel \ | \ P14 \\
+P14 \rightarrow N\acute{e}gation \ | \ P15 \\
+P15 \rightarrow number \ | \ \textrm{'}(\textrm{'} \ S' \ \textrm{'})\textrm{'}
+\end{math}
+
 \end{document}
