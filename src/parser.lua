@@ -95,7 +95,7 @@ local op_multiplication = {
   operator   = "*",
   value_type = "",
   type       = "binary",
-  -- left_assoc = true
+  left_assoc = true
 }
 
 local op_division = {
@@ -183,7 +183,7 @@ local op_and = {
   priority   = 9,
   operator   = "&&",
   value_type = "",
-  type       = "binary"
+  type       = "binary",
 }
 
 local op_sum = {
@@ -223,8 +223,8 @@ local expression = {
   -- r_variable       = op_variable,
   -- r_modulo         = op_modulo,
   r_if             = op_ternary,
-  -- r_not            = op_unary,
-  -- r_negative       = op_negative,
+  r_not            = op_unary,
+  r_negative       = op_negative,
   -- r_ternary        = op_ternary2,
   -- -- -- -- -- r_equal          = op_equals,
   -- -- -- -- r_less_equal     = op_le,
@@ -401,7 +401,7 @@ local patterns = {
   unary_postfix = function (operator, curr_expr, next_expr)
     local op_repr = lp.C(lp.P(operator.operator))
 
-    return node_postfix(white * next_expr * white * op_repr^1 * (white + curr_expr))
+    return node_postfix(white * next_expr * white * (op_repr * white)^1 * (white + curr_expr))
   end,
 
   literal = function (literal)
