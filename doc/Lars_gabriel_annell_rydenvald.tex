@@ -58,7 +58,7 @@
 Nous avons pensé à deux solutions différentes pour effectuer l'analyse grammaticale:
 \begin{enumerate}
 	\item[1)] Utiliser des expressions régulières, qui seraient définies par l'utilisateur pour chaque opérateur.
-	\item[2)] Générer une grammaire à partir de modèles prédéfinis pour différents types d'opérateurs.
+	\item[2)] Générer une grammaire à partir de modèles (patterns) prédéfinis pour différents types d'opérateurs.
 \end{enumerate}
 J'ai choisi d'utiliser la 2$^{\grave{e}me}$ méthode, car même si les expressions régulières auraient pû être un moyen "plus simple", elles posent un problème: les expressions arithmétiques incluant des parenthèses ne sont pas des langages réguliers, puisqu'on peut, en prenant un exemple simple, se retrouver dans un cas comme celui-ci: $\{(\textquoteleft(\textquoteleft^{n}\textquoteleft)\textquoteleft^{n})^{*}, n \ge 0 \}$
 \subsection{Choix de l'outil}
@@ -81,7 +81,7 @@ Supposons les opérateurs simples suivants:
 	Soustraction & '-' & 11 & binaire & droite  \\ \hline
 	Multiplication & '*' & 12 & binaire & droite  \\ \hline
 	Division & '/' & 12 & binaire & droite  \\ \hline
-	Exponentiel & '\textasciicircum' & 13 & binaire & droite  \\ \hline
+	Exponentiation & '\textasciicircum' & 13 & binaire & droite  \\ \hline
 	Négation    & '-'  & 14 & unaire préfixe & N/A  \\ \hline 
   nombre & [0-9]+ & 15 & litéral & N/A \\ \hline
 \end{tabular}
@@ -105,9 +105,23 @@ S \rightarrow S' \\
 S' \rightarrow P11 \\
 P11 \rightarrow Addition \ | \ Soustraction \ | \ P12 \\
 P12 \rightarrow Division \ | \ Multiplication \ | \ P13 \\
-P13 \rightarrow Exponentiel \ | \ P14 \\
+P13 \rightarrow Exponentiation \ | \ P14 \\
 P14 \rightarrow N\acute{e}gation \ | \ P15 \\
 P15 \rightarrow nombre \ | \ \textrm{'}(\textrm{'} \ S' \ \textrm{'})\textrm{'}
 \end{math} \\ \\
 Puisque $LPeg$ génère un analyseur lexical de type $PEG$, il faut faire attention à l'ordre de déclaration de la grammaire pour avoir une précédence correcte.
+
+\subsection{Associativité à gauche}
+On constate que tous les opérateurs binaires dans le tableau précédent sont associatifs à droite. Or, on voudrait pouvoir préciser l'associativité lors de la déclaration des opérateurs, puisque cela modifie l'arbre syntaxique produit par l'analyseur lexical. Dans le cas d'un analyseur $LR$, l'associativité à gauche se traduit simplement par une récursion à gauche, telle que
+\ \\ \\
+\begin{math}
+Expr \rightarrow Expr \ \textrm{'}+\textrm{'} \ nombre \ | \ nombre
+\end{math} \\ \\
+Malheureusement, $LPeg$ ne peut pas gérer les récursions à gauche, et une élimination de la récursion à gauche du type
+\\ \\
+\noindent\begin{math}
+	Expr \rightarrow nombre \ Expr\prime \\
+	Expr\prime \rightarrow \textrm{'} + \textrm{'} \ Expr\prime \ | \ nombre
+\end{math} \\ \\
+ne suffit pas. On a encore une associativité à droite.
 \end{document}
