@@ -133,6 +133,15 @@ return function (expression)
           right["right"]
         )
       else
+        if type(left) == "table" then
+          if tlen(left) ~= 4 then
+            -- it's not a binary operator, so left / right associativity doesn't apply
+            -- This can also mean that there is a parenthesis
+            return { left = left, op = op, right = right, op_type = _op.type }
+          end
+          left = fn(left["left"], left["op"], left["right"])
+        end
+
         return { left = left, op = op, right = right, op_type = _op.type }
       end
     end

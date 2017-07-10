@@ -118,7 +118,8 @@ local exp6 = {
 
 local exp7 = {
   literal,
-  negation
+  negation,
+  minus
 }
 
 local exp8 = {
@@ -246,6 +247,36 @@ local expressions = {
       right   = "3",
       op      = "-",
       op_type = "prefix"
+    }
+  },
+  {
+    expression        = exp8,
+    expression_string = "3 - 2 - 1",
+    expected          = {
+      left    = "3",
+      op      = "-",
+      op_type = "binary",
+      right   = {
+        left = "2",
+        right = "1",
+        op    = "-",
+        op_type = "binary"
+      }
+    }
+  },
+  {
+    expression        = exp8,
+    expression_string = "3 + 2 - 1",
+    expected          = {
+      left = {
+        left = "3",
+        op      = "+",
+        op_type = "binary",
+        right = "2"
+      },
+      op = "-",
+      right = "1",
+      op_type = "binary"
     }
   }
 }
