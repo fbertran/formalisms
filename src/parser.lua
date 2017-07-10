@@ -3,39 +3,6 @@ local prefix = "prefix"
 
 local op_map = { }
 
-local str = ""
-local function table_to_string (t, f, print_keys)
-  if f then
-    str = str .. "{"
-  else
-    str = str .. " {"
-  end
-  if type(t) == "table" then
-    for k, v in pairs(t) do
-      if type(v) == "table" then
-        str = str .. " " .. k .. ": "
-        table_to_string(v, false, print_keys)
-      else
-        if print_keys then
-          str = str .. " ".. k .. ": " .. tostring(v) .. ", "
-        else
-          str = str .. " " .. tostring(v)
-        end
-      end
-    end
-  else
-    str = str .. t
-  end
-  str = str .. " }"
-end
-
-local function ptable(t)
-  str = ""
-  table_to_string(t, true, true)
-  print(str)
-end
-
-
 local white = lp.S(" \t") ^ 0
 
 local value_types = {
