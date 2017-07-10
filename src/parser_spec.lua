@@ -1,5 +1,4 @@
 local parser = require "parser"
-local pprint = require "pprint"
 
 require "busted.runner" {}
 
@@ -68,6 +67,14 @@ local exp1 = {
   literal  = literal,
 }
 
+local ternary = {
+  operator = {
+    [1] = "?", [2] = ":"
+  },
+  type = "ternary",
+  priority = 2
+}
+
 local exp2 = {
   literal = literal,
   mult    = multiplication,
@@ -90,6 +97,14 @@ local exp5 = {
   literal,
   nary,
   plus
+}
+
+local exp6 = {
+  literal,
+  ternary,
+  plus,
+  multiplication,
+  not_op
 }
 
 local expressions = {
@@ -170,6 +185,38 @@ local expressions = {
         op = "+",
         op_type = "binary"
       }, { "5" } }
+    }
+  },
+  {
+    expression        = exp6,
+    expression_string = "30 + 20 ? ((90 + 30 + 2) * 3) : 300",
+    expected          = {
+      left = {
+        left = "30",
+        right = "20",
+        op    = "+",
+        op_type = "binary"
+      },
+      middle = { {
+        left = { {
+          left = {
+            left = "90",
+            right = "30",
+            op = "+",
+            op_type = "binary"
+          },
+          right = "2",
+          op = "+",
+          op_type = "binary"
+        } },
+        right = "3",
+        op = "*",
+        op_type = "binary"
+      } },
+      right = "300",
+      op1 = "?",
+      op2 = ":",
+      op_type = "ternary"
     }
   }
 }
