@@ -1,4 +1,5 @@
 local parser = require "parser"
+local pprint = require "pprint"
 
 require "busted.runner" {}
 
@@ -57,6 +58,12 @@ local not_op = {
   type     = "unary_postfix"
 }
 
+local nary = {
+  priority = 15,
+  operator = "sum",
+  type     = "nary"
+}
+
 local exp1 = {
   literal  = literal,
 }
@@ -77,6 +84,12 @@ local exp3 = {
 local exp4 = {
   literal = literal,
   n       = not_op,
+}
+
+local exp5 = {
+  literal,
+  nary,
+  plus
 }
 
 local expressions = {
@@ -139,6 +152,25 @@ local expressions = {
       op      = "~",
       op_type = "postfix"
     }
+  },
+  {
+    expression        = { literal },
+    expression_string = "((((5))))",
+    expected          = { { { { "5" } } } }
+  },
+  {
+    expression        = exp5,
+    expression_string = "sum(30 + 2, 5)",
+    expected          = {
+      op = "sum",
+      op_type = "nary",
+      operands = { {
+        left = "30",
+        right = "2",
+        op = "+",
+        op_type = "binary"
+      }, { "5" } }
+    }
   }
 }
 
@@ -148,7 +180,7 @@ describe("parser", function ()
   end)
 
   for _, v in ipairs(expressions) do
-    it("parses correctly", function ()
+    it("parses correctly, input = " .. v.expression_string, function ()
       local p      = parser(v.expression)
       local result = p:match(v.expression_string)
       assert.is_true(deepcompare(result, v.expected, true))

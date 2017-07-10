@@ -269,6 +269,7 @@ return function (expression)
     expr = sort_by_priority(expr)
 
     local old_priority = expr[1].priority
+    local max_priority = old_priority
 
     local op_table = { }
     local counter = 1
@@ -331,7 +332,8 @@ return function (expression)
     --     print(str)
     -- end
 
-    grammar["prefix15"] = grammar["prefix15"] + ("(" * white * lp.Ct(lp.V("axiom")) * white * ")")
+    grammar[prefix .. max_priority] = grammar[prefix .. max_priority] +
+      ("(" * white * lp.Ct(lp.V("axiom")) * white * ")")
     grammar.axiom = lp.V(prefix .. op_table[tlen(op_table)][1].priority)
 
     return lp.P(grammar)
