@@ -1,4 +1,5 @@
 local parser = require "parser"
+local pprint = require "pprint"
 
 require "busted.runner" {}
 
@@ -38,6 +39,13 @@ local plus = {
   left_assoc = true
 }
 
+local minus = {
+  priority   = 11,
+  operator   = "-",
+  type       = "binary",
+  -- left_assoc = true
+}
+
 local negation = {
   priority   = 14,
   operator   = "-",
@@ -63,9 +71,6 @@ local nary = {
   type     = "nary"
 }
 
-local exp1 = {
-  literal  = literal,
-}
 
 local ternary = {
   operator = {
@@ -73,6 +78,10 @@ local ternary = {
   },
   type = "ternary",
   priority = 2
+}
+
+local exp1 = {
+  literal  = literal,
 }
 
 local exp2 = {
@@ -105,6 +114,17 @@ local exp6 = {
   plus,
   multiplication,
   not_op
+}
+
+local exp7 = {
+  literal,
+  negation
+}
+
+local exp8 = {
+  literal,
+  minus,
+  plus
 }
 
 local expressions = {
@@ -218,6 +238,15 @@ local expressions = {
       op2 = ":",
       op_type = "ternary"
     }
+  },
+  {
+    expression = exp7,
+    expression_string = "-3",
+    expected          = {
+      right   = "3",
+      op      = "-",
+      op_type = "prefix"
+    }
   }
 }
 
@@ -227,9 +256,9 @@ describe("parser", function ()
   end)
 
   for _, v in ipairs(expressions) do
+    local p      = parser(v.expression)
+    local result = p:match(v.expression_string)
     it("parses correctly, input = " .. v.expression_string, function ()
-      local p      = parser(v.expression)
-      local result = p:match(v.expression_string)
       assert.is_true(deepcompare(result, v.expected, true))
     end)
   end

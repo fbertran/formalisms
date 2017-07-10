@@ -67,7 +67,7 @@ Il existe plusieurs générateurs d'analyseurs lexicaux, tels que: \begin{enumer
 	\item \underline{\href{http://dinosaur.compilertools.net/}{Flex/Bison}}, écrit en C, générant un analyseur $LALR(1)$
 	\item \underline{\href{https://pegjs.org/}{PEGjs}}, écrit en JavaScript, générant un parser $PEG$
 	\item \underline{\href{https://github.com/LuaDist/lpeg}{LPeg}}, écrit en C, compatible avec Lua, générant un parser $PEG$
-	\item \underline{\href{https://github.com/pygy/LuLPeg}{LulPeg}}, écrit en Lua, générant aussi un parser $PEG$
+	\item \underline{\href{https://github.com/pygy/LuLPeg}{LulPeg}}, implémentation en pur Lua de $LPeg$.
 \end{enumerate}
 Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, j'ai choisi d'utiliser LPeg. LulPeg a aussi été considéré, cependant celui-ci est beaucoup plus lent que LPeg. \\ \textit{TODO: Include justification.} \\ LPeg, par sa modularité, permet aussi de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
 \subsection{Algorithme de génération de grammaire}
@@ -86,7 +86,7 @@ Supposons les opérateurs simples suivants:
   nombre & [0-9]+ & 15 & litéral & N/A \\ \hline
 \end{tabular}
 \end{center}
-Partons de ce que je vais appeler une "grammaire de base", construite comme ceci: \\ \\
+Prenons comme base la simple grammaire suivante (qui ne fait rien):
 \begin{math}
 S \rightarrow S'
 % \ \\
@@ -123,5 +123,23 @@ Malheureusement, $LPeg$ ne peut pas gérer les récursions à gauche, et une él
 	Expr \rightarrow nombre \ Expr\prime \\
 	Expr\prime \rightarrow \textrm{'} + \textrm{'} \ Expr\prime \ | \ nombre
 \end{math} \\ \\
-ne suffit pas. On a encore une associativité à droite.
+ne suffit pas. On a encore une associativité à droite. \\
+Il existe des implémentations pour introduire la récursion à gauche dans les grammaires $PEG$, telles que \underline{\href{https://github.com/norswap/whimsy/blob/master/doc/autumn/README.md}{Autumn}}\textsuperscript{[1]} ou celle proposée par Laurence Tratt\textsuperscript{[2]}. Puisque nous utilisons $LPeg$ et Lua, aucune de ces deux méthodes ne sont possible dans le cadre de ce travail, il nous faut donc notre propre implémentation pour gérer les opérateurs binaires étant déclarés comme étant associatifs à gauche.
+\subsubsection{Implémentation}
+$LPeg$ nous permet de déclarer des fonctions de capture pour ce qui est lu par l'analyseur généré. Supposons la grammaire suivante: \\ \\
+\begin{math}
+S \rightarrow number \ \textrm{'}+\textrm{'} \ (S \ | \ number) \\
+number \rightarrow [0-9]+
+\end{math} \\ \\
+Notre fonction de capture pour le modèle qui suit $S$ recevra simplement les arguments $gauche$, $repr\acute{e}sentation \ de \ l'op\acute{e}rateur$, $droite$. Déclarons d'abord la fonction comme ceci:
+\begin{minted}{lua}
+function left_assoc(left, op, right)
+  return { left, op, right }
+end
+\end{minted}
+Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent nous retournera donc la table \mint{lua}{{ 1 + { 2 + 3 } }}
+\newpage
+\noindent[1]: Parsing Expression Grammars Made Practical, Nicolas Laurent \newline
+[2]: Direct Left-Recursive Parsing Expression Grammars, Laurence Tratt
+
 \end{document}
