@@ -373,8 +373,10 @@ describe("parser", function ()
         pprint(result)
         print("expected")
         pprint(v.expected)
+        assert.is_true(false)
+      else
+        assert.is_true(true)
       end
-      assert.is_true(cmpres)
     end)
   end
 end)

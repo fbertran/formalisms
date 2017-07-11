@@ -138,7 +138,28 @@ function left_assoc(left, op, right)
 end
 \end{minted}
 Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent nous retournera donc la table \mint{lua}{{ left = 1, op = +, right = { left = 2, op = +, right = 3 } }}
-\noindent Si on veut avoir l'associativité gauche, ce résultat est évidemment faux.
+\noindent Si on veut avoir l'associativité gauche, ce résultat est évidemment faux. Pour avoir un output correct, il nous suffit d'opérer de manière récursive (la gestion d'erreurs ou d'opérateurs différents est omise ici), on a donc
+\begin{minted}{lua}
+function left_assoc(pattern, _op)
+  function recursion(left, op, right)
+    if type(right) == "table" and op == _op.operator then
+      return recursion(
+        {
+          left  = left,
+          op    = op,
+          right = right.left
+        },
+        right.op,
+        right.right
+      )
+    else -- Normal behaviour
+      return { left = left, op = op, right = right }
+    end
+  end
+  
+  return pattern / recursion
+end
+\end{minted}
 \newpage
 \noindent[1]: Parsing Expression Grammars Made Practical, Nicolas Laurent \newline
 [2]: Direct Left-Recursive Parsing Expression Grammars, Laurence Tratt

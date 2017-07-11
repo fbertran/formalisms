@@ -46,8 +46,8 @@ return function (expression)
     -- function to handle postfix operators when we receive them
     -- The pattern is defined as Exp * op_representation^1,
     -- which means that for an input such as "3~~" we would get
-    -- a table such as { 3 ~ ~ } if we didn't have this function to handle
-    -- the match. With this function, we get { { 3 ~ } ~ }
+    -- a table such as { 3 ~ ~ }, whereas with this function we get
+    -- { { 3 ~ } ~ }
     local function construct(...)
       local list = ...
       local function rec(n, t)
