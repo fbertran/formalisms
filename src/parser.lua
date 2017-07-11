@@ -1,4 +1,5 @@
 local lp = require "lpeg"
+local pprint = require "pprint"
 local prefix = "prefix"
 
 local op_map = { }
@@ -8,7 +9,7 @@ local white = lp.S(" \t") ^ 0
 local value_types = {
   ["number"]   = lp.C(lp.R("09") ^ 1), -- / tonumber),
   ["variable"] = (lp.R("az") ^ 1 * (lp.R("az") + lp.R("09")) ^ 0) / tostring,
-  ["boolean"]  = lp.C(lp.P("true") + lp.P("false")),
+  ["boolean"]  = (lp.P("true") + lp.P("false"))^1 / tostring,
 }
 
 return function (expression)
@@ -42,6 +43,11 @@ return function (expression)
   end
 
   local function node_postfix(p)
+    -- function to handle postfix operators when we receive them
+    -- The pattern is defined as Exp * op_representation^1,
+    -- which means that for an input such as "3~~" we would get
+    -- a table such as { 3 ~ ~ } if we didn't have this function to handle
+    -- the match. With this function, we get { { 3 ~ } ~ }
     local function construct(...)
       local list = ...
       local function rec(n, t)
@@ -50,7 +56,7 @@ return function (expression)
         else
           t = { op = list[n], left = rec(n - 1, { t }) }
         end
-        t.op_type = "postfix"
+        t.op_type = "unary_postfix"
         return t
       end
 
@@ -63,14 +69,21 @@ return function (expression)
 
   local function node_prefix (p)
     return p / function (op, right)
-      return { op = op, right = right,  op_type = "prefix" }
+      return { op = op, right = right,  op_type = "unary_prefix" }
     end
   end
 
 
   local function ternary_node (p)
     return p / function (left, op1, middle, op2, right)
-      return { left = left, op1 = op1, middle = middle, op2 = op2, right = right, op_type = "ternary"}
+      return { 
+        left = left, 
+        op1 = op1, 
+        middle = middle, 
+        op2 = op2, 
+        right = right, 
+        op_type = "ternary"
+      }
     end
   end
 
@@ -107,20 +120,29 @@ return function (expression)
 
   local function lassoc(p, _op)
 
-    local function fn(left, op, right)
+    local function fn(left, op, right) --, op_type)
       -- second condition is to make sure that we are not "stealing"
       -- anything from operators that have the same priority but
       -- are not left associative
       if type(right) == "table" and op == _op.operator then
-        if tlen(right) ~= 4 then
-          -- it's not a binary operator, so left / right associativity doesn't apply
-          -- This can also mean that there is a parenthesis
-          return { left = left, op = op, right = right, op_type = _op.type }
-        end
+        -- we have to take precedence in account,
+        -- as well as if it's not a binary operator, then
+        -- left associativity doesn't apply
+        if
+          right.op ~= nil and
+          (
+            op_map[right["op"] .. right["op_type"]].type ~= "binary" or
+            op_map[right["op"] .. right["op_type"]].priority > _op.priority
+          )
+        then
+          if
+            left.op ~= nil and
+            left.op_type ~= nil and
+            op_map[left.op .. left.op_type].left_assoc
+          then
+            left = fn(left.left, left.op, left.right, left.op_type)
+          end
 
-        -- we have to take precedence into account
-        -- if op_map[right[find_operator(right)]].priority > _op.priority then
-        if op_map[right["op"]].priority > _op.priority then
           return { left = left, op = op, right = right, op_type = _op.type }
         end
 
@@ -130,17 +152,16 @@ return function (expression)
             left = left, op = op, right = right["left"], op_type = _op.type
           },
           right["op"],
-          right["right"]
+          right["right"],
+          right["op_type"]
         )
       else
-        if type(left) == "table" then
-          if tlen(left) ~= 4 then
-            -- it's not a binary operator, so left / right associativity doesn't apply
-            -- This can also mean that there is a parenthesis
-            return { left = left, op = op, right = right, op_type = _op.type }
-          end
-          left = fn(left["left"], left["op"], left["right"])
+        if left.op_type ~= left.op_type ~= "binary" then
+          -- it's not a binary operator, so left / right associativity doesn't apply
+          -- This can also mean that there is a parenthesis
+          return { left = left, op = op, right = right, op_type = _op.type }
         end
+        left = fn(left["left"], left["op"], left["right"], left["op_type"])
 
         return { left = left, op = op, right = right, op_type = _op.type }
       end
@@ -247,8 +268,9 @@ return function (expression)
     -- use ipairs to make sure we get the table
     -- elements in the right order
     for _, v in ipairs(expr) do
-
-      op_map[v.operator] = v
+      if v.operator ~= nil and #v.operator > 0 and type(v.operator) ~= "table" then
+        op_map[v.operator .. v.type] = v
+      end
 
       if v.priority < old_priority then
         counter = counter + 1
@@ -292,12 +314,6 @@ return function (expression)
         prev_expr = curr_expr
       end
     end
-
-    -- for k = 1, tlen(op_table), 1 do
-    --     str = ""
-    --     table_to_string(op_table[k], true, true)
-    --     print(str)
-    -- end
 
     grammar[prefix .. max_priority] = grammar[prefix .. max_priority] +
       ("(" * white * lp.Ct(lp.V("axiom")) * white * ")")

@@ -134,10 +134,11 @@ number \rightarrow [0-9]+
 Notre fonction de capture pour le modèle qui suit $S$ recevra simplement les arguments $gauche$, $repr\acute{e}sentation \ de \ l'op\acute{e}rateur$, $droite$. Déclarons d'abord la fonction comme ceci:
 \begin{minted}{lua}
 function left_assoc(left, op, right)
-  return { left, op, right }
+  return { left = left, op = op, right = right }
 end
 \end{minted}
-Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent nous retournera donc la table \mint{lua}{{ 1 + { 2 + 3 } }}
+Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent nous retournera donc la table \mint{lua}{{ left = 1, op = +, right = { left = 2, op = +, right = 3 } }}
+\noindent Si on veut avoir l'associativité gauche, ce résultat est évidemment faux.
 \newpage
 \noindent[1]: Parsing Expression Grammars Made Practical, Nicolas Laurent \newline
 [2]: Direct Left-Recursive Parsing Expression Grammars, Laurence Tratt

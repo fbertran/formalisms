@@ -32,6 +32,13 @@ local literal = {
   type       = "literal",
 }
 
+local bool = {
+  priority   = 15,
+  operator   = "",
+  value_type = "boolean",
+  type       = "literal"
+}
+
 local plus = {
   priority   = 11,
   operator   = "+",
@@ -43,7 +50,7 @@ local minus = {
   priority   = 11,
   operator   = "-",
   type       = "binary",
-  -- left_assoc = true
+  left_assoc = true
 }
 
 local negation = {
@@ -128,6 +135,23 @@ local exp8 = {
   plus
 }
 
+local exp9 = {
+  literal,
+  plus,
+  not_op
+}
+
+local exp10 = {
+  literal,
+  minus,
+  negation
+}
+
+local exp11 = {
+  bool,
+  multiplication
+}
+
 local expressions = {
   {
     expression        = exp1,
@@ -162,7 +186,7 @@ local expressions = {
       right = {
         op = "~",
         left = "3",
-        op_type = "postfix"
+        op_type = "unary_postfix"
       },
       op = "*",
       op_type = "binary"
@@ -177,16 +201,16 @@ local expressions = {
           left = {
             left    = "3",
             op      = "~",
-            op_type = "postfix"
+            op_type = "unary_postfix"
           },
           op      = "~",
-          op_type = "postfix"
+          op_type = "unary_postfix"
         },
         op      = "~",
-        op_type = "postfix"
+        op_type = "unary_postfix"
       },
       op      = "~",
-      op_type = "postfix"
+      op_type = "unary_postfix"
     }
   },
   {
@@ -240,30 +264,30 @@ local expressions = {
       op_type = "ternary"
     }
   },
-  {
-    expression = exp7,
-    expression_string = "-3",
-    expected          = {
-      right   = "3",
-      op      = "-",
-      op_type = "prefix"
-    }
-  },
-  {
-    expression        = exp8,
-    expression_string = "3 - 2 - 1",
-    expected          = {
-      left    = "3",
-      op      = "-",
-      op_type = "binary",
-      right   = {
-        left = "2",
-        right = "1",
-        op    = "-",
-        op_type = "binary"
-      }
-    }
-  },
+   {
+     expression = exp7,
+     expression_string = "-3",
+     expected          = {
+       right   = "3",
+       op      = "-",
+       op_type = "unary_prefix"
+     }
+   },
+   {
+     expression        = exp8,
+     expression_string = "3 - 2 - 1",
+     expected          = {
+       left = {
+         left = "3",
+         op   = "-",
+         op_type = "binary",
+         right = "2",
+       },
+       op = "-",
+       op_type = "binary",
+       right = "1",
+     }
+   },
   {
     expression        = exp8,
     expression_string = "3 + 2 - 1",
@@ -278,6 +302,59 @@ local expressions = {
       right = "1",
       op_type = "binary"
     }
+  },
+  {
+    expression = exp9,
+    expression_string = "1 + 2 + 3 + 4~",
+    expected = {
+      left = {
+        left = {
+          left    = "1",
+          op      = "+",
+          op_type = "binary",
+          right   = "2"
+        },
+        op = "+",
+        op_type = "binary",
+        right = "3"
+      },
+      op = "+",
+      op_type = "binary",
+      right = {
+        left    = "4",
+        op      = "~",
+        op_type = "unary_postfix",
+      }
+    }
+  },
+  {
+    expression = exp10,
+    expression_string = "1 - 2 - -3",
+    expected = {
+      left = {
+        left = "1",
+        op = "-",
+        op_type = "binary",
+        right = "2",
+      },
+      op_type = "binary",
+      op = "-",
+      right = {
+        right = "3",
+        op = "-",
+        op_type = "unary_prefix"
+      }
+    }
+  },
+  {
+    expression        = exp11,
+    expression_string = "true * false",
+    expected          = {
+      left    = "true",
+      op      = "*",
+      right   = "false",
+      op_type = "binary",
+    }
   }
 }
 
@@ -290,7 +367,14 @@ describe("parser", function ()
     local p      = parser(v.expression)
     local result = p:match(v.expression_string)
     it("parses correctly, input = " .. v.expression_string, function ()
-      assert.is_true(deepcompare(result, v.expected, true))
+      local cmpres = deepcompare(result, v.expected, true)
+      if not cmpres then
+        print("result:")
+        pprint(result)
+        print("expected")
+        pprint(v.expected)
+      end
+      assert.is_true(cmpres)
     end)
   end
 end)
