@@ -106,20 +106,7 @@ return function (expression)
     end
   end
 
-  local function find_operator(t)
-    ptable(t)
-    local ctr = 1
-    for _, v in ipairs(t) do
-      print(v)
-      if type(v) == "string" and op_map[v] ~= nil then
-        return ctr
-      end
-      ctr = ctr + 1
-    end
-  end
-
   local function binary_lassoc(p, _op)
-
     local function fn(left, op, right) --, op_type)
       -- second condition is to make sure that we are not "stealing"
       -- anything from operators that have the same priority but
