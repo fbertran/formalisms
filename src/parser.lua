@@ -221,7 +221,7 @@ return function (expression)
       return value_types[literal.value_type]
     end,
 
-    ternary = function (operator, _, expr)
+    ternary = function (operator, curr_expr, next_expr)
       local first  = operator.operator[1]
       local second = operator.operator[2]
 
@@ -229,8 +229,8 @@ return function (expression)
       second = lp.C(lp.P(second))
 
       return ternary_node(
-        expr * white * first * white * lp.V("axiom")
-        * white * second * white * expr
+        next_expr * white * first * white * lp.V("axiom")
+        * white * second * white * (curr_expr + next_expr)
       )
     end,
 
