@@ -76,12 +76,12 @@ return function (expression)
 
   local function ternary_node (p)
     return p / function (left, op1, middle, op2, right)
-      return { 
-        left = left, 
-        op1 = op1, 
-        middle = middle, 
-        op2 = op2, 
-        right = right, 
+      return {
+        left = left,
+        op1 = op1,
+        middle = middle,
+        op2 = op2,
+        right = right,
         op_type = "ternary"
       }
     end
@@ -118,13 +118,16 @@ return function (expression)
     end
   end
 
-  local function lassoc(p, _op)
+  local function binary_lassoc(p, _op)
 
     local function fn(left, op, right) --, op_type)
       -- second condition is to make sure that we are not "stealing"
       -- anything from operators that have the same priority but
       -- are not left associative
       if type(right) == "table" and op == _op.operator then
+        if tlen(right) == 1 and type(right[1]) == "table" then -- parenthesis
+          return { left = left, op = op, right = right, op_type = _op.type }
+        end
         -- we have to take precedence in account,
         -- as well as if it's not a binary operator, then
         -- left associativity doesn't apply
@@ -156,12 +159,14 @@ return function (expression)
           right["op_type"]
         )
       else
-        if left.op_type ~= left.op_type ~= "binary" then
+        if left.op_type ~= "binary" then
           -- it's not a binary operator, so left / right associativity doesn't apply
           -- This can also mean that there is a parenthesis
           return { left = left, op = op, right = right, op_type = _op.type }
         end
-        left = fn(left["left"], left["op"], left["right"], left["op_type"])
+        if type(left) == "table" then
+          left = fn(left["left"], left["op"], left["right"], left["op_type"])
+        end
 
         return { left = left, op = op, right = right, op_type = _op.type }
       end
@@ -180,7 +185,7 @@ return function (expression)
       local pattern = (white * next_expr * white * op_repr * white * (curr_expr + next_expr) * white)
 
       if operator.left_assoc then
-        pattern = lassoc(pattern, operator)
+        pattern = binary_lassoc(pattern, operator)
       else
         pattern = pattern / function (left, op, right)
           return { left = left, op = op, right = right, op_type = operator.type }
@@ -232,8 +237,8 @@ return function (expression)
     end,
   }
 
--- Adds the expression to the corresponding priority
--- of the expression
+  -- Adds the expression to the corresponding priority
+  -- of the expression
   local function add_expr(grammar, expr, expr_ref)
     if grammar[expr_ref] == nil then
       grammar[expr_ref] = expr
@@ -262,6 +267,8 @@ return function (expression)
     local op_table = { }
     local counter = 1
     local second_counter = 0
+
+    local var_op
 
     local curr_expr, prev_expr
 
@@ -294,32 +301,55 @@ return function (expression)
 
     local last_expr
 
+
     for i = 1, tlen(op_table), 1 do
       for j = 1, tlen(op_table[i]), 1 do
         local op = op_table[i][j]
+        
+        local is_var = false
+
+        if op.type == "literal" and op.value_type == "variable" then
+          var_op = op
+          is_var = true
+        end
 
         curr_expr = prefix .. op.priority
 
         local e
 
-        if curr_expr ~= prev_expr then
-          last_expr = lp.V(prev_expr)
-          e = patterns[op.type](op, lp.V(curr_expr), last_expr) + lp.V(prev_expr)
-        else
-          e = patterns[op.type](op, lp.V(curr_expr), last_expr)
-        end
+        -- Basically we don't want to inset variables in the grammar
+        -- at this stage, since the 
+        if is_var == false then
+          if curr_expr ~= prev_expr then
+            last_expr = lp.V(prev_expr)
+            e = patterns[op.type](op, lp.V(curr_expr), last_expr) + lp.V(prev_expr)
+          else
+            e = patterns[op.type](op, lp.V(curr_expr), last_expr)
+          end
 
-        grammar = add_expr(grammar, e, prefix .. op.priority)
+          grammar = add_expr(grammar, e, prefix .. op.priority)
+        end
 
         prev_expr = curr_expr
       end
     end
 
+    -- variable literals need to be inserted at the very end,
+    -- because if there is let's say an nary operator consisting of letters
+    -- (e.g. "sum") then it matches "sum" as a variable instead of as the
+    -- "sum" operator 
+    if var_op ~= nil then
+      grammar[prefix .. max_priority] = grammar[prefix .. max_priority] + 
+        (patterns[var_op.type](var_op)) 
+    end
+
     grammar[prefix .. max_priority] = grammar[prefix .. max_priority] +
       ("(" * white * lp.Ct(lp.V("axiom")) * white * ")")
+
     grammar.axiom = lp.V(prefix .. op_table[tlen(op_table)][1].priority)
 
     return lp.P(grammar)
   end
+
   return build_grammar(expression)
 end

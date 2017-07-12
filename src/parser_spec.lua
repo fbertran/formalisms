@@ -39,6 +39,13 @@ local bool = {
   type       = "literal"
 }
 
+local variable = {
+  priority   = 15,
+  operator   = "",
+  value_type = "variable",
+  type       = "literal"
+}
+
 local plus = {
   priority   = 11,
   operator   = "+",
@@ -152,6 +159,14 @@ local exp11 = {
   multiplication
 }
 
+local exp12 = {
+  literal,
+  variable,
+  plus,
+  multiplication,
+  nary
+}
+
 local expressions = {
   {
     expression        = exp1,
@@ -220,16 +235,29 @@ local expressions = {
   },
   {
     expression        = exp5,
-    expression_string = "sum(30 + 2, 5)",
+    expression_string = "9 + sum(30 + 2, 5) + 3",
     expected          = {
-      op = "sum",
-      op_type = "nary",
-      operands = { {
-        left = "30",
-        right = "2",
+      left = {
+        left = "9",
+        right = {
+          op = "sum",
+          op_type = "nary",
+          operands = {
+            {
+              left = "30",
+              right = "2",
+              op    = "+",
+              op_type = "binary"
+            },
+            { "5" }
+          }
+        },
+        op_type = "binary",
         op = "+",
-        op_type = "binary"
-      }, { "5" } }
+      },
+      op = "+",
+      op_type = "binary",
+      right   = "3"
     }
   },
   {
@@ -305,7 +333,7 @@ local expressions = {
   },
   {
     expression = exp9,
-    expression_string = "1 + 2 + 3 + 4~",
+    expression_string = "1 + 2 + 3 + 4",
     expected = {
       left = {
         left = {
@@ -320,11 +348,7 @@ local expressions = {
       },
       op = "+",
       op_type = "binary",
-      right = {
-        left    = "4",
-        op      = "~",
-        op_type = "unary_postfix",
-      }
+      right = "4" 
     }
   },
   {
@@ -355,8 +379,28 @@ local expressions = {
       right   = "false",
       op_type = "binary",
     }
+  },
+  {
+    expression        = exp12,
+    expression_string = "hello + sum(90 * one1)",
+    expected          = {
+      left    = "hello",
+      op      = "+",
+      op_type = "binary",
+      right   = {
+        op        = "sum",
+        operands  = { {
+          left    = "90",
+          op      = "*",
+          op_type = "binary",
+          right   = "one1"
+        } },
+        op_type = "nary",
+      }
+    }
   }
 }
+
 
 describe("parser", function ()
   it("doesnt accept empty grammars", function ()
@@ -373,10 +417,8 @@ describe("parser", function ()
         pprint(result)
         print("expected")
         pprint(v.expected)
-        assert.is_true(false)
-      else
-        assert.is_true(true)
       end
+      assert.is_true(cmpres)
     end)
   end
 end)
