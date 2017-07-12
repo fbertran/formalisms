@@ -376,8 +376,8 @@ local expressions = {
     expected          = {
       left    = "true",
       op      = "*",
-      right   = "false",
       op_type = "binary",
+      right   = "false",
     }
   },
   {

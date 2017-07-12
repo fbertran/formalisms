@@ -164,6 +164,8 @@ return function (expression)
           right["right"],
           right["op_type"]
         )
+
+
       else
         if left.op_type ~= "binary" then
           -- it's not a binary operator, so left / right associativity doesn't apply
@@ -240,7 +242,7 @@ return function (expression)
         op_repr *
         white
         * lp.P("(") * white *
-        lp.V("axiom") * white * ("," * white * lp.V("axiom")) ^ 0 *
+        lp.V("axiom")^0 * white * ("," * white * lp.V("axiom")) ^ 0 *
         white * lp.P(")") * white
       )
     end,

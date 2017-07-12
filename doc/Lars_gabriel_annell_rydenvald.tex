@@ -111,6 +111,20 @@ P15 \rightarrow nombre \ | \ \textrm{'}(\textrm{'} \ S' \ \textrm{'})\textrm{'}
 \end{math} \\ \\
 Puisque $LPeg$ génère un analyseur lexical de type $PEG$, il faut faire attention à l'ordre de déclaration de la grammaire pour avoir une précédence correcte.
 
+\subsection{Patterns utilisés pour les différents types d'opérateurs}
+Les fonctions pour générer les patterns sont stockés dans une table, et retournent un pattern $LPeg$. Considérons ici que les espaces blancs (\textbackslash s, \textbackslash t, \textbackslash n) sont ignorés. De plus, notons la "prochaine" expression dans la grammaire par $next\_expression$, et l'expression courante par $curr\_expression$, et la représentation de l'opérateur (e.g. "+") par $op\_repr$. Notons aussi l'axiome $S$ par $Expression$, la répétition "une fois ou plus" par $+$ et la répétition "0 fois ou plus" par $*$.
+\subsubsection{Opérateurs binaires}
+$next\_expression \ op\_repr \ (next\_expression \ | \ curr\_expression)$
+\subsubsection{Opérateurs ternaires}
+% TODO
+\subsubsection{Opérateurs unaires préfixes}
+$op\_repr \ (next\_expression \ | \ curr\_expression)$
+\subsubsection{Opérateurs unaires postfixes}
+Pour ce type d'opérateur, on est obligé de faire une répétition sur la représentation de l'opérateur, à cause du fait qu'on n'a pas la possibilité d'utiliser la récursion à gauche. \\ \\
+$next\_expression \ op\_representation+ \ curr\_expression$
+\subsubsection{Opérateurs n-aires}
+Pour représenter les opérateurs n-aires, nous avons décidé d'utiliser la forme "représentation\_opérateur'('opérande1, opérande2, ..., opérandeN')', ce qui nous donne \\ \\
+$op\_repr'('Expression(','Expression)*')'$
 \subsection{Associativité à gauche}
 On constate que tous les opérateurs binaires dans le tableau précédent sont associatifs à droite. Or, on voudrait pouvoir préciser l'associativité lors de la déclaration des opérateurs, puisque cela modifie l'arbre syntaxique produit par l'analyseur lexical. Dans le cas d'un analyseur $LR$, l'associativité à gauche se traduit simplement par une récursion à gauche, telle que
 \ \\ \\
@@ -160,7 +174,6 @@ function left_assoc(pattern, _op)
   return pattern / recursion
 end
 \end{minted}
-Il faut ensuite gérer le cas où la priorité de l'opérateur à droite est plus élevée.
 \newpage
 \noindent[1]: Parsing Expression Grammars Made Practical, Nicolas Laurent \newline
 [2]: Direct Left-Recursive Parsing Expression Grammars, Laurence Tratt
