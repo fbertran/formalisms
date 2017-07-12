@@ -6,10 +6,11 @@ local op_map = { }
 
 local white = lp.S(" \t") ^ 0
 
+-- patterns for primitive types (number / boolean) and variables
 local value_types = {
-  ["number"]   = lp.C(lp.R("09") ^ 1), -- / tonumber),
-  ["variable"] = (lp.R("az") ^ 1 * (lp.R("az") + lp.R("09")) ^ 0) / tostring,
-  ["boolean"]  = (lp.P("true") + lp.P("false"))^1 / tostring,
+  number   = lp.C(lp.R("09") ^ 1), -- / tonumber),
+  variable = (lp.R("az") ^ 1 * (lp.R("az") + lp.R("09")) ^ 0) / tostring,
+  boolean  = (lp.P("true") + lp.P("false"))^1 / tostring,
 }
 
 return function (expression)
@@ -151,6 +152,7 @@ return function (expression)
           -- This can also mean that there is a parenthesis
           return { left = left, op = op, right = right, op_type = _op.type }
         end
+
         if type(left) == "table" then
           left = fn(left["left"], left["op"], left["right"], left["op_type"])
         end
@@ -304,7 +306,7 @@ return function (expression)
 
         local e
 
-        -- Basically we don't want to inset variables in the grammar
+        -- Basically we don't want to insert variables in the grammar
         -- at this stage, since the 
         if is_var == false then
           if curr_expr ~= prev_expr then

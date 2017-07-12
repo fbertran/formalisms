@@ -410,6 +410,7 @@ describe("parser", function ()
   for _, v in ipairs(expressions) do
     local p      = parser(v.expression)
     local result = p:match(v.expression_string)
+
     it("parses correctly, input = " .. v.expression_string, function ()
       local cmpres = deepcompare(result, v.expected, true)
       if not cmpres then
