@@ -2,18 +2,30 @@ local lp = require "lpeg"
 local pprint = require "pprint"
 local prefix = "prefix"
 
-local op_map = { }
-
-local white = lp.S(" \t") ^ 0
-
--- patterns for primitive types (number / boolean) and variables
-local value_types = {
-  number   = lp.C(lp.R("09") ^ 1), -- / tonumber),
-  variable = (lp.R("az") ^ 1 * (lp.R("az") + lp.R("09")) ^ 0) / tostring,
-  boolean  = (lp.P("true") + lp.P("false"))^1 / tostring,
-}
 
 return function (expression)
+  -- Holds the different operators, example for an expression which has
+  -- multiplication and addition:
+  --
+  -- op_map = {
+  --  ["binary+"] = addition_operator,
+  --  ["binary*"] = multiplication_operator
+  -- }
+  --
+  -- This way we can easily retrieve properties such as the operator's priority
+  local op_map = { }
+
+  local white = lp.S(" \t") ^ 0
+
+  -- patterns for primitive types (number / boolean) and variables
+  local value_types = {
+    number   = lp.C(lp.R("09") ^ 1), -- / tonumber),
+    variable = (lp.R("az") ^ 1 * (lp.R("az") + lp.R("09")) ^ 0) / tostring,
+    boolean  = (lp.P("true") + lp.P("false"))^1 / tostring,
+  }
+
+
+  -- utility function
   local function tlen(t)
     local i = 0
     for _ in pairs(t) do
@@ -42,6 +54,7 @@ return function (expression)
 
     return nt
   end
+
 
   local function node_postfix(p)
     -- function to handle postfix operators when we receive them
@@ -107,8 +120,9 @@ return function (expression)
     end
   end
 
+
   local function binary_lassoc(p, _op)
-    local function fn(left, op, right) --, op_type)
+    local function fn(left, op, right)
       -- second condition is to make sure that we are not "stealing"
       -- anything from operators that have the same priority but
       -- are not left associative
@@ -116,16 +130,20 @@ return function (expression)
         if tlen(right) == 1 and type(right[1]) == "table" then -- parenthesis
           return { left = left, op = op, right = right, op_type = _op.type }
         end
+
         -- we have to take precedence in account,
         -- as well as if it's not a binary operator, then
         -- left associativity doesn't apply
         if
-          right.op ~= nil and
-          (
+          right.op ~= nil and (
             op_map[right["op"] .. right["op_type"]].type ~= "binary" or
             op_map[right["op"] .. right["op_type"]].priority > _op.priority
           )
         then
+          -- But we still have to go through the operators on the left side of
+          -- the expression, to check if they are left associative, in which case
+          -- we have to handle them as well.
+          -- So we propagate the recursion to the left hand side as well
           if
             left.op ~= nil and
             left.op_type ~= nil and
@@ -166,7 +184,9 @@ return function (expression)
 
   -- Hashmap for the patterns so we don't need
   -- a ton of `if - else if - else` statements
-  -- for the different types of operators
+  -- for the different types of operators.
+  -- the "white" you see in there is just for ignoring whitespace.
+  -- Unfortunately it has to be added everywhere
   local patterns = {
     binary = function (operator, curr_expr, next_expr)
       local op_repr = lp.C(lp.P(operator.operator))
@@ -290,7 +310,8 @@ return function (expression)
 
     local last_expr
 
-
+    -- Iterate over each operator,
+    -- and add the pattern to our grammar
     for i = 1, tlen(op_table), 1 do
       for j = 1, tlen(op_table[i]), 1 do
         local op = op_table[i][j]

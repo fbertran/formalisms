@@ -138,7 +138,7 @@ function left_assoc(left, op, right)
 end
 \end{minted}
 Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent nous retournera donc la table \mint{lua}{{ left = 1, op = +, right = { left = 2, op = +, right = 3 } }}
-\noindent Si on veut avoir l'associativité gauche, ce résultat est évidemment faux. Pour avoir un output correct, il nous suffit d'opérer de manière récursive (la gestion d'erreurs ou d'opérateurs différents est omise ici), on a donc
+\noindent Si on veut avoir l'associativité à gauche, ce résultat est évidemment faux. Pour avoir un output correct, il nous suffit d'opérer de manière récursive (la gestion d'erreurs ou d'opérateurs différents est omise ici), on a donc
 \begin{minted}{lua}
 function left_assoc(pattern, _op)
   function recursion(left, op, right)
@@ -160,6 +160,7 @@ function left_assoc(pattern, _op)
   return pattern / recursion
 end
 \end{minted}
+Il faut ensuite gérer le cas où la priorité de l'opérateur à droite est plus élevée.
 \newpage
 \noindent[1]: Parsing Expression Grammars Made Practical, Nicolas Laurent \newline
 [2]: Direct Left-Recursive Parsing Expression Grammars, Laurence Tratt
