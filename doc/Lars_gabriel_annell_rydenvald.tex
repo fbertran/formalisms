@@ -54,7 +54,7 @@
 % Ecrire à propos d'ardoises, et des autres logiciels qui existent déjà (c.f. présentation)
 \section{Formalismes des opérateurs}
 % Formalismes des opérateurs
-\section{Analyse grammaticale}
+\section{Analyse lexicale}
 Nous avons pensé à deux solutions différentes pour effectuer l'analyse grammaticale:
 \begin{enumerate}
 	\item[1)] Utiliser des expressions régulières, qui seraient définies par l'utilisateur pour chaque opérateur.
@@ -96,7 +96,7 @@ On va ensuite rajouter un à un les opérateurs dans cette grammaire, de la mani
 
 \begin{enumerate}
 	\item On trie la table des opérateurs, par priorité, dans l'ordre décroissant.
-	\item Pour chaque type d'opérateur, on crée le pattern. Par exemple, l'opérateur binaire $Addition$ dans notre table, aura le pattern \\ $P11 \rightarrow \ P12 \ \textrm{'}+\textrm{'} \ (P12 \ | \ P11)$
+	\item Pour chaque type d'opérateur, on crée le pattern correspondant. Par exemple, l'opérateur binaire $Addition$ dans notre table, aura le pattern \\ $P11 \rightarrow \ P12 \ \textrm{'}+\textrm{'} \ (P11 \ | \ P12)$
 	\item On rajoute le nouveau pattern crée dans la grammaire de base
 \end{enumerate}
 Pour finir, on se retrouve avec une grammaire comme celle-ci: \\ \\
@@ -114,19 +114,23 @@ Puisque $LPeg$ génère un analyseur lexical de type $PEG$, il faut faire attent
 \subsection{Patterns utilisés pour les différents types d'opérateurs}
 Les fonctions pour générer les patterns sont stockés dans une table, et retournent un pattern $LPeg$. Considérons ici que les espaces blancs (\textbackslash s, \textbackslash t, \textbackslash n) sont ignorés. De plus, notons la "prochaine" expression dans la grammaire par $next\_expression$, et l'expression courante par $curr\_expression$, et la représentation de l'opérateur (e.g. "+") par $op\_repr$. Notons aussi l'axiome $S$ par $Expression$, la répétition "une fois ou plus" par $+$ et la répétition "0 fois ou plus" par $*$.
 \subsubsection{Opérateurs binaires}
+Ce pattern est un des plus simples et un des plus évidents. \\ \\
 $next\_expression \ op\_repr \ (next\_expression \ | \ curr\_expression)$
 \subsubsection{Opérateurs ternaires}
-Il existe deux variantes d'opérateurs ternaires, la première étant le bloc conditionnel, "if ... then ... else", et l'autre ressemblant le "inline if", par exemple "... ? ... : ...". Pour décrire ces deux opérateurs, on dénombre les opérateurs par $op\_reprN$.
+Il existe deux variantes d'opérateurs ternaires, la première étant le bloc conditionnel, "if ... then ... else", et l'autre ressemblant au "inline if", par exemple "... ? ... : ...". Pour décrire ces deux opérateurs, on dénombre les opérateurs par $op\_reprN$.
 \begin{enumerate}
 	\item Pour la première version, le pattern utilisé est \newline $op\_repr1 \ Expression \ op\_repr2 \ Expression \ op\_repr3 \ Expression$
 	\item Pour la deuxième version, on utilisera \newline
 	$next\_expr \ op\_repr1 \ Expression \ op\_repr2 \ (curr\_expression \ | \ next\_expression)$
 \end{enumerate}
+Il faut cependant faire attention à la priorité qu'on fixe dans les deux cas différents. Le premier cas requiert une priorité élevée (normalement au même niveau que les terminaux), et le deuxième cas nécessite une priorité basse.
 \subsubsection{Opérateurs unaires préfixes}
-$op\_repr \ (next\_expression \ | \ curr\_expression)$
+Le pattern lui-même n'est pas difficile à définir: \\ \\
+$op\_repr \ (next\_expression \ | \ curr\_expression)$ \\ \\
+Cependant on est dans un cas où il faut aussi donner une priorité élevée à l'opérateur pour qu'il soit reconnu dans tous les cas.
 \subsubsection{Opérateurs unaires postfixes}
 Pour ce type d'opérateur, on est obligé de faire une répétition sur la représentation de l'opérateur, à cause du fait qu'on n'a pas la possibilité d'utiliser la récursion à gauche. \\ \\
-$next\_expression \ op\_representation+ \ curr\_expression$
+$next\_expression \ op\_repr+ \ curr\_expression$
 \subsubsection{Opérateurs n-aires}
 Pour représenter les opérateurs n-aires, nous avons décidé d'utiliser la forme "représentation\_opérateur'('opérande1, opérande2, ..., opérandeN')', ce qui nous donne \\ \\
 $op\_repr'('Expression(','Expression)*')'$
@@ -142,7 +146,7 @@ Malheureusement, $LPeg$ ne peut pas gérer les récursions à gauche, et une él
 	Expr \rightarrow nombre \ Expr\prime \\
 	Expr\prime \rightarrow \textrm{'} + \textrm{'} \ Expr\prime \ | \ nombre
 \end{math} \\ \\
-ne suffit pas. On a encore une associativité à droite. \\
+ne suffit pas. On a encore une associativité à droite. \\ \\
 Il existe des implémentations pour introduire la récursion à gauche dans les grammaires $PEG$, telles que \underline{\href{https://github.com/norswap/whimsy/blob/master/doc/autumn/README.md}{Autumn}}\textsuperscript{[1]} ou celle proposée par Laurence Tratt\textsuperscript{[2]}. Puisque nous utilisons $LPeg$ et Lua, aucune de ces deux méthodes ne sont possibles dans le cadre de ce travail, il nous faut donc notre propre implémentation pour gérer les opérateurs binaires étant déclarés comme étant associatifs à gauche.
 \subsubsection{Implémentation}
 $LPeg$ nous permet de déclarer des fonctions de capture pour ce qui est lu par l'analyseur généré. Supposons la grammaire suivante: \\ \\
@@ -157,7 +161,7 @@ function left_assoc(left, op, right)
 end
 \end{minted}
 Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent nous retournera donc la table \mint{lua}{{ left = 1, op = +, right = { left = 2, op = +, right = 3 } }}
-\noindent Si on veut avoir l'associativité à gauche, ce résultat est évidemment faux. Pour avoir un output correct, il nous suffit d'opérer de manière récursive (la gestion d'erreurs ou d'opérateurs différents est omise ici), on a donc (en pseudo-code)
+\noindent Si on veut avoir l'associativité à gauche, ce résultat est évidemment faux. Pour avoir un output correct, il nous suffit d'opérer de manière récursive. On a donc (en pseudo-code):
 \begin{minted}{lua}
 -- pattern est le pattern pour l'analyseur lexical
 -- _op est l'opérateur auquel on veut appliquer l'associativité à gauche
@@ -169,6 +173,13 @@ function left_assoc(pattern, _op)
 		-- Est-ce que nous avons une table à droite? Dans ce cas il faut
 		-- "voler" l'opérande gauche de l'opérande de droite
     if right is a table and op equals _op.operator then
+			-- Par la manière dont fonctionne LPeg, il faut quand même faire une
+			-- récursion sur l'opérateur à gauche, si celui-ci est binaire et
+			-- associatif à gauche
+			if left is a table and the left operator is a binary left-associative operator then
+				left = recursion(left.left, left.op, left.right)
+			end
+	    
 	    -- Cependant il faut faire attention à ce que l'opérateur de droite
 	    -- soit aussi un opérateur binaire, et que celui-ci ait une priorité
 	    -- soit égale ou moins élevée que l'opérateur qu'on traite maintenant
@@ -191,7 +202,7 @@ function left_assoc(pattern, _op)
 	    -- Par la manière dont fonctionne LPeg, il faut quand même faire une
 	    -- récursion sur l'opérateur à gauche, si celui-ci est binaire et
 	    -- associatif à gauche
-	    if left is a table and binary left-associative operator then
+	    if left is a table and the left operator is a binary left-associative operator then
 		    left = recursion(left.left, left.op, left.right)
 	    end
 			
@@ -201,8 +212,15 @@ function left_assoc(pattern, _op)
     end
   end
   
+  -- L'opérateur '/' est overloaded par LPeg, ceci retourne le pattern et la 
+  -- la fonction "recursion" sera la fonction de capture lorsque ce pattern
+  -- est rencontré
+  -- http://www.inf.puc-rio.br/\~roberto/lpeg/#cap-func
   return pattern / recursion
 end
+\end{minted}
+Pour revenir à notre expression \mint{lua}{1 + 2 + 3} \noindent de plus haut, si nous avons donné la propriété d'associativité à gauche à notre opérateur \lstinline|+|, l'analyse lexicale nous retournera maintenant la table correcte \begin{minted}{lua}
+	{ left = { left = 1, op = "+", right = 2 }, op = "+", right = 3 }
 \end{minted}
 \newpage
 \noindent[1]: Parsing Expression Grammars Made Practical, Nicolas Laurent \newline

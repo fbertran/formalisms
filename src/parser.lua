@@ -136,7 +136,7 @@ return function (expression)
 
 
   local function binary_lassoc(pattern, _op)
-    local function fn(left, op, right)
+    local function recursion(left, op, right)
       -- second condition is to make sure that we are not "stealing"
       -- anything from operators that have the same priority but
       -- are not left associative
@@ -163,14 +163,14 @@ return function (expression)
             left.op_type ~= nil and
             op_map[left.op .. left.op_type].left_assoc
           then
-            left = fn(left.left, left.op, left.right, left.op_type)
+            left = recursion(left.left, left.op, left.right, left.op_type)
           end
 
           return { left = left, op = op, right = right, op_type = _op.type }
         end
 
         -- Recursion needed to move the operands to make the operator left-associative
-        return fn(
+        return recursion(
           {
             left = left, op = op, right = right["left"], op_type = _op.type
           },
@@ -186,14 +186,14 @@ return function (expression)
         end
 
         if type(left) == "table" then
-          left = fn(left["left"], left["op"], left["right"], left["op_type"])
+          left = recursion(left["left"], left["op"], left["right"], left["op_type"])
         end
 
         return { left = left, op = op, right = right, op_type = _op.type }
       end
     end
 
-    return pattern / fn
+    return pattern / recursion
   end
 
   -- Hashmap for the patterns so we don't need
@@ -254,7 +254,7 @@ return function (expression)
         op_repr *
         white
         * lp.P("(") * white *
-        lp.V("axiom")^0 * white * ("," * white * lp.V("axiom")) ^ 0 *
+        lp.V("axiom") * white * ("," * white * lp.V("axiom")) ^ 0 *
         white * lp.P(")") * white
       )
     end,

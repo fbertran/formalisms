@@ -451,6 +451,30 @@ local expressions = {
       op3     = "else",
       op_type = "ternary_alternative",
     }
+  },
+  {
+    expression        = exp3,
+    expression_string = "1 * 2 * 3 * 4~",
+    expected          = {
+      left = {
+        left = {
+          left    = "1",
+          op      = "*",
+          op_type = "binary",
+          right   = "2",
+        },
+        op      = "*",
+        op_type = "binary",
+        right   = "3",
+      },
+      op      = "*",
+      op_type = "binary",
+      right   = {
+        left    = "4",
+        op      = "~",
+        op_type = "unary_postfix"
+      }
+    }
   }
 }
 
