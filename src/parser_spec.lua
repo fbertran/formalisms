@@ -365,7 +365,7 @@ local expressions = {
       },
       op = "+",
       op_type = "binary",
-      right = "4" 
+      right = "4"
     }
   },
   {

@@ -1,5 +1,4 @@
 local lp = require "lpeg"
-local pprint = require "pprint"
 local prefix = "prefix"
 
 
@@ -97,6 +96,21 @@ return function (expression)
         op2 = op2,
         right = right,
         op_type = "ternary"
+      }
+    end
+  end
+
+
+  local function alternative_ternary_node (p)
+    return p / function (op1, left, op2, middle, op3, right)
+      return {
+        op = op1,
+        op2 = op2,
+        op3 = op3,
+        left = left,
+        middle = middle,
+        right = right,
+        op_type = "ternary_alternative"
       }
     end
   end
@@ -254,24 +268,14 @@ return function (expression)
       second = lp.C(lp.P(second))
       third = lp.C(lp.P(third))
 
-      local function s(op1, left, op2, middle, op3, right)
-        return {
-          op = op1,
-          op2 = op2, 
-          op3 = op3,
-          left = left,
-          middle = middle,
-          right = right,
-          op_type = "ternary_alternative"
-        }
-      end
+
 
       local pattern = white * first * white *
         lp.V("axiom") * white * second * white * lp.V("axiom") * white * third * white *
         lp.V("axiom")
 
-      return pattern / s
-    end
+      return alternative_ternary_node(pattern)
+    end,
   }
 
   -- Adds the expression to the corresponding priority

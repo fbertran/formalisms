@@ -157,13 +157,27 @@ function left_assoc(left, op, right)
 end
 \end{minted}
 Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent nous retournera donc la table \mint{lua}{{ left = 1, op = +, right = { left = 2, op = +, right = 3 } }}
-\noindent Si on veut avoir l'associativité à gauche, ce résultat est évidemment faux. Pour avoir un output correct, il nous suffit d'opérer de manière récursive (la gestion d'erreurs ou d'opérateurs différents est omise ici), on a donc
+\noindent Si on veut avoir l'associativité à gauche, ce résultat est évidemment faux. Pour avoir un output correct, il nous suffit d'opérer de manière récursive (la gestion d'erreurs ou d'opérateurs différents est omise ici), on a donc (en pseudo-code)
 \begin{minted}{lua}
+-- pattern est le pattern pour l'analyseur lexical
+-- _op est l'opérateur auquel on veut appliquer l'associativité à gauche
 function left_assoc(pattern, _op)
+  -- left est la partie gauche de l'expression parsée
+  -- op est l'opérateur
+  -- right est la partie droite
   function recursion(left, op, right)
 		-- Est-ce que nous avons une table à droite? Dans ce cas il faut
 		-- "voler" l'opérande gauche de l'opérande de droite
-    if type(right) == "table" and op == _op.operator then
+    if right is a table and op equals _op.operator then
+	    -- Cependant il faut faire attention à ce que l'opérateur de droite
+	    -- soit aussi un opérateur binaire, et que celui-ci ait une priorité
+	    -- soit égale ou moins élevée que l'opérateur qu'on traite maintenant
+	    if right.op.priority > _op.priority or right.op.type is not binary then
+		    -- Dans ce cas on retourne normalement
+	      return { left = left, op = op, right = right }
+	    end
+    
+	    -- Sinon on fait la récursion
       return recursion(
         {
           left  = left,
@@ -173,7 +187,14 @@ function left_assoc(pattern, _op)
         right.op,
         right.right
       )
-    else 
+    else
+	    -- Par la manière dont fonctionne LPeg, il faut quand même faire une
+	    -- récursion sur l'opérateur à gauche, si celui-ci est binaire et
+	    -- associatif à gauche
+	    if left is a table and binary left-associative operator then
+		    left = recursion(left.left, left.op, left.right)
+	    end
+			
 	    -- On retourne normalement, ce que nous avons à droite n'est pas
 	    -- une table, donc il n'y a pas besoin de traiter
       return { left = left, op = op, right = right }
