@@ -18,7 +18,7 @@
 \usepackage{subfig}
 \usepackage{minted}
 \usepackage[hidelinks]{hyperref}
-\setminted[java]{tabsize=2}
+\setminted[lua]{tabsize=2}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -116,7 +116,12 @@ Les fonctions pour générer les patterns sont stockés dans une table, et retou
 \subsubsection{Opérateurs binaires}
 $next\_expression \ op\_repr \ (next\_expression \ | \ curr\_expression)$
 \subsubsection{Opérateurs ternaires}
-% TODO
+Il existe deux variantes d'opérateurs ternaires, la première étant le bloc conditionnel, "if ... then ... else", et l'autre ressemblant le "inline if", par exemple "... ? ... : ...". Pour décrire ces deux opérateurs, on dénombre les opérateurs par $op\_reprN$.
+\begin{enumerate}
+	\item Pour la première version, le pattern utilisé est \newline $op\_repr1 \ Expression \ op\_repr2 \ Expression \ op\_repr3 \ Expression$
+	\item Pour la deuxième version, on utilisera \newline
+	$next\_expr \ op\_repr1 \ Expression \ op\_repr2 \ (curr\_expression \ | \ next\_expression)$
+\end{enumerate}
 \subsubsection{Opérateurs unaires préfixes}
 $op\_repr \ (next\_expression \ | \ curr\_expression)$
 \subsubsection{Opérateurs unaires postfixes}
@@ -138,7 +143,7 @@ Malheureusement, $LPeg$ ne peut pas gérer les récursions à gauche, et une él
 	Expr\prime \rightarrow \textrm{'} + \textrm{'} \ Expr\prime \ | \ nombre
 \end{math} \\ \\
 ne suffit pas. On a encore une associativité à droite. \\
-Il existe des implémentations pour introduire la récursion à gauche dans les grammaires $PEG$, telles que \underline{\href{https://github.com/norswap/whimsy/blob/master/doc/autumn/README.md}{Autumn}}\textsuperscript{[1]} ou celle proposée par Laurence Tratt\textsuperscript{[2]}. Puisque nous utilisons $LPeg$ et Lua, aucune de ces deux méthodes ne sont possible dans le cadre de ce travail, il nous faut donc notre propre implémentation pour gérer les opérateurs binaires étant déclarés comme étant associatifs à gauche.
+Il existe des implémentations pour introduire la récursion à gauche dans les grammaires $PEG$, telles que \underline{\href{https://github.com/norswap/whimsy/blob/master/doc/autumn/README.md}{Autumn}}\textsuperscript{[1]} ou celle proposée par Laurence Tratt\textsuperscript{[2]}. Puisque nous utilisons $LPeg$ et Lua, aucune de ces deux méthodes ne sont possibles dans le cadre de ce travail, il nous faut donc notre propre implémentation pour gérer les opérateurs binaires étant déclarés comme étant associatifs à gauche.
 \subsubsection{Implémentation}
 $LPeg$ nous permet de déclarer des fonctions de capture pour ce qui est lu par l'analyseur généré. Supposons la grammaire suivante: \\ \\
 \begin{math}
@@ -156,6 +161,8 @@ Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent nous retournera donc la
 \begin{minted}{lua}
 function left_assoc(pattern, _op)
   function recursion(left, op, right)
+		-- Est-ce que nous avons une table à droite? Dans ce cas il faut
+		-- "voler" l'opérande gauche de l'opérande de droite
     if type(right) == "table" and op == _op.operator then
       return recursion(
         {

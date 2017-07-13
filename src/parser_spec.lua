@@ -25,6 +25,7 @@ local function deepcompare(t1,t2,ignore_mt)
   return true
 end
 
+
 local literal = {
   priority   = 15,
   operator   = "",
@@ -92,6 +93,14 @@ local ternary = {
   },
   type = "ternary",
   priority = 2
+}
+
+local ternary_alternative = {
+  operator  = "if",
+  operator2 = "then",
+  operator3 = "else",
+  type      = "ternary_alternative",
+  priority  = 15,
 }
 
 local exp1 = {
@@ -165,6 +174,14 @@ local exp12 = {
   plus,
   multiplication,
   nary
+}
+
+local exp13 = {
+  literal,
+  variable,
+  plus,
+  multiplication,
+  ternary_alternative
 }
 
 local expressions = {
@@ -397,6 +414,19 @@ local expressions = {
         } },
         op_type = "nary",
       }
+    }
+  },
+  {
+    expression        = exp13,
+    expression_string = "if hello then null else 35",
+    expected          = {
+      left    = "hello",
+      middle  = "null",
+      right   = "35",
+      op      = "if",
+      op2     = "then",
+      op3     = "else",
+      op_type = "ternary_alternative",
     }
   }
 }

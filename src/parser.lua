@@ -246,6 +246,34 @@ return function (expression)
         white * lp.P(")") * white
       )
     end,
+
+    ternary_alternative = function (operator)
+      local first  = operator.operator
+      local second = operator.operator2
+      local third  = operator.operator3
+
+      first  = lp.C(lp.P(first))
+      second = lp.C(lp.P(second))
+      third = lp.C(lp.P(third))
+
+      local function s(op1, left, op2, middle, op3, right)
+        return {
+          op = op1,
+          op2 = op2, 
+          op3 = op3,
+          left = left,
+          middle = middle,
+          right = right,
+          op_type = "ternary_alternative"
+        }
+      end
+
+      local pattern = white * first * white *
+        lp.V("axiom") * white * second * white * lp.V("axiom") * white * third * white *
+        lp.V("axiom")
+
+      return pattern / s
+    end
   }
 
   -- Adds the expression to the corresponding priority
@@ -317,7 +345,7 @@ return function (expression)
     for i = 1, tlen(op_table), 1 do
       for j = 1, tlen(op_table[i]), 1 do
         local op = op_table[i][j]
-        
+
         local is_var = false
 
         if op.type == "literal" and op.value_type == "variable" then
@@ -330,7 +358,7 @@ return function (expression)
         local e
 
         -- Basically we don't want to insert variables in the grammar
-        -- at this stage, since the 
+        -- at this stage, since the
         if is_var == false then
           if curr_expr ~= prev_expr then
             last_expr = lp.V(prev_expr)
@@ -349,10 +377,10 @@ return function (expression)
     -- variable literals need to be inserted at the very end,
     -- because if there is let's say an nary operator consisting of letters
     -- (e.g. "sum") then it matches "sum" as a variable instead of as the
-    -- "sum" operator 
+    -- "sum" operator
     if var_op ~= nil then
-      grammar[prefix .. max_priority] = grammar[prefix .. max_priority] + 
-        (patterns[var_op.type](var_op)) 
+      grammar[prefix .. max_priority] = grammar[prefix .. max_priority] +
+        (patterns[var_op.type](var_op))
     end
 
     grammar[prefix .. max_priority] = grammar[prefix .. max_priority] +
