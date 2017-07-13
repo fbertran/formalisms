@@ -121,7 +121,7 @@ return function (expression)
   end
 
 
-  local function binary_lassoc(p, _op)
+  local function binary_lassoc(pattern, _op)
     local function fn(left, op, right)
       -- second condition is to make sure that we are not "stealing"
       -- anything from operators that have the same priority but
@@ -164,8 +164,6 @@ return function (expression)
           right["right"],
           right["op_type"]
         )
-
-
       else
         if left.op_type ~= "binary" then
           -- it's not a binary operator, so left / right associativity doesn't apply
@@ -181,7 +179,7 @@ return function (expression)
       end
     end
 
-    return p / fn
+    return pattern / fn
   end
 
   -- Hashmap for the patterns so we don't need
@@ -278,11 +276,11 @@ return function (expression)
 
   -- Adds the expression to the corresponding priority
   -- of the expression
-  local function add_expr(grammar, expr, expr_ref)
-    if grammar[expr_ref] == nil then
-      grammar[expr_ref] = expr
+  local function add_expr(grammar, expr, level)
+    if grammar[level] == nil then
+      grammar[level] = expr
     else
-      grammar[expr_ref] = expr + grammar[expr_ref]
+      grammar[level] = expr + grammar[level]
     end
     return grammar
   end
@@ -341,7 +339,7 @@ return function (expression)
     local last_expr
 
     -- Iterate over each operator,
-    -- and add the pattern to our grammar
+    -- and add the resulting pattern to our grammar
     for i = 1, tlen(op_table), 1 do
       for j = 1, tlen(op_table[i]), 1 do
         local op = op_table[i][j]
@@ -358,7 +356,7 @@ return function (expression)
         local e
 
         -- Basically we don't want to insert variables in the grammar
-        -- at this stage, since the
+        -- at this stage, since we cannot be sure in which order we receive the operators
         if is_var == false then
           if curr_expr ~= prev_expr then
             last_expr = lp.V(prev_expr)

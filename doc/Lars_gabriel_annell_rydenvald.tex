@@ -173,7 +173,9 @@ function left_assoc(pattern, _op)
         right.op,
         right.right
       )
-    else -- Normal behaviour
+    else 
+	    -- On retourne normalement, ce que nous avons à droite n'est pas
+	    -- une table, donc il n'y a pas besoin de traiter
       return { left = left, op = op, right = right }
     end
   end

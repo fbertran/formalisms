@@ -428,6 +428,29 @@ local expressions = {
       op3     = "else",
       op_type = "ternary_alternative",
     }
+  },
+  {
+    expression        = exp13,
+    expression_string = "if 5 * 2 then null else 35 + 20",
+    expected          = {
+      left    = {
+        left    = "5",
+        op      = "*",
+        op_type = "binary",
+        right   = "2",
+      },
+      middle  = "null",
+      right   = {
+        left    = "35",
+        op      = "+",
+        op_type = "binary",
+        right   = "20",
+      },
+      op      = "if",
+      op2     = "then",
+      op3     = "else",
+      op_type = "ternary_alternative",
+    }
   }
 }
 
