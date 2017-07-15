@@ -18,7 +18,10 @@
 \usepackage{subfig}
 \usepackage{minted}
 \usepackage[hidelinks]{hyperref}
+\usepackage{syntax}
 \setminted[lua]{tabsize=2}
+
+\setlength{\grammarindent}{0cm}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -42,20 +45,20 @@
 \begin{center}
 	\huge 
 	Ardoises \\
-	Formalismes et expressions
+	Formalismes d'opérateurs et expressions
 \end{center}
 \renewcommand{\contentsname}{Sommaire}
 \tableofcontents
 \newpage
 
 \section{Introduction}
-%Le but de ce travail, dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardoises}}, est d'ajouter des formalismes pour les opérateurs ainsi qu'une manière de transformer 
+Dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardoises}}, ce travail a pour but d'introduire la possibilité aux utilisateurs de formellement définir des opérateurs, ainsi que de fournir un analyseur lexical basé sur ces opérateurs. 
 \section{Ardoises}
 % Ecrire à propos d'ardoises, et des autres logiciels qui existent déjà (c.f. présentation)
 \section{Formalismes des opérateurs}
 % Formalismes des opérateurs
 \section{Analyse lexicale}
-Nous avons pensé à deux solutions différentes pour effectuer l'analyse grammaticale:
+Deux solutions pour effectuer l'analyse lexicale se présentaient à nous:
 \begin{enumerate}
 	\item[1)] Utiliser des expressions régulières, qui seraient définies par l'utilisateur pour chaque opérateur.
 	\item[2)] Générer une grammaire à partir de modèles (patterns) prédéfinis pour différents types d'opérateurs.
@@ -87,74 +90,85 @@ Supposons les opérateurs simples suivants:
 \end{tabular}
 \end{center}
 Prenons comme base la simple grammaire suivante (qui ne fait rien):
-\begin{math}
-S \rightarrow S'
-% \ \\
-% P15 \rightarrow number \ | \ \textrm{'}(\textrm{'} \ S' \ \textrm{'})\textrm{'}
-\end{math} \\ \\
+\begin{grammar}
+	<s> ::= <s'>
+\end{grammar}
 On va ensuite rajouter un à un les opérateurs dans cette grammaire, de la manière  suivante:
 
 \begin{enumerate}
 	\item On trie la table des opérateurs, par priorité, dans l'ordre décroissant.
-	\item Pour chaque type d'opérateur, on crée le pattern correspondant. Par exemple, l'opérateur binaire $Addition$ dans notre table, aura le pattern \\ $P11 \rightarrow \ P12 \ \textrm{'}+\textrm{'} \ (P11 \ | \ P12)$
+	\item Pour chaque type d'opérateur, on crée le pattern correspondant. Par exemple, l'opérateur binaire $Addition$ dans notre table, aura le pattern
+	\begin{grammar}
+		<P11> ::= <P12> `+' ( <P11> | <P12> )
+	\end{grammar}
 	\item On rajoute le nouveau pattern crée dans la grammaire de base
 \end{enumerate}
-Pour finir, on se retrouve avec une grammaire comme celle-ci: \\ \\
-\begin{math}
-S \rightarrow S' \\
-S' \rightarrow P11 \\
-P11 \rightarrow Addition \ | \ Soustraction \ | \ P12 \\
-P12 \rightarrow Division \ | \ Multiplication \ | \ P13 \\
-P13 \rightarrow Exponentiation \ | \ P14 \\
-P14 \rightarrow N\acute{e}gation \ | \ P15 \\
-P15 \rightarrow nombre \ | \ \textrm{'}(\textrm{'} \ S' \ \textrm{'})\textrm{'}
-\end{math} \\ \\
+Pour finir, on se retrouve avec une grammaire comme celle-ci:
+\begin{grammar}
+<s> \ \ \ \ ::= <s'>\\
+<s'> \ \ \ ::= <P11>\\
+<P11> ::= <Addition> | <Soustraction> | <P12>\\
+<P12> ::= <Division> | <Multiplication> | <P13>\\
+<P13> ::= <Exponentiation> | <P14>\\
+<P14> ::= <Négation> | <P15>\\
+<P15> ::= <nombre> | `(' <s> `)'
+\end{grammar}
 Puisque $LPeg$ génère un analyseur lexical de type $PEG$, il faut faire attention à l'ordre de déclaration de la grammaire pour avoir une précédence correcte.
 
 \subsection{Patterns utilisés pour les différents types d'opérateurs}
-Les fonctions pour générer les patterns sont stockés dans une table, et retournent un pattern $LPeg$. Considérons ici que les espaces blancs (\textbackslash s, \textbackslash t, \textbackslash n) sont ignorés. De plus, notons la "prochaine" expression dans la grammaire par $next\_expression$, et l'expression courante par $curr\_expression$, et la représentation de l'opérateur (e.g. "+") par $op\_repr$. Notons aussi l'axiome $S$ par $Expression$, la répétition "une fois ou plus" par $+$ et la répétition "0 fois ou plus" par $*$.
+Les fonctions pour générer les patterns sont stockés dans une table, et retournent un pattern $LPeg$. Considérons ici que les espaces blancs (\textbackslash s, \textbackslash t, \textbackslash n) sont ignorés. De plus, notons la "prochaine" expression dans la grammaire par $next\_expression$, et l'expression courante par $curr\_expression$, et la représentation de l'opérateur (e.g. "+") par $op\_repr$. Notons aussi l'axiome $s$ par $Expression$
 \subsubsection{Opérateurs binaires}
-Ce pattern est un des plus simples et un des plus évidents. \\ \\
-$next\_expression \ op\_repr \ (next\_expression \ | \ curr\_expression)$
+Ce pattern est un des plus simples et un des plus évidents.
+\begin{grammar}
+	<binaire> ::= <next\_expression> <op\_repr> ( <curr\_expression> | <next\_expression> )
+\end{grammar}
 \subsubsection{Opérateurs ternaires}
-Il existe deux variantes d'opérateurs ternaires, la première étant le bloc conditionnel, "if ... then ... else", et l'autre ressemblant au "inline if", par exemple "... ? ... : ...". Pour décrire ces deux opérateurs, on dénombre les opérateurs par $op\_reprN$.
+Il existe deux variantes d'opérateurs ternaires, la première étant le bloc conditionnel, "if ... then ... else", et l'autre ressemblant au "inline if", par exemple "... ? ... : ...". Pour décrire ces deux opérateurs, on dénombre les opérateurs par $op\_reprN, \ N \in {1, 3}$.
 \begin{enumerate}
-	\item Pour la première version, le pattern utilisé est \newline $op\_repr1 \ Expression \ op\_repr2 \ Expression \ op\_repr3 \ Expression$
-	\item Pour la deuxième version, on utilisera \newline
-	$next\_expr \ op\_repr1 \ Expression \ op\_repr2 \ (curr\_expression \ | \ next\_expression)$
+	\item Pour la première version, le pattern utilisé est 
+	\begin{grammar}
+		<ternaire\_v1> ::= <op\_repr1> <Expression> <op\_repr2> <Expression> <op\_repr3> <Expression>
+	\end{grammar}
+	\item Pour la deuxième version, on utilisera
+	\begin{grammar}
+		<ternaire\_v2> ::= <next\_expression> <op\_repr1> <Expression> <op\_repr2> ( <curr\_expression> | <next\_expression> )
+	\end{grammar}
 \end{enumerate}
 Il faut cependant faire attention à la priorité qu'on fixe dans les deux cas différents. Le premier cas requiert une priorité élevée (normalement au même niveau que les terminaux), et le deuxième cas nécessite une priorité basse.
 \subsubsection{Opérateurs unaires préfixes}
-Le pattern lui-même n'est pas difficile à définir: \\ \\
-$op\_repr \ (next\_expression \ | \ curr\_expression)$ \\ \\
+Le pattern lui-même n'est pas difficile à définir:
+\begin{grammar}
+	<unaire\_préfixe> ::= <op\_repr> ( <curr\_expression> | <next\_expression> )
+\end{grammar}
 Cependant on est dans un cas où il faut aussi donner une priorité élevée à l'opérateur pour qu'il soit reconnu dans tous les cas.
 \subsubsection{Opérateurs unaires postfixes}
-Pour ce type d'opérateur, on est obligé de faire une répétition sur la représentation de l'opérateur, à cause du fait qu'on n'a pas la possibilité d'utiliser la récursion à gauche. \\ \\
-$next\_expression \ op\_repr+ \ curr\_expression$
+Pour ce type d'opérateur, on est obligé de faire une répétition sur la représentation de l'opérateur, à cause du fait qu'on n'a pas la possibilité d'utiliser la récursion à gauche.
+\begin{grammar}
+	<unaire\_postfixe> ::= <next\_expression> <op\_repr>+ <curr\_expression>
+\end{grammar}
 \subsubsection{Opérateurs n-aires}
-Pour représenter les opérateurs n-aires, nous avons décidé d'utiliser la forme "représentation\_opérateur'('opérande1, opérande2, ..., opérandeN')', ce qui nous donne \\ \\
-$op\_repr'('Expression(','Expression)*')'$
+Pour représenter les opérateurs n-aires, nous avons décidé d'utiliser la forme "représentation\_opérateur'('opérande1, opérande2, ..., opérandeN')', ce qui nous donne:
+\begin{grammar}
+	<naire> ::= <op\_repr> `(' <Expression> \{ `,' <Expression> \} `)'
+\end{grammar}
 \subsection{Associativité à gauche}
 On constate que tous les opérateurs binaires dans le tableau précédent sont associatifs à droite. Or, on voudrait pouvoir préciser l'associativité lors de la déclaration des opérateurs, puisque cela modifie l'arbre syntaxique produit par l'analyseur lexical. Dans le cas d'un analyseur $LR$, l'associativité à gauche se traduit simplement par une récursion à gauche, telle que
-\ \\ \\
-\begin{math}
-Expr \rightarrow Expr \ \textrm{'}+\textrm{'} \ nombre \ | \ nombre
-\end{math} \\ \\
+\begin{grammar}
+	<Expr> ::= <Expr> `+' <nombre> | <nombre>
+\end{grammar}
 Malheureusement, $LPeg$ ne peut pas gérer les récursions à gauche, et une élimination de la récursion à gauche du type
-\\ \\
-\noindent\begin{math}
-	Expr \rightarrow nombre \ Expr\prime \\
-	Expr\prime \rightarrow \textrm{'} + \textrm{'} \ Expr\prime \ | \ nombre
-\end{math} \\ \\
+\begin{grammar}
+	<Expr> \ ::= <nombre> <Expr'> \\
+	<Expr'> ::= `+' <Expr'> | <nombre>
+\end{grammar}
 ne suffit pas. On a encore une associativité à droite. \\ \\
 Il existe des implémentations pour introduire la récursion à gauche dans les grammaires $PEG$, telles que \underline{\href{https://github.com/norswap/whimsy/blob/master/doc/autumn/README.md}{Autumn}}\textsuperscript{[1]} ou celle proposée par Laurence Tratt\textsuperscript{[2]}. Puisque nous utilisons $LPeg$ et Lua, aucune de ces deux méthodes ne sont possibles dans le cadre de ce travail, il nous faut donc notre propre implémentation pour gérer les opérateurs binaires étant déclarés comme étant associatifs à gauche.
 \subsubsection{Implémentation}
-$LPeg$ nous permet de déclarer des fonctions de capture pour ce qui est lu par l'analyseur généré. Supposons la grammaire suivante: \\ \\
-\begin{math}
-S \rightarrow number \ \textrm{'}+\textrm{'} \ (S \ | \ number) \\
-number \rightarrow [0-9]+
-\end{math} \\ \\
-Notre fonction de capture pour le modèle qui suit $S$ recevra simplement les arguments $gauche$, $repr\acute{e}sentation \ de \ l'op\acute{e}rateur$, $droite$. Déclarons d'abord la fonction comme ceci:
+$LPeg$ nous permet de déclarer des fonctions de capture pour ce qui est lu par l'analyseur généré. Supposons la grammaire suivante:
+\begin{grammar}
+	<s> ::= <nombre> `+' ( <s> | <nombre> )
+\end{grammar}
+Notre fonction de capture pour le modèle qui suit $s$ recevra simplement les arguments $gauche$, $repr\acute{e}sentation \ de \ l'op\acute{e}rateur$, $droite$. Déclarons d'abord la fonction comme ceci:
 \begin{minted}{lua}
 function left_assoc(left, op, right)
   return { left = left, op = op, right = right }

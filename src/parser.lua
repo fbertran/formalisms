@@ -278,8 +278,7 @@ return function (expression)
     end,
   }
 
-  -- Adds the expression to the corresponding priority
-  -- of the expression
+  -- Adds the expression to a grammar object
   local function add_expr(grammar, expr, level)
     if grammar[level] == nil then
       grammar[level] = expr
@@ -382,7 +381,7 @@ return function (expression)
     -- "sum" operator
     if var_op ~= nil then
       grammar[prefix .. max_priority] = grammar[prefix .. max_priority] +
-        (patterns[var_op.type](var_op))
+        patterns[var_op.type](var_op)
     end
 
     grammar[prefix .. max_priority] = grammar[prefix .. max_priority] +
