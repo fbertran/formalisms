@@ -282,7 +282,7 @@ return function (expression)
   }
 
   -- Adds the expression to a grammar object
-  local function add_expr(grammar, expr, level)
+  local function add_pattern(grammar, expr, level)
     if grammar[level] == nil then
       grammar[level] = expr
     else
@@ -371,7 +371,7 @@ return function (expression)
             e = patterns[op.type](op, lp.V(curr_expr), last_expr)
           end
 
-          grammar = add_expr(grammar, e, prefix .. op.priority)
+          grammar = add_pattern(grammar, e, prefix .. op.priority)
         end
 
         prev_expr = curr_expr
