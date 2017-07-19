@@ -116,7 +116,7 @@ return function (expression)
   end
 
 
-  local function nary_node (p)
+  local function nary_capture (p)
     return p / function (op, ...)
       local arglist = { }
       local arglen  = select("#", ...)
@@ -252,7 +252,7 @@ return function (expression)
     nary = function (operator)
       local op_repr = lp.C(lp.P(operator.operator))
 
-      return nary_node(
+      return nary_capture(
         white *
         op_repr *
         white
