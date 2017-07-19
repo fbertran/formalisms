@@ -60,8 +60,8 @@ Dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardois
 \section{Analyse lexicale}
 Deux solutions pour effectuer l'analyse lexicale se présentaient à nous:
 \begin{enumerate}
-	\item[1)] Utiliser des expressions régulières, qui seraient définies par l'utilisateur pour chaque opérateur.
-	\item[2)] Générer une grammaire à partir de modèles (patterns) prédéfinis pour différents types d'opérateurs.
+	\item Utiliser des expressions régulières, qui seraient définies par l'utilisateur pour chaque opérateur.
+	\item Générer une grammaire à partir de modèles (patterns) prédéfinis pour différents types d'opérateurs.
 \end{enumerate}
 J'ai choisi d'utiliser la 2$^{\grave{e}me}$ méthode, car même si les expressions régulières auraient pû être un moyen "plus simple", elles posent un problème: les expressions arithmétiques incluant des parenthèses ne sont pas des langages réguliers, puisqu'on peut, en prenant un exemple simple, se retrouver dans un cas comme celui-ci: $\{(\textquoteleft(\textquoteleft^{n}\textquoteleft)\textquoteleft^{n})^{*}, n \ge 0 \}$
 \subsection{Choix de l'outil}
@@ -144,7 +144,7 @@ Cependant on est dans un cas où il faut aussi donner une priorité élevée à 
 \subsubsection{Opérateurs unaires postfixes}
 Pour ce type d'opérateur, on est obligé de faire une répétition sur la représentation de l'opérateur, à cause du fait qu'on n'a pas la possibilité d'utiliser la récursion à gauche.
 \begin{grammar}
-	<unaire\_postfixe> ::= <next\_expression> <op\_repr>+ <curr\_expression>
+	<unaire\_postfixe> ::= <next\_expression> <op\_repr>+
 \end{grammar}
 \subsubsection{Opérateurs n-aires}
 Pour représenter les opérateurs n-aires, nous avons décidé d'utiliser la forme "représentation\_opérateur'('opérande1, opérande2, ..., opérandeN')', ce qui nous donne:
@@ -236,6 +236,17 @@ end
 Pour revenir à notre expression \mint{lua}{1 + 2 + 3} \noindent de plus haut, si nous avons donné la propriété d'associativité à gauche à notre opérateur \lstinline|+|, l'analyse lexicale nous retournera maintenant la table correcte \begin{minted}{lua}
 	{ left = { left = 1, op = "+", right = 2 }, op = "+", right = 3 }
 \end{minted}
+\subsection{Autres fonctions de capture}
+\subsubsection{Opérateurs unaires postfixes}
+L'impossibilité d'utiliser la récursion à gauche avec $LPeg$ pose aussi un problème pour les opérateurs postfixes. Si on avait la récursion à gauche, on aurait simplement pu écrire
+\begin{grammar}
+	<unaire\_postfixe> ::= ( <curr\_expression> | <next\_expression> ) <op\_repr>
+\end{grammar}
+Supposons l'opérateur postfixe $`\%`$.
+Avec le pattern précédent on respecte la priorité de déclaration des opérateurs, et on peut aussi capturer une expression du type `3\%\%\%` qui serait lue correctement comme \mint{lua}{{ { { 3 % } % } % }}
+Sans la récursion à gauche, on ne peut plus capturer l'entièreté de l'expression `3\%\%\%` sans utiliser de répétition. Or la répétition du symbole nous donne une table comme celle-ci:
+\mint{lua}{{ 3 % % % }}
+ce qui n'est pas correct.
 \newpage
 \noindent[1]: Parsing Expression Grammars Made Practical, Nicolas Laurent \newline
 [2]: Direct Left-Recursive Parsing Expression Grammars, Laurence Tratt

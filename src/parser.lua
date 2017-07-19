@@ -225,8 +225,11 @@ return function (expression)
 
     unary_postfix = function (operator, curr_expr, next_expr)
       local op_repr = lp.C(lp.P(operator.operator))
+      local pattern = (
+        white * next_expr * white * (op_repr * white)^1
+      )
 
-      return node_postfix(white * next_expr * white * (op_repr * white)^1 * (white + curr_expr))
+      return node_postfix(pattern)
     end,
 
     literal = function (literal)
