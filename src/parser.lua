@@ -55,14 +55,13 @@ return function (expression)
   end
 
 
-  local function node_postfix(p)
+  local function postfix_capture(p)
     -- function to handle postfix operators when we receive them
     -- The pattern is defined as Exp * op_representation^1,
     -- which means that for an input such as "3~~" we would get
     -- a table such as { 3 ~ ~ }, whereas with this function we get
     -- { { 3 ~ } ~ }
-    local function construct(...)
-      local list = ...
+    local function construct(list)
       local function rec(n, t)
         if n == 1 then
           return list[1]
@@ -75,19 +74,20 @@ return function (expression)
 
       return rec(tlen(list), { })
     end
+
     return p / function(...)
       return construct({ ... })
     end
   end
 
-  local function node_prefix (p)
+  local function prefix_capture (p)
     return p / function (op, right)
       return { op = op, right = right,  op_type = "unary_prefix" }
     end
   end
 
 
-  local function ternary_node (p)
+  local function ternary_capture (p)
     return p / function (left, op1, middle, op2, right)
       return {
         left = left,
@@ -101,7 +101,7 @@ return function (expression)
   end
 
 
-  local function alternative_ternary_node (p)
+  local function alternative_ternary_capture (p)
     return p / function (op1, left, op2, middle, op3, right)
       return {
         op = op1,
@@ -220,7 +220,7 @@ return function (expression)
 
     unary_prefix = function (operator, curr_expr, next_expr)
       local op_repr = lp.C(lp.P(operator.operator))
-      return node_prefix(white * (op_repr * white * (curr_expr + next_expr + white)))
+      return prefix_capture(white * (op_repr * white * (curr_expr + next_expr + white)))
     end,
 
     unary_postfix = function (operator, curr_expr, next_expr)
@@ -229,7 +229,7 @@ return function (expression)
         white * next_expr * white * (op_repr * white)^1
       )
 
-      return node_postfix(pattern)
+      return postfix_capture(pattern)
     end,
 
     literal = function (literal)
@@ -243,7 +243,7 @@ return function (expression)
       first  = lp.C(lp.P(first))
       second = lp.C(lp.P(second))
 
-      return ternary_node(
+      return ternary_capture(
         next_expr * white * first * white * lp.V("axiom")
         * white * second * white * (curr_expr + next_expr)
       )
@@ -277,7 +277,7 @@ return function (expression)
         lp.V("axiom") * white * second * white * lp.V("axiom") * white * third * white *
         lp.V("axiom")
 
-      return alternative_ternary_node(pattern)
+      return alternative_ternary_capture(pattern)
     end,
   }
 

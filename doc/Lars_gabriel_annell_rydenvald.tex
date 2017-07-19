@@ -244,9 +244,66 @@ L'impossibilité d'utiliser la récursion à gauche avec $LPeg$ pose aussi un pr
 \end{grammar}
 Supposons l'opérateur postfixe $`\%`$.
 Avec le pattern précédent on respecte la priorité de déclaration des opérateurs, et on peut aussi capturer une expression du type `3\%\%\%` qui serait lue correctement comme \mint{lua}{{ { { 3 % } % } % }}
-Sans la récursion à gauche, on ne peut plus capturer l'entièreté de l'expression `3\%\%\%` sans utiliser de répétition. Or la répétition du symbole nous donne une table comme celle-ci:
+\noindent Sans la récursion à gauche, on ne peut plus capturer l'entièreté de l'expression `3\%\%\%` sans utiliser de répétition. Or la répétition du symbole nous donne une table comme celle-ci:
 \mint{lua}{{ 3 % % % }}
-ce qui n'est pas correct.
+\noindent ce qui n'est pas correct. On va donc opérer sur la liste qui nous est donnée par $LPeg$ pour créer la table juste.
+\begin{minted}{lua}
+local function postfix_capture(p)
+	-- function to handle postfix operators when we receive them
+	-- The pattern is defined as Exp * op_representation^1,
+	-- which means that for an input such as "3~~" we would get
+	-- a table such as { 3 ~ ~ }, whereas with this function we get
+	-- { { 3 ~ } ~ }
+	local function construct(list)
+	  -- On sait que la table va ressembler à quelque chose 
+	  -- comme { expression ~ ~ ~ ~ }. On commence donc par le dernier élément
+	  -- de la table, et on 
+		local function rec(n, t)
+		  if n == 1 then
+			  return list[1]
+		  else
+				t = { op = list[n], left = rec(n - 1, { t }) }
+		  end
+		  t.op_type = "unary_postfix"
+		  return t
+		end
+	
+	  return rec(tlen(list), { })
+	end
+	
+	-- `...' est la liste des arguments
+	-- (donne tous les arguments passés à la fonction)
+	-- `{ ... }' nous donne simplement une table contenant les arguments
+	-- passés à la fonction
+	return p / function(...)
+		return construct({ ... })
+	end
+end
+\end{minted}
+\subsubsection{Opérateurs n-aires}
+Pour les opérateurs n-aires, la fonction de capture transforme simplement les expressions capturées qui sont en fait un terminal, par exemple "3" ou "variable" en une table.
+\begin{minted}{lua}
+local function nary_node (p)
+	return p / function (op, ...)
+		local arglist = { }
+		-- select("#", ...) retourne le nombre d'arguments
+		-- passés à la fonction
+		local arglen  = select("#", ...)
+
+		for i = 1, arglen, 1 do
+			-- select(i, ...) retourne le i-ème argument
+			local v = select(i, ...)
+			if type(v) ~= "table" then
+				arglist[i] = { v }
+			else
+				arglist[i] = v
+			end
+		end
+
+		return { op = op, operands = arglist, op_type = "nary" }
+	end
+end
+\end{minted}
 \newpage
 \noindent[1]: Parsing Expression Grammars Made Practical, Nicolas Laurent \newline
 [2]: Direct Left-Recursive Parsing Expression Grammars, Laurence Tratt
