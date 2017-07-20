@@ -52,7 +52,7 @@
 \newpage
 
 \section{Introduction}
-Dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardoises}}, ce travail a pour but d'introduire la possibilité aux utilisateurs de définir des formalismes opérateurs, de fournir un analyseur lexical capable de lire une expression basée sur ces opérateurs et d'en produire un arbre syntaxique abstrait, ainsi que de vérifier que les propriétés des opérateurs définis par les utilisateurs soient respectées.
+Dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardoises}}, ce travail a pour but de fournir un outil de génération de grammaire et d'analyseur lexical, afin de donner aux utilisateurs la possibilité de définir des formalismes opérateurs. L'objectif de l'analyseur lexical est de produire un arbre syntaxique abstrait à partir des opérateurs définis par l'utilisateur, ainsi que de vérifier les propriétés qui leur sont données. % ce travail a pour but d'introduire la possibilité aux utilisateurs de définir des formalismes opérateurs, de fournir un analyseur lexical capable de lire une expression basée sur ces opérateurs et d'en produire un arbre syntaxique abstrait, ainsi que de vérifier que les propriétés des opérateurs définis par les utilisateurs soient respectées.
 \section{Ardoises}
 % Ecrire à propos d'ardoises, et des autres logiciels qui existent déjà (c.f. présentation)
 \section{Formalismes d'opérateurs}
@@ -175,7 +175,7 @@ function left_assoc(left, op, right)
 end
 \end{minted}
 Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent nous retournera donc la table \mint{lua}{{ left = 1, op = +, right = { left = 2, op = +, right = 3 } }}
-\noindent Si on veut avoir l'associativité à gauche, ce résultat est évidemment faux. Pour avoir un output correct, il nous suffit d'opérer de manière récursive. On a donc (en pseudo-code):
+\noindent Si on veut avoir l'associativité à gauche, ce résultat est évidemment faux. Pour avoir une production correcte, il nous suffit d'opérer de manière récursive. On a donc (en pseudo-code):
 \begin{minted}{lua}
 -- pattern est le pattern pour l'analyseur lexical
 -- _op est l'opérateur auquel on veut appliquer l'associativité à gauche
@@ -243,10 +243,9 @@ L'impossibilité d'utiliser la récursion à gauche avec $LPeg$ pose aussi un pr
 	<unaire\_postfixe> ::= ( <curr\_expression> | <next\_expression> ) <op\_repr>
 \end{grammar}
 Supposons l'opérateur postfixe $`\%`$.
-Avec le pattern précédent on respecte la priorité de déclaration des opérateurs, et on peut aussi capturer une expression du type `3\%\%\%` qui serait lue correctement comme \mint{lua}{{ { { 3 % } % } % }}
+Avec le pattern précédent on respecte la priorité de déclaration des opérateurs, et on peut aussi capturer une expression du type `3\%\%\%` qui nous donnerait cette production correcte \mintinline{lua}{{ { { 3 % } % } % }}.
 \noindent Sans la récursion à gauche, on ne peut plus capturer l'entièreté de l'expression `3\%\%\%` sans utiliser de répétition. Or la répétition du symbole nous donne une table comme celle-ci:
-\mint{lua}{{ 3 % % % }}
-\noindent ce qui n'est pas correct. On va donc opérer sur la liste qui nous est donnée par $LPeg$ pour créer la table juste.
+\mintinline{lua}{{ 3 % % % }} ce qui n'est pas ce qu'on veut. On va donc opérer sur la liste qui nous est donnée par $LPeg$ pour créer la table juste.
 \begin{minted}{lua}
 local function postfix_capture(p)
 	-- function to handle postfix operators when we receive them
@@ -361,9 +360,11 @@ end
 	\item Finaliser le tout. L'entrée \lstinline|quaternary| dans notre table \lstinline|patterns| devrait ressembler à ceci:
 	\begin{minted}{lua}
 quaternary = function (operator, curr_expr, next_expr)
+	-- On commence par récupérer les représentations textuelles de l'opérateur
 	local first, second, third = lp.P(operator.operator), 
 	lp.P(operator.operator1), lp.P(operator.operator2)
 	
+	-- On dit à LPeg de capturer ces représentations
 	first = lp.C(first)
 	second = lp.C(second)
 	third = lp.C(third)
@@ -374,6 +375,8 @@ quaternary = function (operator, curr_expr, next_expr)
 		third * white * (curr_expr + next_expr)
 	)
 	
+	-- Finalement on retourne la fonction de capture, 
+	-- et notre règle sera insérée dans notre grammaire globale.
 	return quaternary_capture(pattern)
 end,
 	\end{minted}
@@ -387,7 +390,7 @@ local quaternary = {
 	priority  = 13
 }
 	\end{minted}
-	on peut maintenant écrire \mint{lua}{1 u 2 u 3 u 4} ce qui nous retourne la table
+	on peut maintenant écrire \mint{lua}{1 u 2 u 3 u 4} ce qui produit la table
 	\begin{minted}{lua}
 {
 	left    = "1",

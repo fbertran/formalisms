@@ -384,6 +384,10 @@ return function (expression)
       end
     end
 
+
+    grammar[prefix .. max_priority] = grammar[prefix .. max_priority] +
+      ("(" * white * lp.Ct(lp.V("axiom")) * white * ")")
+
     -- variable literals need to be inserted at the very end,
     -- because if there is let's say an nary operator consisting of letters
     -- (e.g. "sum") then it matches "sum" as a variable instead of as the
@@ -392,9 +396,6 @@ return function (expression)
       grammar[prefix .. max_priority] = grammar[prefix .. max_priority] +
         patterns[var_op.type](var_op)
     end
-
-    grammar[prefix .. max_priority] = grammar[prefix .. max_priority] +
-      ("(" * white * lp.Ct(lp.V("axiom")) * white * ")")
 
     grammar.axiom = lp.V(prefix .. op_table[tlen(op_table)][1].priority)
 
