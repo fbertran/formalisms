@@ -475,6 +475,35 @@ local expressions = {
         op_type = "unary_postfix"
       }
     }
+  },
+  {
+    expression        = exp3,
+    expression_string = "1 * 2 * 3 * 4~ + 1",
+    expected          = {
+      left = {
+        left = {
+          left = {
+            left    = "1",
+            op      = "*",
+            op_type = "binary",
+            right   = "2",
+          },
+          op      = "*",
+          op_type = "binary",
+          right   = "3",
+        },
+        op      = "*",
+        op_type = "binary",
+        right   = {
+          left    = "4",
+          op      = "~",
+          op_type = "unary_postfix"
+        }
+      },
+      op      = "+",
+      op_type = "binary",
+      right   = "1"
+    }
   }
 }
 

@@ -52,7 +52,7 @@
 \newpage
 
 \section{Introduction}
-Dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardoises}}, ce travail a pour but d'introduire la possibilité aux utilisateurs de définir des formalismes opérateurs, de fournir un analyseur lexical capable de lire une expression basée sur ces opérateurs et d'en produire un arbre syntaxique abstrait, ainsi que de vérifier que les propriétés des opérateurs définis par les utilisateurs sont respectées
+Dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardoises}}, ce travail a pour but d'introduire la possibilité aux utilisateurs de définir des formalismes opérateurs, de fournir un analyseur lexical capable de lire une expression basée sur ces opérateurs et d'en produire un arbre syntaxique abstrait, ainsi que de vérifier que les propriétés des opérateurs définis par les utilisateurs soient respectées.
 \section{Ardoises}
 % Ecrire à propos d'ardoises, et des autres logiciels qui existent déjà (c.f. présentation)
 \section{Formalismes d'opérateurs}
@@ -168,7 +168,7 @@ $LPeg$ nous permet de déclarer des fonctions de capture pour ce qui est lu par 
 \begin{grammar}
 	<s> ::= <nombre> `+' ( <s> | <nombre> )
 \end{grammar}
-Notre fonction de capture pour le modèle qui suit $s$ recevra simplement les arguments $gauche$, $repr\acute{e}sentation \ de \ l'op\acute{e}rateur$, $droite$. Déclarons d'abord la fonction comme ceci:
+Notre fonction de capture pour le modèle qui suit $s$ recevra simplement les arguments $gauche$, \\ $repr\acute{e}sentation \ de \ l'op\acute{e}rateur$, $droite$. Déclarons d'abord la fonction comme ceci:
 \begin{minted}{lua}
 function left_assoc(left, op, right)
   return { left = left, op = op, right = right }
@@ -226,7 +226,7 @@ function left_assoc(pattern, _op)
     end
   end
   
-  -- L'opérateur '/' est overloaded par LPeg, ceci retourne le pattern et la 
+  -- L'opérateur '/' est surchargé par LPeg, ceci retourne le pattern et la 
   -- la fonction "recursion" sera la fonction de capture lorsque ce pattern
   -- est rencontré
   -- http://www.inf.puc-rio.br/\~roberto/lpeg/#cap-func
@@ -304,6 +304,103 @@ local function nary_node (p)
 	end
 end
 \end{minted}
+\subsection{Créer une règle pour un nouveau type d'opérateur}
+Pour permettre aux utilisateurs d'utiliser un type d'opérateur qui n'est pas déjà défini dans le générateur de grammaire, il faut suivre quelques étapes simples. Faisons un exemple, un opérateur quaternaire, étape par étape:
+\begin{enumerate}
+	\item Décider du nom du type d'opérateur. Utilisons $quaternary$
+	\item Créer une entrée dans la table \lstinline|patterns| avec le même nom que le type d'opérateur, ce qui devrait ressembler à ceci:
+	\begin{minted}{lua}
+quaternary = function (operator, curr_expr, next_expr)
+
+end
+	\end{minted}
+	\lstinline|operator| est l'objet opérateur passé, ce qui nous permet de récupérer ses propriétés, \lstinline|curr_expr| est une référence vers la règle elle-même, pour qu'on puisse faire la récursion à droite. Finalement, \lstinline|next_expr| est une référence vers la règle suivante dans la grammaire (pour la descente récursive).
+	\item Créer la règle du type d'opérateur. Pour celui-ci, utilisons
+	\begin{grammar}
+		<quaternary> ::= <next\_expr> <op\_repr1> <Expression> <op\_repr2> <Expression> <op\_repr3> ( <quaternary> | <next\_expr> )
+	\end{grammar}
+	qui se traduit en Lua par
+	\begin{minted}{lua}
+local pattern = (
+	next_expr * white * first * white *
+	lp.V("axiom") * white * second * white * 
+	lp.V("axiom") * white * third * white * (curr_expr + next_expr) 
+)
+	\end{minted}
+	Quelques explications:
+	\begin{enumerate}
+		\item \mintinline{lua}{lp.V("axiom")} fait référence à l'axiome, c'est-à-dire qu'on autorise toutes les expressions à l'intérieur de l'opérateur.
+		\item \mintinline{lua}{first}, \mintinline{lua}{second} et \mintinline{lua}{third} sont les représentations en caractère (ou chaîne de caractères) de l'opérateur. Ils peuvent être identiques.
+		\item \mintinline{lua}{white} doit obligatoirement être utilisé pour ignorer les caractères blancs (\lstinline|\s|, \lstinline|\t|, \lstinline|\n|).
+		\item Il faut utiliser \lstinline|next_expr| sur la gauche pour la descente récursive. Sur la droite de la règle, il faut utiliser \lstinline|curr_expr| pour la récursion à droite (pour pouvoir enchaîner des opérateurs qui ont la même priorité).
+	\end{enumerate}
+	\item Définir une fonction de capture. Dans le cas de notre opérateur quaternaire, il est simplement question de retourner une table contenant l'opérateur et les opérandes, puisqu'il n'y a pas de propriétés telles que l'associativité à gauche. \\
+	Les fonctions de capture avec $LPeg$ reçoivent en argument ce qui est lu, et les arguments vont dans l'ordre, de gauche à droite. Donc, pour cet opérateur, on définirait la fonction de capture de cette manière:
+	\begin{minted}{lua}
+-- p est la règle
+function quaternary_capture (p)
+	-- On utilise l'opérateur de capture de LPeg
+	return p / function (left, op1, middle1, op2, middle2, op3, right)
+		-- Et on retourne juste une table.
+		-- A savoir: on pourrait utiliser la fonction lpeg.Ct (Capture table),
+		-- cependant il est préférable de définir nos clés nous-même, car lpeg.Ct
+		-- retourne une table dont les clés sont des nombres (1, 2, ...)
+		return {
+			left    = left,
+			op      = op1,
+			op2     = op2,
+			op3     = op3,
+			middle1 = middle1,
+			middle2 = middle2,
+			right   = right,
+			op_type = "quaternary"
+		}
+	end
+end
+	\end{minted}
+	\item Finaliser le tout. L'entrée \lstinline|quaternary| dans notre table \lstinline|patterns| devrait ressembler à ceci:
+	\begin{minted}{lua}
+quaternary = function (operator, curr_expr, next_expr)
+	local first, second, third = lp.P(operator.operator), 
+	lp.P(operator.operator1), lp.P(operator.operator2)
+	
+	first = lp.C(first)
+	second = lp.C(second)
+	third = lp.C(third)
+	
+	local pattern = (
+		next_expr * white * first * white *
+		lp.V("axiom") * white * second * white * lp.V("axiom") * white *
+		third * white * (curr_expr + next_expr)
+	)
+	
+	return quaternary_capture(pattern)
+end,
+	\end{minted}
+	\item En définissant notre opérateur de cette façon
+	\begin{minted}{lua}
+local quaternary = {
+	operator  = "u",
+	operator1 = "u",
+	operator2 = "u",
+	type      = "quaternary",
+	priority  = 13
+}
+	\end{minted}
+	on peut maintenant écrire \mint{lua}{1 u 2 u 3 u 4} ce qui nous retourne la table
+	\begin{minted}{lua}
+{
+	left    = "1",
+	middle1 = "2",
+	middle2 = "3",
+	right   = "4",
+	op      = "u",
+	op2     = "u",
+	op3     = "u",
+	op_type = "quaternary"
+}
+	\end{minted}
+\end{enumerate}
 \newpage
 \noindent[1]: Parsing Expression Grammars Made Practical, Nicolas Laurent \newline
 [2]: Direct Left-Recursive Parsing Expression Grammars, Laurence Tratt

@@ -320,6 +320,12 @@ return function (expression)
     for _, v in ipairs(expr) do
       if v.operator ~= nil and #v.operator > 0 and type(v.operator) ~= "table" then
         op_map[v.operator .. v.type] = v
+      elseif type(v.operator) == "table" then
+        local concat = ""
+        for _, op_repr in ipairs(v.operator) do
+          concat = concat .. op_repr
+        end
+        op_map[concat .. v.type] = v
       end
 
       if v.priority < old_priority then
