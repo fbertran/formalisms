@@ -7,8 +7,8 @@ return function (expression)
   -- multiplication and addition:
   --
   -- op_map = {
-  --  ["binary+"] = addition_operator,
-  --  ["binary*"] = multiplication_operator
+  --  ["+binary"] = addition_operator,
+  --  ["*binary"] = multiplication_operator
   -- }
   --
   -- This way we can easily retrieve properties such as the operator's priority
@@ -24,7 +24,7 @@ return function (expression)
   }
 
 
-  -- utility function
+  -- utility function to get the table length
   local function tlen(t)
     local i = 0
     for _ in pairs(t) do

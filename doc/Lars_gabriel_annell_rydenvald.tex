@@ -52,7 +52,7 @@
 \newpage
 
 \section{Introduction}
-Dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardoises}}, ce travail a pour but de fournir un outil de génération de grammaire et d'analyseur lexical, afin de donner aux utilisateurs la possibilité de définir des formalismes opérateurs. L'objectif de l'analyseur lexical est de produire un arbre syntaxique abstrait à partir des opérateurs définis par l'utilisateur, ainsi que de vérifier les propriétés qui leur sont données. % ce travail a pour but d'introduire la possibilité aux utilisateurs de définir des formalismes opérateurs, de fournir un analyseur lexical capable de lire une expression basée sur ces opérateurs et d'en produire un arbre syntaxique abstrait, ainsi que de vérifier que les propriétés des opérateurs définis par les utilisateurs soient respectées.
+Dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardoises}}, ce travail a pour but de fournir un outil de génération de grammaire et d'analyse lexicale, afin de donner aux utilisateurs la possibilité de définir des formalismes opérateurs. L'objectif de l'analyseur lexical est de produire un arbre syntaxique abstrait à partir des opérateurs définis par l'utilisateur, ainsi que de vérifier les propriétés qui leur sont données.
 \section{Ardoises}
 % Ecrire à propos d'ardoises, et des autres logiciels qui existent déjà (c.f. présentation)
 \section{Formalismes d'opérateurs}
@@ -61,7 +61,7 @@ Dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardois
 Deux solutions pour effectuer l'analyse lexicale se présentaient à nous:
 \begin{enumerate}
 	\item Utiliser des expressions régulières, qui seraient définies par l'utilisateur pour chaque opérateur.
-	\item Générer une grammaire à partir de modèles (patterns) prédéfinis pour différents types d'opérateurs.
+	\item Générer une grammaire à partir de modèles (ou règles) prédéfinis pour différents types d'opérateurs.
 \end{enumerate}
 J'ai choisi d'utiliser la 2$^{\grave{e}me}$ méthode, car même si les expressions régulières auraient pû être un moyen "plus simple", elles posent un problème: les expressions arithmétiques incluant des parenthèses ne sont pas des langages réguliers, puisqu'on peut, en prenant un exemple simple, se retrouver dans un cas comme celui-ci: $\{(\textquoteleft(\textquoteleft^{n}\textquoteleft)\textquoteleft^{n})^{*}, n \ge 0 \}$
 \subsection{Choix de l'outil}
@@ -97,11 +97,11 @@ On va ensuite rajouter un à un les opérateurs dans cette grammaire, de la mani
 
 \begin{enumerate}
 	\item On trie la table des opérateurs, par priorité, dans l'ordre décroissant.
-	\item Pour chaque type d'opérateur, on crée le pattern correspondant. Par exemple, l'opérateur binaire $Addition$ dans notre table, aura le pattern
+	\item Pour chaque type d'opérateur, on crée la règle correspondante. Par exemple, l'opérateur binaire $Addition$ dans notre table, aura la règle
 	\begin{grammar}
 		<Addition> ::= <P12> `+' ( <Addition> | <P12> )
 	\end{grammar}
-	\item On rajoute le nouveau pattern crée dans la grammaire de base
+	\item On rajoute la nouvelle règle créée dans la grammaire de base
 \end{enumerate}
 Pour finir, on se retrouve avec une grammaire comme celle-ci:
 \begin{grammar}
@@ -115,17 +115,17 @@ Pour finir, on se retrouve avec une grammaire comme celle-ci:
 \end{grammar}
 Puisque $LPeg$ génère un analyseur lexical de type $PEG$, il faut faire attention à l'ordre de déclaration de la grammaire pour avoir une précédence correcte.
 
-\subsection{Patterns utilisés pour les différents types d'opérateurs}
-Les fonctions pour générer les patterns sont stockés dans une table, et retournent un pattern $LPeg$. Considérons ici que les espaces blancs (\textbackslash s, \textbackslash t, \textbackslash n) sont ignorés. De plus, notons la "prochaine" expression dans la grammaire par $next\_expression$, et l'expression courante par $curr\_expression$, et la représentation de l'opérateur (e.g. "+") par $op\_repr$. Notons aussi l'axiome $s$ par $Expression$
+\subsection{Règles utilisées pour les différents types d'opérateurs}
+Les fonctions pour générer les règles sont stockées dans une table, et retournent une règle $LPeg$. Considérons ici que les espaces blancs (\textbackslash s, \textbackslash t, \textbackslash n) sont ignorés. De plus, notons la "prochaine" règle dans la grammaire par $next\_expression$, et la règle courante par $curr\_expression$, et la représentation de l'opérateur (e.g. "+") par $op\_repr$. Notons aussi l'axiome $s$ par $Expression$
 \subsubsection{Opérateurs binaires}
-Ce pattern est un des plus simples et un des plus évidents.
+Cette règle est un des plus simples et un des plus évidents.
 \begin{grammar}
 	<binaire> ::= <next\_expression> <op\_repr> ( <curr\_expression> | <next\_expression> )
 \end{grammar}
 \subsubsection{Opérateurs ternaires}
 Il existe deux variantes d'opérateurs ternaires, la première étant le bloc conditionnel, "if ... then ... else", et l'autre ressemblant au "inline if", par exemple "... ? ... : ...". Pour décrire ces deux opérateurs, on dénombre les opérateurs par $op\_reprN, \ N \in {1, 3}$.
 \begin{enumerate}
-	\item Pour la première version, le pattern utilisé est 
+	\item Pour la première version, la règle utilisée est 
 	\begin{grammar}
 		<ternaire\_v1> ::= <op\_repr1> <Expression> <op\_repr2> <Expression> <op\_repr3> <Expression>
 	\end{grammar}
@@ -136,7 +136,7 @@ Il existe deux variantes d'opérateurs ternaires, la première étant le bloc co
 \end{enumerate}
 Il faut cependant faire attention à la priorité qu'on fixe dans les deux cas différents. Le premier cas requiert une priorité élevée (normalement au même niveau que les terminaux), et le deuxième cas nécessite une priorité basse.
 \subsubsection{Opérateurs unaires préfixes}
-Le pattern lui-même n'est pas difficile à définir:
+La règle elle-même n'est pas difficile à définir:
 \begin{grammar}
 	<unaire\_préfixe> ::= <op\_repr> ( <curr\_expression> | <next\_expression> )
 \end{grammar}
@@ -177,7 +177,7 @@ end
 Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent nous retournera donc la table \mint{lua}{{ left = 1, op = +, right = { left = 2, op = +, right = 3 } }}
 \noindent Si on veut avoir l'associativité à gauche, ce résultat est évidemment faux. Pour avoir une production correcte, il nous suffit d'opérer de manière récursive. On a donc (en pseudo-code):
 \begin{minted}{lua}
--- pattern est le pattern pour l'analyseur lexical
+-- pattern est la règle pour l'analyseur lexical
 -- _op est l'opérateur auquel on veut appliquer l'associativité à gauche
 function left_assoc(pattern, _op)
   -- left est la partie gauche de l'expression parsée
@@ -226,7 +226,7 @@ function left_assoc(pattern, _op)
     end
   end
   
-  -- L'opérateur '/' est surchargé par LPeg, ceci retourne le pattern et la 
+  -- L'opérateur '/' est surchargé par LPeg, ceci retourne la règle et la 
   -- la fonction "recursion" sera la fonction de capture lorsque ce pattern
   -- est rencontré
   -- http://www.inf.puc-rio.br/\~roberto/lpeg/#cap-func
@@ -282,7 +282,7 @@ end
 \subsubsection{Opérateurs n-aires}
 Pour les opérateurs n-aires, la fonction de capture transforme simplement les expressions capturées qui sont en fait un terminal, par exemple "3" ou "variable" en une table.
 \begin{minted}{lua}
-local function nary_node (p)
+local function nary_capture (p)
 	return p / function (op, ...)
 		local arglist = { }
 		-- select("#", ...) retourne le nombre d'arguments
