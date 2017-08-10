@@ -52,9 +52,15 @@
 \newpage
 
 \section{Introduction}
-Dans le cadre du logiciel \underline{\href{https://ardoises.ovh/overview}{Ardoises}}, ce travail a pour but de fournir un outil de génération de grammaire et d'analyse lexicale, afin de donner aux utilisateurs la possibilité de définir des formalismes opérateurs. L'objectif de l'analyseur lexical est de produire un arbre syntaxique abstrait à partir des opérateurs définis par l'utilisateur, ainsi que de vérifier les propriétés qui leur sont données.
-\section{Ardoises}
-% Ecrire à propos d'ardoises, et des autres logiciels qui existent déjà (c.f. présentation)
+Ce travail repose sur Ardoises, % insert reference
+qui est une plateforme de modélisation formelle. Elle permet aux utilisateurs de créer des modèles formels modulaires, ainsi que d'effectuer des vérifications de propriétés sur ces modèles. \\
+
+Ce travail est constitué de deux parties:
+\begin{enumerate}
+	\item La création de modèles formels d'opérateurs et de modèles formels d'expressions. La distinction entre les modèles "opérateurs" et "expressions" est nécessaire pour assurer la modularité des modèles, qui est une fonctionnalité importante du logiciel Ardoises.
+	\item Pour faciliter la visualisation des modèles formels d'expressions, on propose aussi un analyseur syntaxique dont la grammaire acceptée sera basée sur le modèle d'expression donné par l'utilisateur.
+\end{enumerate}
+
 \section{Formalismes d'opérateurs}
 % Formalismes des opérateurs
 \section{Analyse lexicale}
