@@ -75,7 +75,7 @@ qui permet l'héritage prototype en Lua. \lstinline|Layeredata| est aussi respon
 
 \noindent Le plus important à retenir est que lors de l'instanciation d'un modèle, \lstinline|Layeredata| nous fournit une référence vers l'instance. \\
 
-\noindent Avec cette librairie, on a donc la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent du modèle de base. De même, grâce au formalisme \lstinline|record| de la librairie \lstinline|Ardoises/Formalismes| on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
+\noindent Avec cette librairie, on a donc la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent du modèle de base. De plus, grâce au formalisme \lstinline|record| de la librairie \lstinline|Ardoises/Formalismes| on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
 
 \subsection{Distinction entre opérateurs et expressions}
 Même si cela paraît évident, il est important de noter les différences entre opérateurs et expressions; un opérateur est constitué d'un symbole, accepte un certain nombre d'opérandes et possède certaines propriétés, tandis qu'une expression est constituée d'un ou plusieurs opérateurs. Sachant qu'une opérande d'un opérateur peut être une sous-expression, il nous faut donc un moyen (de préférence simple) pour exprimer les sous-expressions acceptées.
@@ -113,12 +113,12 @@ specific_operator [meta] = {
 \end{minted}
 
 \subsection{Définition des expressions}
-La modularité des définitions pour les expressions reste aussi importante; Le modèle d'expression le plus abstrait définit donc simplement qu'une expression est composée de
+La modularité des définitions pour les expressions reste importante; le modèle d'expression le plus abstrait définit donc simplement qu'une expression est composée de
 \begin{itemize}
 	\item D'une part d'opérateurs acceptés par l'expression.
 	\item D'autre part de sous-expressions, composées par les opérateurs de l'expression, et des opérandes acceptées par ces opérateurs.
 \end{itemize}
-Un modèle plus concret définira ensuite les opérateurs qui composent l'expression. Finalement, on hérite de cette expression pour définir les sous-expressions. Pour donner un exemple; reprenons une expression qui autorise simplement l'addition (à noter: les litéraux (nombres, booléens et chaînes de caractère sont aussi représentés par des opérateurs)). On a donc la définition de l'expression
+Un modèle plus concret définira ensuite les opérateurs qui composent l'expression. Finalement, on hérite de cette expression pour définir les sous-expressions. Pour donner un exemple; reprenons une expression qui autorise simplement l'addition (à noter: les litéraux (nombres, booléens et chaînes de caractère) sont aussi représentés par des opérateurs). On a donc la définition de l'expression
 \begin{minted}{lua}
 addition_operator = {
 	[refines] = { addition },
@@ -166,7 +166,7 @@ addition = {
 	}
 }
 \end{minted}
-\noindent Cette représentation nous donnerait l'arbre syntaxique suivant
+\noindent Cette représentation nous donnerait l'arbre syntaxique suivant:
 \begin{center}
 	\begin{figure}[h]
 		\includegraphics[width=\textwidth]{ast.png}
@@ -176,7 +176,7 @@ addition = {
 \section{Analyse syntaxique}
 Deux solutions pour effectuer l'analyse syntaxique et la construction d'un arbre syntaxique abstrait se présentaient à nous:
 \begin{enumerate}
-	\item Utiliser des expressions régulières, qui seraient définies par l'utilisateur pour chaque opérateur.
+	\item Utiliser des expressions rationnelles, qui seraient définies par l'utilisateur pour chaque opérateur.
 	\item Générer une grammaire à partir de modèles (ou règles) prédéfinis pour différents types d'opérateurs.
 \end{enumerate}
 J'ai choisi d'utiliser la 2$^{\grave{e}me}$ méthode, car même si les expressions régulières auraient pû être un moyen "plus simple", elles posent un problème: les expressions arithmétiques incluant des parenthèses ne sont pas des langages réguliers, puisqu'on peut, en prenant un exemple simple, se retrouver dans un cas comme celui-ci: $\{(\textquoteleft(\textquoteleft^{n}\textquoteleft)\textquoteleft^{n})^{*}, n \ge 0 \}$
@@ -189,7 +189,7 @@ Il existe plusieurs générateurs d'analyseurs lexicaux, tels que: \begin{enumer
 	\item \underline{\href{https://github.com/pygy/LuLPeg}{LulPeg}}, implémentation en pur Lua de $LPeg$.
 \end{enumerate}
 Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, j'ai choisi d'utiliser LPeg. LulPeg a aussi été considéré, cependant celui-ci est beaucoup plus lent que LPeg. \\ \textit{TODO: Include justification.} \\ LPeg, par sa modularité, permet aussi de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
-\subsection{Algorithme de génération de grammaire}
+\subsection{Génération de grammaire}
 Puisque nous ne connaissons pas en avance les opérateurs disponibles dans une expression, il est nécessaire de générer la grammaire à partir des opérateurs définis par l'utilisateur. \\
 Supposons les opérateurs simples suivants:
 \begin{center}
@@ -217,6 +217,7 @@ On va ensuite rajouter un à un les opérateurs dans cette grammaire, de la mani
 	\begin{grammar}
 		<Addition> ::= <P12> `+' ( <Addition> | <P12> )
 	\end{grammar}
+	\textbf{N.B.} Le non-terminal \textit{P12} est défini dans la grammaire ci-dessous.
 	\item On rajoute la nouvelle règle créée dans la grammaire de base
 \end{enumerate}
 Pour finir, on se retrouve avec une grammaire comme celle-ci:
@@ -239,7 +240,7 @@ Cette règle est un des plus simples et un des plus évidents.
 	<binaire> ::= <next\_expression> <op\_repr> ( <curr\_expression> | <next\_expression> )
 \end{grammar}
 \subsubsection{Opérateurs ternaires}
-Il existe deux variantes d'opérateurs ternaires, la première étant le bloc conditionnel, "if ... then ... else", et l'autre ressemblant au "inline if", par exemple "... ? ... : ...". Pour décrire ces deux opérateurs, on dénombre les opérateurs par $op\_reprN, \ N \in {1, 3}$.
+Il existe deux variantes d'opérateurs ternaires, la première étant le bloc conditionnel, "if ... then ... else", et l'autre ressemblant au "inline if", par exemple "... ? ... : ...". Pour décrire ces deux opérateurs, on dénombre les représentations des opérateurs par $op\_reprN, \ N \in {1, 3}$.
 \begin{enumerate}
 	\item Pour la première version, la règle utilisée est 
 	\begin{grammar}
@@ -256,7 +257,7 @@ La règle elle-même n'est pas difficile à définir:
 \begin{grammar}
 	<unaire\_préfixe> ::= <op\_repr> ( <curr\_expression> | <next\_expression> )
 \end{grammar}
-Cependant on est dans un cas où il faut aussi donner une priorité élevée à l'opérateur pour qu'il soit reconnu dans tous les cas.
+Cependant on est dans un cas où il faut aussi donner une priorité élevée à l'opérateur pour qu'il soit reconnu par le reste des opérateurs.
 \subsubsection{Opérateurs unaires postfixes}
 Pour ce type d'opérateur, on est obligé de faire une répétition sur la représentation de l'opérateur, à cause du fait qu'on n'a pas la possibilité d'utiliser la récursion à gauche.
 \begin{grammar}
@@ -279,7 +280,7 @@ Malheureusement, $LPeg$ ne peut pas gérer les récursions à gauche, et une él
 \end{grammar}
 ne suffit pas. On a encore une associativité à droite. \\ \\
 Il existe des implémentations pour introduire la récursion à gauche dans les grammaires $PEG$, telles que \underline{\href{https://github.com/norswap/whimsy/blob/master/doc/autumn/README.md}{Autumn}}\textsuperscript{[1]} ou celle proposée par Laurence Tratt\textsuperscript{[2]}. Puisque nous utilisons $LPeg$ et Lua, aucune de ces deux méthodes ne sont possibles dans le cadre de ce travail, il nous faut donc notre propre implémentation pour gérer les opérateurs binaires étant déclarés comme étant associatifs à gauche.
-\subsubsection{Implémentation}
+\subsubsection{Solution pour Ardoises}
 $LPeg$ nous permet de déclarer des fonctions de capture pour ce qui est lu par l'analyseur généré. Supposons la grammaire suivante:
 \begin{grammar}
 	<s> ::= <nombre> `+' ( <s> | <nombre> )
@@ -449,7 +450,8 @@ local pattern = (
 		\item \mintinline{lua}{white} doit obligatoirement être utilisé pour ignorer les caractères blancs (\lstinline|\s|, \lstinline|\t|, \lstinline|\n|).
 		\item Il faut utiliser \lstinline|next_expr| sur la gauche pour la descente récursive. Sur la droite de la règle, il faut utiliser \lstinline|curr_expr| pour la récursion à droite (pour pouvoir enchaîner des opérateurs qui ont la même priorité).
 	\end{enumerate}
-	\item Définir une fonction de capture. Dans le cas de notre opérateur quaternaire, il est simplement question de retourner une table contenant l'opérateur et les opérandes, puisqu'il n'y a pas de propriétés telles que l'associativité à gauche. \\
+	\item Définir une fonction de capture. Dans le cas de not
+	re opérateur quaternaire, il est simplement question de retourner une table contenant l'opérateur et les opérandes, puisqu'il n'y a pas de propriétés telles que l'associativité à gauche. \\
 	Les fonctions de capture avec $LPeg$ reçoivent en argument ce qui est lu, et les arguments vont dans l'ordre, de gauche à droite. Donc, pour cet opérateur, on définirait la fonction de capture de cette manière:
 	\begin{minted}{lua}
 -- p est la règle
