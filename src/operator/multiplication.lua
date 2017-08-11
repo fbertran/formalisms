@@ -10,12 +10,6 @@ return function (Layer, multiplication, ref)
     operator,
   }
 
-  -- multiplication.operator = "*"
-  -- multiplication.priority = 12
-  -- multiplication.is_associative = true
-  -- multiplication.is_commutative = true
-  -- print (re.operator [meta].of)
-
   multiplication [meta] = {
     of       = false,
     operands = {

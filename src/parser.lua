@@ -118,16 +118,17 @@ return function (expression)
 
   local function nary_capture (p)
     return p / function (op, ...)
+      local args = { ... }
       local arglist = { }
-      local arglen  = select("#", ...)
+      local ctr = 1
 
-      for i = 1, arglen, 1 do
-        local v = select(i, ...)
+      for _, v in ipairs(args) do
         if type(v) ~= "table" then
-          arglist[i] = { v }
+          arglist[ctr] = { v }
         else
-          arglist[i] = v
+          arglist[ctr] = v
         end
+        ctr = ctr + 1
       end
 
       return { op = op, operands = arglist, op_type = "nary" }

@@ -13,7 +13,7 @@ describe ("Arithmetic expression", function ()
     -- Warning: here we create an **instance** of the `arithmetic` expression.
     -- We **must** use `arithmetic` instead of self-`ref` everywhere,
     -- or the checks fail.
-    local layer = Layer.new {}
+    local layer, ref = Layer.new {}
     layer [refines] = { arithmetic }
 
     -- `l1`, `l2`, and `layer` **must** refine `arithmetic` instead of self-`ref`,
@@ -29,7 +29,6 @@ describe ("Arithmetic expression", function ()
       operator  = arithmetic [meta] [expression].number,
       operands  = { 2 },
     }
-
 
     layer.operator = arithmetic [meta] [expression].multiplication
     layer.operands = { l1, l2 }
@@ -100,7 +99,7 @@ describe ("Arithmetic expression", function ()
     local add = {
       [refines] = { arithmetic },
       operator  = arithmetic [meta] [expression].addition,
-      operands  = { 2, 2 },
+      operands  = { sub, sub },
     }
 
     layer.operator = arithmetic [meta] [expression].multiplication

@@ -1,14 +1,30 @@
-return function (Layer, Addition_Expression)
+return function (Layer, addition_expression, ref)
   local refines = Layer.key.refines
 
   local expression = Layer.require "expression"
   local addition   = Layer.require "operator.addition"
+  local literal    = Layer.require "operator.literal"
 
-  Addition_Expression [refines] = {
+  addition_expression [refines] = {
     expression
   }
 
-  Addition_Expression.operator = addition
+  local r_number = {
+    [refines] = literal,
+    [meta   ] = { of = "number" },
+  }
 
-  return Addition_Expression
+  local r_add = {
+    [refines] = { addition },
+    [meta   ] = { of = ref },
+  }
+
+  addition_expression [meta] = {
+    [expression] = {
+      number   = r_number,
+      addition = r_add,
+    },
+  }
+
+  return addition_expression
 end

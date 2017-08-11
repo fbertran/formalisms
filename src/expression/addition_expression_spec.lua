@@ -5,17 +5,25 @@ local addition_expression = Layer.require "expression.addition_expression"
 
 describe ("Addition expression", function()
   it ("has the properties imposed by Expression", function ()
-    local layer = Layer.new {}
+    local layer, ref = Layer.new {}
 
     layer [refines] = {
       addition_expression
     }
 
-    layer.operands = {
-      10, 20
+    local l1 = {
+      [refines] = { addition_expression },
+      operator  = addition_expression [meta] [expression] .number,
+      operands  = { 1 },
     }
 
-    assert.True (layer.operator.is_associative)
+    local l2 = {
+      [refines] = { addition_expression },
+      operator  = addition_expression [meta] [expression] .addition,
+      operands  = { l1, l1 }
+    }
+
+    assert.True (layer.operator.left_associative)
     assert.True (layer.operator.is_commutative)
 
     Layer.Proxy.check_all (layer)

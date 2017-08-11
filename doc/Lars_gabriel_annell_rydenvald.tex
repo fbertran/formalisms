@@ -19,7 +19,13 @@
 \usepackage{minted}
 \usepackage[hidelinks]{hyperref}
 \usepackage{syntax}
-\setminted[lua]{tabsize=2}
+\setminted[lua]{tabsize=2,fontsize=\small}
+\setminted[yaml]{tabsize=4}
+
+\makeatletter
+\AtBeginEnvironment{minted}{\dontdofcolorbox}
+\def\dontdofcolorbox{\renewcommand\fcolorbox[4][]{##4}}
+\makeatother
 
 \setlength{\grammarindent}{0cm}
 
@@ -53,7 +59,7 @@
 
 \section{Introduction}
 Ce travail repose sur Ardoises, % insert reference
-qui est une plateforme de modélisation formelle. Elle permet aux utilisateurs de créer des modèles formels modulaires, ainsi que d'effectuer des vérifications de propriétés sur ces modèles. \\
+qui est une plateforme de modélisation formelle. Elle permet aux utilisateurs de créer des modèles formels modulaires, d'effectuer des vérifications de propriétés sur ces modèles et vise à offrir une représentation visuelle des formalismes. \\
 
 Ce travail est constitué de deux parties:
 \begin{enumerate}
@@ -61,10 +67,114 @@ Ce travail est constitué de deux parties:
 	\item Pour faciliter la visualisation des modèles formels d'expressions, on propose aussi un analyseur syntaxique dont la grammaire acceptée sera basée sur le modèle d'expression donné par l'utilisateur.
 \end{enumerate}
 
-\section{Formalismes d'opérateurs}
-% Formalismes des opérateurs
-\section{Analyse lexicale}
-Deux solutions pour effectuer l'analyse lexicale se présentaient à nous:
+\section{Formalismes d'opérateurs et d'expressions}
+
+\subsection{Layered data}
+Toute cette partie repose sur la librairie \lstinline|Layeredata|, % TODO ajouter référence vers l'article sur layeredata
+qui permet l'héritage prototype en Lua. \lstinline|Layeredata| est aussi responsable pour la vérification de propriétés sur les instances des modèles. \\
+
+\noindent Le plus important à retenir est que lors de l'instanciation d'un modèle, \lstinline|Layeredata| nous fournit une référence vers l'instance. \\
+
+\noindent Avec cette librairie, on a donc la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent du modèle de base. De même, grâce au formalisme \lstinline|record| de la librairie \lstinline|Ardoises/Formalismes| on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
+
+\subsection{Distinction entre opérateurs et expressions}
+Même si cela paraît évident, il est important de noter les différences entre opérateurs et expressions; un opérateur est constitué d'un symbole, accepte un certain nombre d'opérandes et possède certaines propriétés, tandis qu'une expression est constituée d'un ou plusieurs opérateurs. Sachant qu'une opérande d'un opérateur peut être une sous-expression, il nous faut donc un moyen (de préférence simple) pour exprimer les sous-expressions acceptées.
+
+\subsection{Définition des opérateurs}
+Comme noté plus haut, la modularité des modèles est importante. Supposons deux modèles d'expressions différents:
+
+\begin{itemize}
+	\item Le premier accepte les opérateurs \lstinline|addition| et \lstinline|soustraction|.
+	\item Et le deuxième accepte les opérateurs \lstinline|addition| et \lstinline|multiplication|.
+\end{itemize}
+
+\noindent Ce qu'on veut dans ce cas, c'est utiliser le même modèle de l'opérateur \lstinline|addition|, c'est à dire que l'opérateur doit être conçu pour accepter des sous-expressions en fonction du modèle d'expression qui l'utilise. C'est-à-dire, le modèle d'opérateur ne doit pas définir à l'avance les sous-expressions qu'il accepte. Le modèle de base \lstinline|operator| imposera donc simplement les propriétés que les opérateurs plus spécifiques devront eux-même définir. \\
+\ \\
+Ensuite, on définira les métadonnées des opérateurs plus spécifiques de la manière suivante:
+\begin{minted}{lua}
+specific_operator [meta] = {
+	of       = false, -- Ceci définira plus tard le type des opérandes accepté
+	                  -- par l'opérateur.
+	                  -- La propriété est initialisée à "false" car 
+	                  -- on ne connaît pas encore le type, qui peut être une sous-expression
+	                  -- ou des valeurs litérales.
+	operands = {
+		[refines] = { collection },
+		[meta   ] = {
+			[collection] = {
+				minimum    = 2,
+				maximum    = 2,
+				value_type = re.operator [meta].of, -- Définit le type des opérandes
+				                                    -- Ce type est donné par l'expression
+			},
+		},
+	},
+}
+\end{minted}
+
+\subsection{Définition des expressions}
+La modularité des définitions pour les expressions reste aussi importante; Le modèle d'expression le plus abstrait définit donc simplement qu'une expression est composée de
+\begin{itemize}
+	\item D'une part d'opérateurs acceptés par l'expression.
+	\item D'autre part de sous-expressions, composées par les opérateurs de l'expression, et des opérandes acceptées par ces opérateurs.
+\end{itemize}
+Un modèle plus concret définira ensuite les opérateurs qui composent l'expression. Finalement, on hérite de cette expression pour définir les sous-expressions. Pour donner un exemple; reprenons une expression qui autorise simplement l'addition (à noter: les litéraux (nombres, booléens et chaînes de caractère sont aussi représentés par des opérateurs)). On a donc la définition de l'expression
+\begin{minted}{lua}
+addition_operator = {
+	[refines] = { addition },
+	[meta   ] = { of = ref }, -- Ce champ est important!
+	                          -- C'est lui qui définit le type des opérandes acceptées.
+		                        -- De cette manière, l'opérateur peut accepter des sous-expressions.
+		                        -- 'ref' fait référence à l'expression qu'on définit.
+}
+
+number = {
+	[refines] = { literal_number },
+	[meta   ] = { of = "number" }, -- Le litéral devrait seulement accepter des opérandes
+	                               -- qui sont des nombres
+}
+
+-- Finalement on compose pour la définition de notre expression.
+addition_expression [meta] = {
+	[expression] = {
+		addition_operator = addition_operator,
+		number            = number,
+	}
+}
+\end{minted}
+
+\noindent Maintenant que l'expression est définie, on peut en faire quelque chose d'encore plus concret:
+\begin{minted}{lua}
+literal_1 = {
+	[refines] = { addition_expression },
+	operator  = addition_expression[meta][expression].number,
+	operands  = { 1 },
+}
+
+literal_2 = {
+	[refines] = { addition_expression },
+	operator  = addition_expression[meta][expression].number,
+	operands  = { 2 },
+}
+
+addition = {
+	[refines] = { addition_expression },
+	operator  = addition_expression[meta][expression].addition_operator,
+	operands  = {
+		literal_1,
+		literal_2,
+	}
+}
+\end{minted}
+\noindent Cette représentation nous donnerait l'arbre syntaxique suivant
+\begin{center}
+	\begin{figure}[h]
+		\includegraphics[width=\textwidth]{ast.png}
+	\end{figure}
+\end{center}
+
+\section{Analyse syntaxique}
+Deux solutions pour effectuer l'analyse syntaxique et la construction d'un arbre syntaxique abstrait se présentaient à nous:
 \begin{enumerate}
 	\item Utiliser des expressions régulières, qui seraient définies par l'utilisateur pour chaque opérateur.
 	\item Générer une grammaire à partir de modèles (ou règles) prédéfinis pour différents types d'opérateurs.
@@ -249,7 +359,7 @@ L'impossibilité d'utiliser la récursion à gauche avec $LPeg$ pose aussi un pr
 	<unaire\_postfixe> ::= ( <curr\_expression> | <next\_expression> ) <op\_repr>
 \end{grammar}
 Supposons l'opérateur postfixe $`\%`$.
-Avec le pattern précédent on respecte la priorité de déclaration des opérateurs, et on peut aussi capturer une expression du type `3\%\%\%` qui nous donnerait cette production correcte \mintinline{lua}{{ { { 3 % } % } % }}.
+Avec la règle précédente on respecte la priorité de déclaration des opérateurs, et on peut aussi capturer une expression du type `3\%\%\%` qui nous donnerait cette production correcte \mintinline{lua}{{ { { 3 % } % } % }}.
 \noindent Sans la récursion à gauche, on ne peut plus capturer l'entièreté de l'expression `3\%\%\%` sans utiliser de répétition. Or la répétition du symbole nous donne une table comme celle-ci:
 \mintinline{lua}{{ 3 % % % }} ce qui n'est pas ce qu'on veut. On va donc opérer sur la liste qui nous est donnée par $LPeg$ pour créer la table juste.
 \begin{minted}{lua}
