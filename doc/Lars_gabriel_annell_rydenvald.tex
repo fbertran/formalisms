@@ -166,7 +166,7 @@ addition = {
 	}
 }
 \end{minted}
-\noindent Cette représentation nous donnerait l'arbre syntaxique suivant:
+\noindent Cette représentation nous donne l'arbre syntaxique suivant:
 \begin{center}
 	\begin{figure}[h]
 		\includegraphics[width=\textwidth]{ast.png}
@@ -174,6 +174,7 @@ addition = {
 \end{center}
 
 \section{Analyse syntaxique}
+La modularité de construction des opérateurs que nous proposons fait que nous ne connaissons pas en avance les opérateurs disponibles dans une expression, il est nécessaire de générer la grammaire à partir des opérateurs définis par l'utilisateur. 
 Deux solutions pour effectuer l'analyse syntaxique et la construction d'un arbre syntaxique abstrait se présentaient à nous:
 \begin{enumerate}
 	\item Utiliser des expressions rationnelles, qui seraient définies par l'utilisateur pour chaque opérateur.
@@ -188,9 +189,14 @@ Il existe plusieurs générateurs d'analyseurs lexicaux, tels que: \begin{enumer
 	\item \underline{\href{https://github.com/LuaDist/lpeg}{LPeg}}, écrit en C, compatible avec Lua, générant un parser $PEG$
 	\item \underline{\href{https://github.com/pygy/LuLPeg}{LulPeg}}, implémentation en pur Lua de $LPeg$.
 \end{enumerate}
-Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, j'ai choisi d'utiliser LPeg. LulPeg a aussi été considéré, cependant celui-ci est beaucoup plus lent que LPeg. \\ \textit{TODO: Include justification.} \\ LPeg, par sa modularité, permet aussi de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
+Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, j'ai choisi d'utiliser LPeg. LulPeg a aussi été considéré, cependant celui-ci est beaucoup plus lent que LPeg. En effet, pour produire un arbre syntaxique à partir de l'expression 
+\begin{minted}{lua}
+(((((sum(30-20))))))
+\end{minted}
+Lpeg prend 2.233 secondes, et LulPeg % TODO insert lulpeg benchmarks results
+secondes (... minutes). Ces résultats sont des moyennes calculées sur 1'000 exécutions, et chronométrées avec la commande \lstinline|time|, sur Ubuntu 16.04 et un ordinateur équipé d'un processeur Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz, possédant 2 cœurs et hyper-threading. \\
+De plus, par sa modularité, LPeg permet de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
 \subsection{Génération de grammaire}
-Puisque nous ne connaissons pas en avance les opérateurs disponibles dans une expression, il est nécessaire de générer la grammaire à partir des opérateurs définis par l'utilisateur. \\
 Supposons les opérateurs simples suivants:
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
@@ -285,75 +291,12 @@ $LPeg$ nous permet de déclarer des fonctions de capture pour ce qui est lu par 
 \begin{grammar}
 	<s> ::= <nombre> `+' ( <s> | <nombre> )
 \end{grammar}
-Notre fonction de capture pour le modèle qui suit $s$ recevra simplement les arguments $gauche$, \\ $repr\acute{e}sentation \ de \ l'op\acute{e}rateur$, $droite$. Déclarons d'abord la fonction comme ceci:
-\begin{minted}{lua}
-function left_assoc(left, op, right)
-  return { left = left, op = op, right = right }
-end
-\end{minted}
-Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent nous retournera donc la table \mint{lua}{{ left = 1, op = +, right = { left = 2, op = +, right = 3 } }}
-\noindent Si on veut avoir l'associativité à gauche, ce résultat est évidemment faux. Pour avoir une production correcte, il nous suffit d'opérer de manière récursive. On a donc (en pseudo-code):
-\begin{minted}{lua}
--- pattern est la règle pour l'analyseur lexical
--- _op est l'opérateur auquel on veut appliquer l'associativité à gauche
-function left_assoc(pattern, _op)
-  -- left est la partie gauche de l'expression parsée
-  -- op est l'opérateur
-  -- right est la partie droite
-  function recursion(left, op, right)
-		-- Est-ce que nous avons une table à droite? Dans ce cas il faut
-		-- "voler" l'opérande gauche de l'opérande de droite
-    if right is a table and op equals _op.operator then
-			-- Par la manière dont fonctionne LPeg, il faut quand même faire une
-			-- récursion sur l'opérateur à gauche, si celui-ci est binaire et
-			-- associatif à gauche
-			if left is a table and the left operator is a binary left-associative operator then
-				left = recursion(left.left, left.op, left.right)
-			end
-	    
-	    -- Cependant il faut faire attention à ce que l'opérateur de droite
-	    -- soit aussi un opérateur binaire, et que celui-ci ait une priorité
-	    -- soit égale ou moins élevée que l'opérateur qu'on traite maintenant
-	    if right.op.priority > _op.priority or right.op.type is not binary then
-		    -- Dans ce cas on retourne normalement
-	      return { left = left, op = op, right = right }
-	    end
-    
-	    -- Sinon on fait la récursion
-      return recursion(
-        {
-          left  = left,
-          op    = op,
-          right = right.left
-        },
-        right.op,
-        right.right
-      )
-    else
-	    -- Par la manière dont fonctionne LPeg, il faut quand même faire une
-	    -- récursion sur l'opérateur à gauche, si celui-ci est binaire et
-	    -- associatif à gauche
-	    if left is a table and the left operator is a binary left-associative operator then
-		    left = recursion(left.left, left.op, left.right)
-	    end
-			
-	    -- On retourne normalement, ce que nous avons à droite n'est pas
-	    -- une table, donc il n'y a pas besoin de traiter
-      return { left = left, op = op, right = right }
-    end
-  end
-  
-  -- L'opérateur '/' est surchargé par LPeg, ceci retourne la règle et la 
-  -- la fonction "recursion" sera la fonction de capture lorsque ce pattern
-  -- est rencontré
-  -- http://www.inf.puc-rio.br/\~roberto/lpeg/#cap-func
-  return pattern / recursion
-end
-\end{minted}
+Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent produira la table \mint{lua}{{ left = 1, op = +, right = { left = 2, op = +, right = 3 } }}
+\noindent Si on suppose que notre opérateur $addition$ est associatif à gauche, ce résultat est évidemment faux. Pour avoir une production correcte, il nous suffit d'opérer de manière récursive sur la table produite. 
 Pour revenir à notre expression \mint{lua}{1 + 2 + 3} \noindent de plus haut, si nous avons donné la propriété d'associativité à gauche à notre opérateur \lstinline|+|, l'analyse lexicale nous retournera maintenant la table correcte \begin{minted}{lua}
 	{ left = { left = 1, op = "+", right = 2 }, op = "+", right = 3 }
 \end{minted}
-\subsection{Autres fonctions de capture}
+\subsection{Fonctions de capture}
 \subsubsection{Opérateurs unaires postfixes}
 L'impossibilité d'utiliser la récursion à gauche avec $LPeg$ pose aussi un problème pour les opérateurs postfixes. Si on avait la récursion à gauche, on aurait simplement pu écrire
 \begin{grammar}
@@ -401,19 +344,17 @@ Pour les opérateurs n-aires, la fonction de capture transforme simplement les e
 \begin{minted}{lua}
 local function nary_capture (p)
 	return p / function (op, ...)
+		local args = { ... }
 		local arglist = { }
-		-- select("#", ...) retourne le nombre d'arguments
-		-- passés à la fonction
-		local arglen  = select("#", ...)
-
-		for i = 1, arglen, 1 do
-			-- select(i, ...) retourne le i-ème argument
-			local v = select(i, ...)
+		local ctr = 1
+		
+		for _, v in ipairs(args) do
 			if type(v) ~= "table" then
-				arglist[i] = { v }
+				arglist[ctr] = { v }
 			else
-				arglist[i] = v
+				arglist[ctr] = v
 			end
+			ctr = ctr + 1
 		end
 
 		return { op = op, operands = arglist, op_type = "nary" }
