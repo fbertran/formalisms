@@ -1,8 +1,8 @@
-local lp = require "lpeg"
-local prefix = "prefix"
-
+local lp = require("lpeg")
 
 return function (expression)
+  local prefix = "prefix"
+
   -- Holds the different operators, example for an expression which has
   -- multiplication and addition:
   --

@@ -59,7 +59,7 @@
 
 \section{Introduction}
 Ce travail repose sur Ardoises, % insert reference
-qui est une plateforme de modélisation formelle. Elle permet aux utilisateurs de créer des modèles formels modulaires, d'effectuer des vérifications de propriétés sur ces modèles et vise à offrir une représentation visuelle des formalismes. \\
+qui est une plateforme de modélisation formelle. Elle permet aux utilisateurs de créer des modèles formels modulaires, d'effectuer des vérifications de propriétés sur ces modèles et offre une représentation visuelle des formalismes. \\
 
 Ce travail est constitué de deux parties:
 \begin{enumerate}
@@ -73,9 +73,7 @@ Ce travail est constitué de deux parties:
 Toute cette partie repose sur la librairie \lstinline|Layeredata|, % TODO ajouter référence vers l'article sur layeredata
 qui permet l'héritage prototype en Lua. \lstinline|Layeredata| est aussi responsable pour la vérification de propriétés sur les instances des modèles. \\
 
-\noindent Le plus important à retenir est que lors de l'instanciation d'un modèle, \lstinline|Layeredata| nous fournit une référence vers l'instance. \\
-
-\noindent Avec cette librairie, on a donc la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent du modèle de base. De plus, grâce au formalisme \lstinline|record| de la librairie \lstinline|Ardoises/Formalismes| on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
+\noindent Avec cette librairie, on a donc la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent du modèle de base. De plus, grâce au formalismes \lstinline|record| et \lstinline|collection| de la librairie \lstinline|Ardoises/Formalismes| on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
 
 \subsection{Distinction entre opérateurs et expressions}
 Même si cela paraît évident, il est important de noter les différences entre opérateurs et expressions; un opérateur est constitué d'un symbole, accepte un certain nombre d'opérandes et possède certaines propriétés, tandis qu'une expression est constituée d'un ou plusieurs opérateurs. Sachant qu'une opérande d'un opérateur peut être une sous-expression, il nous faut donc un moyen (de préférence simple) pour exprimer les sous-expressions acceptées.
@@ -113,7 +111,7 @@ specific_operator [meta] = {
 \end{minted}
 
 \subsection{Définition des expressions}
-La modularité des définitions pour les expressions reste importante; le modèle d'expression le plus abstrait définit donc simplement qu'une expression est composée de
+La modularité des définitions pour les expressions reste importante; le modèle d'expression le plus abstrait définit donc simplement qu'une expression est composée:
 \begin{itemize}
 	\item D'une part d'opérateurs acceptés par l'expression.
 	\item D'autre part de sous-expressions, composées par les opérateurs de l'expression, et des opérandes acceptées par ces opérateurs.
@@ -174,13 +172,13 @@ addition = {
 \end{center}
 
 \section{Analyse syntaxique}
-La modularité de construction des opérateurs que nous proposons fait que nous ne connaissons pas en avance les opérateurs disponibles dans une expression, il est nécessaire de générer la grammaire à partir des opérateurs définis par l'utilisateur. 
-Deux solutions pour effectuer l'analyse syntaxique et la construction d'un arbre syntaxique abstrait se présentaient à nous:
+La modularité de construction des opérateurs et des expressions que nous proposons fait que nous ne connaissons pas en avance la grammaire nécessaire pour faire l'analyse syntaxique. Il nous est donc imposé de générer la grammaire à partir du modèle d'expression défini par l'utilisateur.
+Deux solutions pour effectuer cette tâche et faire la construction de l'arbre syntaxique correspondant se présentaient à nous:
 \begin{enumerate}
 	\item Utiliser des expressions rationnelles, qui seraient définies par l'utilisateur pour chaque opérateur.
-	\item Générer une grammaire à partir de modèles (ou règles) prédéfinis pour différents types d'opérateurs.
+	\item Générer une grammaire à partir de règles prédéfinis pour différents types d'opérateurs.
 \end{enumerate}
-J'ai choisi d'utiliser la 2$^{\grave{e}me}$ méthode, car même si les expressions régulières auraient pû être un moyen "plus simple", elles posent un problème: les expressions arithmétiques incluant des parenthèses ne sont pas des langages réguliers, puisqu'on peut, en prenant un exemple simple, se retrouver dans un cas comme celui-ci: $\{(\textquoteleft(\textquoteleft^{n}\textquoteleft)\textquoteleft^{n})^{*}, n \ge 0 \}$
+J'ai choisi d'utiliser la 2$^{\grave{e}me}$ méthode, car même si les expressions rationnelles auraient pû être un moyen "plus simple", elles posent un problème: les expressions arithmétiques incluant des parenthèses ne sont pas des langages réguliers, puisqu'on peut, en prenant un exemple simple, se retrouver dans un cas comme celui-ci: $\{(\textquoteleft(\textquoteleft^{n}\textquoteleft)\textquoteleft^{n})^{*}, n \ge 0 \}$.
 \subsection{Choix de l'outil}
 Il existe plusieurs générateurs d'analyseurs lexicaux, tels que: \begin{enumerate}
 	\item \underline{\href{http://www.antlr.org/about.html}{ANTLR}}, écrit en Java, générant un analyseur $LL(^*)$
@@ -193,9 +191,8 @@ Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile en
 \begin{minted}{lua}
 (((((sum(30-20))))))
 \end{minted}
-Lpeg prend 2.233 secondes, et LulPeg % TODO insert lulpeg benchmarks results
-secondes (... minutes). Ces résultats sont des moyennes calculées sur 1'000 exécutions, et chronométrées avec la commande \lstinline|time|, sur Ubuntu 16.04 et un ordinateur équipé d'un processeur Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz, possédant 2 cœurs et hyper-threading. \\
-De plus, par sa modularité, LPeg permet de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
+LPeg finit en 2.233 secondes, tandis que LulPeg prend 210.791 secondes (3 minutes et 30 secondes). Ces résultats sont des moyennes calculées sur 1'000 exécutions, et chronométrées avec la commande \lstinline|time|, sur Ubuntu 16.04 et un ordinateur équipé d'un processeur Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz. \\
+De plus, par sa modularité (les $PEG$ donnent la possibilité de composer des grammaires de manière procédurale), LPeg permet de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
 \subsection{Génération de grammaire}
 Supposons les opérateurs simples suivants:
 \begin{center}
@@ -236,7 +233,14 @@ Pour finir, on se retrouve avec une grammaire comme celle-ci:
 <P14> ::= <Négation> | <P15>\\
 <P15> ::= <nombre> | `(' <s> `)'
 \end{grammar}
-Puisque $LPeg$ génère un analyseur lexical de type $PEG$, il faut faire attention à l'ordre de déclaration de la grammaire pour avoir une précédence correcte.
+Puisque $LPeg$ génère un analyseur lexical de type $PEG$, il faut faire attention à l'ordre de déclaration de la grammaire pour avoir une précédence correcte. En outre, il y a quelques autres règles à respecter:
+\begin{enumerate}
+	\item Si le modèle d'expression autorise les variables, et des mots-clés (ex. \lstinline|true|, \lstinline|false|), il est nécessaire de les placer à la toute fin de la grammaire, par exemple
+	\begin{grammar}
+<P15> ::= <nombre> | <booléen> | `(' <s> `)' | <variable>
+	\end{grammar}
+	Le cas échéant, l'analyseur lexical lira \lstinline|true| (ou \lstinline|false|) et considérera le symbole comme étant une variable.
+\end{enumerate}
 
 \subsection{Règles utilisées pour les différents types d'opérateurs}
 Les fonctions pour générer les règles sont stockées dans une table, et retournent une règle $LPeg$. Considérons ici que les espaces blancs (\textbackslash s, \textbackslash t, \textbackslash n) sont ignorés. De plus, notons la "prochaine" règle dans la grammaire par $next\_expression$, et la règle courante par $curr\_expression$, et la représentation de l'opérateur (e.g. "+") par $op\_repr$. Notons aussi l'axiome $s$ par $Expression$
@@ -279,10 +283,10 @@ On constate que tous les opérateurs binaires dans le tableau précédent sont a
 \begin{grammar}
 	<Expr> ::= <Expr> `+' <nombre> | <nombre>
 \end{grammar}
-Malheureusement, $LPeg$ ne peut pas gérer les récursions à gauche, et une élimination de la récursion à gauche du type
+Malheureusement, $LPeg$ ne gère pas les récursions à gauche, et une élimination de la récursion à gauche du type
 \begin{grammar}
-	<Expr> \ ::= <nombre> <Expr'> \\
-	<Expr'> ::= `+' <Expr'> | <nombre>
+<Expr> \ ::= <nombre> <Expr'> \\
+<Expr'> ::= `+' <Expr'> | <nombre>
 \end{grammar}
 ne suffit pas. On a encore une associativité à droite. \\ \\
 Il existe des implémentations pour introduire la récursion à gauche dans les grammaires $PEG$, telles que \underline{\href{https://github.com/norswap/whimsy/blob/master/doc/autumn/README.md}{Autumn}}\textsuperscript{[1]} ou celle proposée par Laurence Tratt\textsuperscript{[2]}. Puisque nous utilisons $LPeg$ et Lua, aucune de ces deux méthodes ne sont possibles dans le cadre de ce travail, il nous faut donc notre propre implémentation pour gérer les opérateurs binaires étant déclarés comme étant associatifs à gauche.
@@ -292,10 +296,26 @@ $LPeg$ nous permet de déclarer des fonctions de capture pour ce qui est lu par 
 	<s> ::= <nombre> `+' ( <s> | <nombre> )
 \end{grammar}
 Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent produira la table \mint{lua}{{ left = 1, op = +, right = { left = 2, op = +, right = 3 } }}
-\noindent Si on suppose que notre opérateur $addition$ est associatif à gauche, ce résultat est évidemment faux. Pour avoir une production correcte, il nous suffit d'opérer de manière récursive sur la table produite. 
-Pour revenir à notre expression \mint{lua}{1 + 2 + 3} \noindent de plus haut, si nous avons donné la propriété d'associativité à gauche à notre opérateur \lstinline|+|, l'analyse lexicale nous retournera maintenant la table correcte \begin{minted}{lua}
-	{ left = { left = 1, op = "+", right = 2 }, op = "+", right = 3 }
-\end{minted}
+\noindent Si on suppose que notre opérateur $addition$ est associatif à gauche, ce résultat est évidemment faux. La table au-dessus correspond à l'arbre syntaxique 
+\begin{center}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.2\textwidth]{rassoc-ast.png}
+	\end{figure}
+\end{center}
+Pour avoir une production correcte, il nous suffit d'opérer de manière récursive sur la table produite, on réarrange donc simplement les nœuds en traversant la table pour obtenir
+\begin{center}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.2\textwidth]{lassoc-ast.png}
+	\end{figure}
+\end{center}
+Il y a cependant certaines situations où nous sommes obligés de nous arrêter:
+\begin{enumerate}
+	\item Le cas où l'opérateur à droite (ou à gauche) n'est pas un opérateur binaire (cela n'a pas de sens de considérer l'associativité gauche / droite pour des opérateurs non binaires)
+	\item Le cas où l'opérateur à droite (ou à gauche) a une priorité plus élevée que l'opérateur qui essaie d'imposer son associativité à gauche. Effectivement, une expression du type \lstinline|1 + 2 * 3| doit produire la table \lstinline|{ left = 1, op = +, right = { left = 2, op = *, right = 3 } }|
+\end{enumerate}
+Le code décrivant cette transformation se trouve sur mon \underline{\href{http://dinosaur.compilertools.net/}{github}}
 \subsection{Fonctions de capture}
 \subsubsection{Opérateurs unaires postfixes}
 L'impossibilité d'utiliser la récursion à gauche avec $LPeg$ pose aussi un problème pour les opérateurs postfixes. Si on avait la récursion à gauche, on aurait simplement pu écrire
