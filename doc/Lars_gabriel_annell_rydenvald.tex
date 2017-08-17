@@ -70,13 +70,13 @@ Ce travail est constitué de deux parties:
 \section{Formalismes d'opérateurs et d'expressions}
 
 \subsection{Layered data}
-Toute cette partie repose sur la librairie \lstinline|Layeredata|, % TODO ajouter référence vers l'article sur layeredata
+Toute cette partie dépend de la librairie \lstinline|Layeredata|, % TODO ajouter référence vers l'article sur layeredata
 qui permet l'héritage prototype en Lua. \lstinline|Layeredata| est aussi responsable pour la vérification de propriétés sur les instances des modèles. \\
 
-\noindent Avec cette librairie, on a donc la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent du modèle de base. De plus, grâce au formalismes \lstinline|record| et \lstinline|collection| de la librairie \lstinline|Ardoises/Formalismes| on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
+\noindent Avec cette librairie, on a la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent du modèle de base. De plus, grâce au formalismes \lstinline|data.record| et \lstinline|data.collection| de la librairie \lstinline|Ardoises/Formalismes| on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
 
 \subsection{Distinction entre opérateurs et expressions}
-Même si cela paraît évident, il est important de noter les différences entre opérateurs et expressions; un opérateur est constitué d'un symbole, accepte un certain nombre d'opérandes et possède certaines propriétés, tandis qu'une expression est constituée d'un ou plusieurs opérateurs. Sachant qu'une opérande d'un opérateur peut être une sous-expression, il nous faut donc un moyen (de préférence simple) pour exprimer les sous-expressions acceptées.
+Même si cela paraît évident, il est important de noter les différences entre opérateurs et expressions; un opérateur est constitué d'un symbole (sa représentation textuelle), accepte un certain nombre d'opérandes et possède certaines propriétés, tandis qu'une expression est constituée d'un ou plusieurs opérateurs. Sachant qu'une opérande d'un opérateur peut être une sous-expression, il nous faut donc un moyen (de préférence simple) pour exprimer les sous-expressions acceptées.
 
 \subsection{Définition des opérateurs}
 Comme noté plus haut, la modularité des modèles est importante. Supposons deux modèles d'expressions différents:
@@ -86,7 +86,7 @@ Comme noté plus haut, la modularité des modèles est importante. Supposons deu
 	\item Et le deuxième accepte les opérateurs \lstinline|addition| et \lstinline|multiplication|.
 \end{itemize}
 
-\noindent Ce qu'on veut dans ce cas, c'est utiliser le même modèle de l'opérateur \lstinline|addition|, c'est à dire que l'opérateur doit être conçu pour accepter des sous-expressions en fonction du modèle d'expression qui l'utilise. C'est-à-dire, le modèle d'opérateur ne doit pas définir à l'avance les sous-expressions qu'il accepte. Le modèle de base \lstinline|operator| imposera donc simplement les propriétés que les opérateurs plus spécifiques devront eux-même définir. \\
+\noindent Ce qu'on veut dans ce cas, c'est pouvoir utiliser le même modèle de l'opérateur \lstinline|addition|, c'est à dire que l'opérateur doit être conçu pour accepter des sous-expressions en fonction du modèle d'expression qui l'utilise. C'est-à-dire, le modèle d'opérateur ne doit pas définir à l'avance les sous-expressions qu'il accepte. Le modèle de base \lstinline|operator| imposera donc simplement les propriétés que les opérateurs plus spécifiques devront eux-même définir. \\
 \ \\
 Ensuite, on définira les métadonnées des opérateurs plus spécifiques de la manière suivante:
 \begin{minted}{lua}
@@ -103,7 +103,8 @@ specific_operator [meta] = {
 				minimum    = 2,
 				maximum    = 2,
 				value_type = re.operator [meta].of, -- Définit le type des opérandes
-				                                    -- Ce type est donné par l'expression
+				                                    -- Ce type sera soit une sous-expression, 
+				                                    -- soit un litéral
 			},
 		},
 	},
@@ -170,7 +171,40 @@ addition = {
 		\includegraphics[width=\textwidth]{ast.png}
 	\end{figure}
 \end{center}
+\subsection{Ajouter des opérateurs à une expression}
+Supposons qu'on se base sur l'expression de la section précédente, et qu'on veuille rajouter un opérateur "multiplication". Il suffira de créer un modèle pour l'opérateur, créer un modèle pour notre expression, hériter du modèle \lstinline|addition_expression| puis d'insérer notre opérateur multiplication dans la table \lstinline|[meta][expression]|. On écrit donc
+\begin{minted}{lua}
+multiplication_addition_expression[refines] = { addition_expression }
 
+multiplication_operator = {
+	[refines] = { multiplication },
+	[meta   ] = { of = ref },
+}
+
+multiplication_addition_expression[meta][expression].multiplication = multiplication_operator
+\end{minted}
+et on a notre modèle qui accepte les additions, les multiplications et les nombres.
+\subsection{Supprimer des opérateurs d'une expression}
+La librairie \lstinline|Layeredata| fournit un moyen simple de supprimer des propriétés, la clé \lstinline|Layer.key.deleted|. Pour retirer un opérateur d'une expression, il suffit alors de créer un nouveau modèle, d'hériter de l'expression qu'on veut modifier, puis d'écrire, par exemple:
+\begin{minted}{lua}
+other_expression[refines] = { addition_expression }
+other_expression[meta][expression].addition = Layer.key.deleted
+\end{minted}
+De cette manière, notre modèle \lstinline|other_expression| n'acceptera plus l'opérateur \lstinline|addition|.
+\subsection{Malheureusement...}
+Dû à une limitation dans la librairie \lstinline|C3| qui est une dépendance de \lstinline|Layeredata|, la vérification de propriétés sur les opérateurs ne fonctionne pas. En utilisant la construction d'opérateurs et d'expressions des sections \lstinline|2.3| et \lstinline|2.4|, on peut écrire
+\begin{minted}{lua}
+addition = {
+	[refines] = { addition_expression },
+	operator  = addition_expression[meta][expression].addition_operator,
+	operands  = {
+		literal_1,
+		"chaine de caractères",
+	}
+}
+\end{minted}
+et c'est accepté par \lstinline|Layeredata| alors qu'on devrait avoir une erreur sur l'expression \lstinline|addition| lorsqu'on lui passe une chaîne de caractères comme opérande. \newline
+Le problème identifié est que \lstinline|addition| hérite du modèle abstrait \lstinline|addition_expression|, or il devrait référencer une instance de \lstinline|addition_expression|. Cependant, en corrigeant cela, la librairie \lstinline|C3| s'arrête sur une erreur.
 \section{Analyse syntaxique}
 La modularité de construction des opérateurs et des expressions que nous proposons fait que nous ne connaissons pas en avance la grammaire nécessaire pour faire l'analyse syntaxique. Il nous est donc imposé de générer la grammaire à partir du modèle d'expression défini par l'utilisateur.
 Deux solutions pour effectuer cette tâche et faire la construction de l'arbre syntaxique correspondant se présentaient à nous:
@@ -191,7 +225,7 @@ Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile en
 \begin{minted}{lua}
 (((((sum(30-20))))))
 \end{minted}
-LPeg finit en 2.233 secondes, tandis que LulPeg prend 210.791 secondes (3 minutes et 30 secondes). Ces résultats sont des moyennes calculées sur 1'000 exécutions, et chronométrées avec la commande \lstinline|time|, sur Ubuntu 16.04 et un ordinateur équipé d'un processeur Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz. \\
+LPeg finit en 2.233 secondes, tandis que LulPeg prend 213 secondes (3 minutes et 33 secondes). Ces résultats sont des moyennes calculées sur 1'000 exécutions pour LPeg et 18 exécutions pour LulPeg (1'000 exécutions de LulPeg aurait pris environ 50 heures), et chronométrées avec la commande \lstinline|time|, sur Ubuntu 16.04 et un ordinateur équipé d'un processeur Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz. \\
 De plus, par sa modularité (les $PEG$ donnent la possibilité de composer des grammaires de manière procédurale), LPeg permet de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
 \subsection{Génération de grammaire}
 Supposons les opérateurs simples suivants:
@@ -274,11 +308,12 @@ Pour ce type d'opérateur, on est obligé de faire une répétition sur la repr�
 	<unaire\_postfixe> ::= <next\_expression> <op\_repr>+
 \end{grammar}
 \subsubsection{Opérateurs n-aires}
-Pour représenter les opérateurs n-aires, nous avons décidé d'utiliser la forme "représentation\_opérateur'('opérande1, opérande2, ..., opérandeN')', ce qui nous donne:
+Pour représenter les opérateurs n-aires, j'ai décidé d'utiliser la forme "représentation\_opérateur'('opérande1, opérande2, ..., opérandeN')', ce qui nous donne:
 \begin{grammar}
 	<naire> ::= <op\_repr> `(' <Expression> \{ `,' <Expression> \} `)'
 \end{grammar}
 \subsection{Associativité à gauche}
+\subsubsection{Problème des PEG}
 On constate que tous les opérateurs binaires dans le tableau précédent sont associatifs à droite. Or, on voudrait pouvoir préciser l'associativité lors de la déclaration des opérateurs, puisque cela modifie l'arbre syntaxique produit par l'analyseur lexical. Dans le cas d'un analyseur $LR$, l'associativité à gauche se traduit simplement par une récursion à gauche, telle que
 \begin{grammar}
 	<Expr> ::= <Expr> `+' <nombre> | <nombre>
@@ -296,27 +331,28 @@ $LPeg$ nous permet de déclarer des fonctions de capture pour ce qui est lu par 
 	<s> ::= <nombre> `+' ( <s> | <nombre> )
 \end{grammar}
 Une analyse de l'entrée \mint{lua}{1 + 2 + 3} \noindent produira la table \mint{lua}{{ left = 1, op = +, right = { left = 2, op = +, right = 3 } }}
-\noindent Si on suppose que notre opérateur $addition$ est associatif à gauche, ce résultat est évidemment faux. La table au-dessus correspond à l'arbre syntaxique 
-\begin{center}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.2\textwidth]{rassoc-ast.png}
-	\end{figure}
-\end{center}
-Pour avoir une production correcte, il nous suffit d'opérer de manière récursive sur la table produite, on réarrange donc simplement les nœuds en traversant la table pour obtenir
-\begin{center}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.2\textwidth]{lassoc-ast.png}
-	\end{figure}
-\end{center}
+\noindent Si on a déclaré que notre opérateur $addition$ est associatif à gauche, ce résultat est évidemment faux. La table ci-dessus correspond à l'arbre syntaxique de la figure~\ref{fig:rassocast}. 
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.2\textwidth]{rassoc-ast.png}
+	\caption{}
+	\label{fig:rassocast}
+\end{figure}
+Pour avoir une production correcte, il nous suffit d'opérer de manière récursive sur la table produite, ainsi on réarrange simplement les nœuds en traversant la table pour obtenir l'arbre représenté sur la figure~\ref{fig:lassocast}.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.2\textwidth]{lassoc-ast.png}
+	\caption{}
+	\label{fig:lassocast}
+\end{figure}
 Il y a cependant certaines situations où nous sommes obligés de nous arrêter:
 \begin{enumerate}
 	\item Le cas où l'opérateur à droite (ou à gauche) n'est pas un opérateur binaire (cela n'a pas de sens de considérer l'associativité gauche / droite pour des opérateurs non binaires)
 	\item Le cas où l'opérateur à droite (ou à gauche) a une priorité plus élevée que l'opérateur qui essaie d'imposer son associativité à gauche. Effectivement, une expression du type \lstinline|1 + 2 * 3| doit produire la table \lstinline|{ left = 1, op = +, right = { left = 2, op = *, right = 3 } }|
 \end{enumerate}
-Le code décrivant cette transformation se trouve sur mon \underline{\href{http://dinosaur.compilertools.net/}{github}}
-\subsection{Fonctions de capture}
+Le code décrivant cette transformation se trouve sur mon \underline{\href{https://github.com/LGabAnnell/formalisms/blob/dev/src/parser.lua\#L139}{github}} (c.f. fonction nommée \lstinline|binary_lassoc|)
+\subsection{Fonctions de capture notables}
+À part la nécessité de définir la fonction de capture pour l'associativité à gauche, certaines règles nécessitent elles aussi une fonction pour transformer la table produite.
 \subsubsection{Opérateurs unaires postfixes}
 L'impossibilité d'utiliser la récursion à gauche avec $LPeg$ pose aussi un problème pour les opérateurs postfixes. Si on avait la récursion à gauche, on aurait simplement pu écrire
 \begin{grammar}
@@ -448,6 +484,7 @@ quaternary = function (operator, curr_expr, next_expr)
 	second = lp.C(second)
 	third = lp.C(third)
 	
+	-- On crée la règle
 	local pattern = (
 		next_expr * white * first * white *
 		lp.V("axiom") * white * second * white * lp.V("axiom") * white *
