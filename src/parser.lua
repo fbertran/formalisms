@@ -137,6 +137,8 @@ return function (expression)
 
 
   local function binary_lassoc(pattern, _op)
+    -- We need to define the function here because
+    -- we want to capture the '_op' variable
     local function recursion(left, op, right)
       -- second condition is to make sure that we are not "stealing"
       -- anything from operators that have the same priority but
