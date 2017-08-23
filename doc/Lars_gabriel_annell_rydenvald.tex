@@ -193,6 +193,8 @@ other_expression[meta][expression].addition = Layer.key.deleted
 De cette manière, notre modèle \lstinline|other_expression| n'acceptera plus l'opérateur \lstinline|addition|.
 \subsection{Malheureusement...}
 Dû à une limitation de la librairie \lstinline|Layeredata|, l'approche décrite précédemment ne fonctionne pas en pratique. Le problème identifié est qu'en référençant une expression en tant que type d'opérandes pour un opérateur, on se retrouve dans une boucle infinie.
+\subsubsection{Solution}
+Nous n'avons pas encore de solution pour ce problème, cependant Alban a décidé d'en prendre la responsabilité.
 \section{Analyse syntaxique}
 La modularité de construction des opérateurs et des expressions que nous proposons fait que nous ne connaissons pas en avance la grammaire nécessaire pour faire l'analyse syntaxique. Il nous est donc imposé de générer la grammaire à partir du modèle d'expression défini par l'utilisateur.
 Deux solutions pour effectuer cette tâche et faire la construction de l'arbre syntaxique correspondant se présentaient à nous:
@@ -339,7 +341,7 @@ Il y a cependant certaines situations où nous sommes obligés de nous arrêter:
 	\item Le cas où l'opérateur à droite (ou à gauche) a une priorité plus élevée que l'opérateur qui essaie d'imposer son associativité à gauche. Effectivement, une expression du type \lstinline|1 + 2 * 3| doit produire la table \lstinline|{ left = 1, op = +, right = { left = 2, op = *, right = 3 } }|
 \end{enumerate}
 Le code décrivant cette transformation se trouve sur mon \underline{\href{https://github.com/LGabAnnell/formalisms/blob/dev/src/parser.lua\#L139}{github}} (c.f. fonction nommée \lstinline|binary_lassoc|)
-\subsection{Fonctions de capture notables}
+\subsection{Autres fonctions de capture notables}
 À part la nécessité de définir la fonction de capture pour l'associativité à gauche, certaines règles nécessitent elles aussi une fonction pour transformer la table produite.
 \subsubsection{Opérateurs unaires postfixes}
 L'impossibilité d'utiliser la récursion à gauche avec $LPeg$ pose aussi un problème pour les opérateurs postfixes. Si on avait la récursion à gauche, on aurait simplement pu écrire

@@ -8,7 +8,9 @@
 # Ardoises
 * Formal modeling platform
 * Provides a graphical interface to view, create and modify the models
+
 ---
+
 # Existing software for formal modeling
 * CPN-AMI
 * CosyVerif
@@ -16,6 +18,7 @@
 * AtomPM
 
 None of these provide the level of parametrisation that Ardoises aims to give to the users
+
 ---
 
 # Formalisms
@@ -58,7 +61,8 @@ addition [meta] = {
       [collection] = {
         minimum    = 2,
         maximum    = 2,
-        value_type = re.operator [meta].of, -- re is a reference to the expression model
+        value_type = re.operator [meta].of, -- re will be a reference to the expression instance
+                                            -- containing this operator
       },
     },
   },
@@ -125,3 +129,54 @@ local addition_ = {
 
 ----
 
+# Unfortunately
+In practice, this approach does not work.
+
+---
+
+# Problem
+
+Defining the type of an operand as an expression -> infinite loop. Layeredata should be able to handle this case, but it isn't.
+
+--- 
+
+# Solution
+I don't know, ask Alban.
+
+---
+
+<h1 style="text-align: center;">Grammar generation and parsing</h1>
+
+---
+
+# Problem to solve
+Operators and expressions not known beforehand
+
+---
+
+# Existing lexical analyser generators
+* ANTLR
+* Flex/Bison
+* PEGjs
+* LPeg
+* LulPeg
+
+---
+
+# Choice: LPeg
+* Allows grammar composition
+* Can parse context-free grammars
+* Convenient LUA integration
+
+---
+
+# Generating a grammar from operators
+
+1) Sort by operator priority (descending)
+2) Use predetermined patterns for each operator
+3) Add the pattern to the grammar
+
+---
+
+# Some considerations
+1. 
