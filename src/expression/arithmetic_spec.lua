@@ -21,7 +21,7 @@ describe ("Arithmetic expression", function ()
     local l1 = {
       [refines] = { arithmetic },
       operator  = arithmetic [meta] [expression].number,
-      operands  = { 1 },
+      operands  = { 5 },
     }
 
     local l2 = {
@@ -30,15 +30,41 @@ describe ("Arithmetic expression", function ()
       operands  = { 2 },
     }
 
-    layer.operator = arithmetic [meta] [expression].multiplication
-    layer.operands = { l1, l2 }
+    local l3 = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].number,
+      operands  = { 5 },
+    }
+
+    local l4 = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].number,
+      operands  = { 2 },
+    }
+
+    local add1 = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].addition,
+      operands  = { l1, l2 }
+    }
+
+
+    local sub1 = {
+      [refines] = { arithmetic },
+      operator  = arithmetic [meta] [expression].substraction,
+      operands  = { l3, l4 },
+    }
+
+    layer.operator = arithmetic[meta][expression].multiplication
+    layer.operands = { add1, sub1 }
 
     Layer.Proxy.check_all (layer)
+
     assert.is_nil (next (Layer.messages))
   end)
 
   it ("accepts all the defined expressions", function ()
-    local layer = Layer.new {}
+    local layer     = Layer.new {}
     layer [refines] = { arithmetic }
 
     local l1 = {

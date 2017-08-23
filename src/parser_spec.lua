@@ -3,7 +3,6 @@ local pprint = require "pprint"
 
 require "busted.runner" {}
 
-
 -- http://lua-users.org/lists/lua-l/2014-09/msg00421.html
 local function deepcompare(t1,t2,ignore_mt)
   local ty1 = type(t1)

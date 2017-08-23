@@ -1,5 +1,4 @@
 return function (Layer, arithmetic, ref)
-
   local refines = Layer.key.refines
   local meta    = Layer.key.meta
 

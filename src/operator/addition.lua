@@ -10,7 +10,6 @@ return function (Layer, addition)
   }
 
   addition [meta] = {
-    of       = false,
     operands = {
       [refines] = { collection },
       [meta   ] = {

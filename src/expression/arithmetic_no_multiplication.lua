@@ -1,4 +1,4 @@
-return function (Layer, arithmetic_no_multiplication)
+return function (Layer, arithmetic_no_multiplication, ref)
   local refines    = Layer.key.refines
   local meta       = Layer.key.meta
   local deleted    = Layer.key.deleted
@@ -7,7 +7,7 @@ return function (Layer, arithmetic_no_multiplication)
 
   arithmetic_no_multiplication [refines] = { arithmetic }
 
-  arithmetic [meta] [expression].multiplication = deleted
+  arithmetic_no_multiplication [meta] [expression].multiplication = deleted
 
   return arithmetic_no_multiplication
 end

@@ -9,6 +9,11 @@ return function (Layer, operator)
   }
 
   operator [meta] = {
+    [record] = {
+      of = {
+        optional = false
+      }
+    }
     -- [record] = {
     --   operator = {
     --     value_type = "string",
