@@ -517,15 +517,7 @@ describe("parser", function ()
     local result = p:match(v.expression_string)
 
     it("parses correctly, input = " .. v.expression_string, function ()
-      local cmpres = deepcompare(result, v.expected, true)
-      -- if not cmpres then
-      --   print("input", v.expression_string)
-      --   print("result:")
-      --   pprint(result)
-      --   print("expected")
-      --   pprint(v.expected)
-      -- end
-      assert.is_true(cmpres)
+      assert.is_true(deepcompare(result, v.expected, true))
     end)
   end
 end)

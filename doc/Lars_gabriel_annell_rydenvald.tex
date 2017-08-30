@@ -73,7 +73,7 @@ Ce travail est constitué de deux parties:
 Toute cette partie dépend de la librairie \lstinline|Layeredata|, % TODO ajouter référence vers l'article sur layeredata
 qui permet l'héritage prototype en Lua. \lstinline|Layeredata| est aussi responsable de la vérification de propriétés sur les instances des modèles. \\
 
-\noindent Avec cette librairie, on a la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent du modèle de base. De plus, grâce au formalismes \lstinline|data.record| et \lstinline|data.collection| de la librairie \lstinline|Ardoises/Formalismes| on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
+\noindent Avec cette librairie, on a la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent des modèles de base. De plus, grâce au formalismes \lstinline|data.record| et \lstinline|data.collection| de la librairie \lstinline|Ardoises/Formalismes| on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
 
 \subsection{Distinction entre opérateurs et expressions}
 Même si cela paraît évident, il est important de noter les différences entre opérateurs et expressions; un opérateur est constitué d'un symbole (sa représentation textuelle), accepte un certain nombre d'opérandes et possède certaines propriétés, tandis qu'une expression est constituée d'un ou plusieurs opérateurs. Sachant qu'une opérande d'un opérateur peut être une sous-expression, il nous faut donc un moyen (de préférence simple) pour exprimer les sous-expressions acceptées.
@@ -202,7 +202,7 @@ Deux solutions pour effectuer cette tâche et faire la construction de l'arbre s
 	\item Utiliser des expressions rationnelles, qui seraient définies par l'utilisateur pour chaque opérateur.
 	\item Générer une grammaire à partir de règles prédéfinis pour différents types d'opérateurs.
 \end{enumerate}
-J'ai choisi d'utiliser la 2$^{\grave{e}me}$ méthode, car même si les expressions rationnelles auraient pû être un moyen "plus simple", elles posent un problème: les expressions arithmétiques incluant des parenthèses ne sont pas des langages réguliers, puisqu'on peut, en prenant un exemple simple, se retrouver dans un cas comme celui-ci: $\{(\textquoteleft(\textquoteleft^{n}\textquoteleft)\textquoteleft^{n})^{*}, n \ge 0 \}$.
+Le choix a été fait d'utiliser la 2$^{\grave{e}me}$ méthode, car même si les expressions rationnelles auraient pû être un moyen ``plus simple", elles posent un problème: les expressions arithmétiques incluant des parenthèses ne sont pas des langages réguliers, puisqu'on peut, en prenant un exemple simple, se retrouver dans un cas comme celui-ci: $\{(\textquoteleft(\textquoteleft^{n}\textquoteleft)\textquoteleft^{n})^{*}, n \ge 0 \}$.
 \subsection{Choix de l'outil}
 Il existe plusieurs générateurs d'analyseurs lexicaux, tels que: 
 \begin{enumerate}
@@ -212,24 +212,24 @@ Il existe plusieurs générateurs d'analyseurs lexicaux, tels que:
 	\item \underline{\href{https://github.com/LuaDist/lpeg}{LPeg}}, écrit en C, compatible avec Lua, générant un parser $PEG$
 	\item \underline{\href{https://github.com/pygy/LuLPeg}{LulPeg}}, implémentation en pur Lua de $LPeg$.
 \end{enumerate}
-Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, le choix est tombé sur LPeg. LulPeg a aussi été considéré, cependant celui-ci est beaucoup plus lent que LPeg. En effet, pour produire un arbre syntaxique à partir de l'expression 
+Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, le choix est tombé sur $LPeg$. $LulPeg$ a aussi été considéré, cependant celui-ci est beaucoup plus lent que $LPeg$. En effet, pour produire un arbre syntaxique à partir de l'expression 
 \begin{minted}{lua}
 (((((sum(30-20))))))
 \end{minted}
-LPeg finit en 2.233 secondes, tandis que LulPeg prend 213 secondes (3 minutes et 33 secondes). Ces nombres sont des moyennes calculées sur 1'000 exécutions pour LPeg et 18 exécutions pour LulPeg (1'000 exécutions de LulPeg aurait pris environ 50 heures), et chronométrées avec la commande \lstinline|time|, sur Ubuntu 16.04 et un ordinateur équipé d'un processeur Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz. \\
-De plus, par sa modularité (les $PEG$ donnent la possibilité de composer des grammaires de manière procédurale), LPeg permet de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
+LPeg finit en 2.233 secondes, tandis que $LulPeg$ prend 213 secondes (3 minutes et 33 secondes). Ces nombres sont des moyennes calculées sur 1'000 exécutions pour $LPeg$ et 18 exécutions pour $LulPeg$ (1'000 exécutions de $LulPeg$ aurait pris environ 50 heures), et chronométrées avec la commande \lstinline|time|, sur Ubuntu 16.04 et un ordinateur équipé d'un processeur Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz. \\
+De plus, par sa modularité (les $PEG$ donnent la possibilité de composer des grammaires de manière procédurale), $LPeg$ permet de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
 \subsection{Génération de grammaire}
 Supposons les opérateurs simples suivants:
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 	\hline
 	\textbf{Opérateur} & \textbf{Représentation} & \textbf{Priorité} &  \textbf{Type} & \textbf{Associativité}\\ \hline
-	Addition & '+' & 11 & binaire & droite \\ \hline
-	Soustraction & '-' & 11 & binaire & droite  \\ \hline
-	Multiplication & '*' & 12 & binaire & droite  \\ \hline
-	Division & '/' & 12 & binaire & droite  \\ \hline
-	Exponentiation & '\textasciicircum' & 13 & binaire & droite  \\ \hline
-	Négation    & '-'  & 14 & unaire préfixe & N/A  \\ \hline 
+	Addition & `+' & 11 & binaire & droite \\ \hline
+	Soustraction & `-' & 11 & binaire & droite  \\ \hline
+	Multiplication & `*' & 12 & binaire & droite  \\ \hline
+	Division & `/' & 12 & binaire & droite  \\ \hline
+	Exponentiation & `\textasciicircum' & 13 & binaire & droite  \\ \hline
+	Négation    & `-'  & 14 & unaire préfixe & N/A  \\ \hline 
   nombre & [0-9]+ & 15 & litéral & N/A \\ \hline
 \end{tabular}
 \end{center}
@@ -240,12 +240,12 @@ Prenons comme base la simple grammaire suivante (qui ne fait rien):
 On va ensuite rajouter un à un les opérateurs dans cette grammaire, de la manière  suivante:
 
 \begin{enumerate}
-	\item On trie la table des opérateurs, par priorité, dans l'ordre décroissant.
+	\item On trie la table des opérateurs par priorité, dans l'ordre décroissant.
 	\item Pour chaque type d'opérateur, on crée la règle correspondante. Par exemple, l'opérateur binaire $Addition$ dans notre table, aura la règle
 	\begin{grammar}
 		<Addition> ::= <P12> `+' ( <P11> | <P12> )
 	\end{grammar}
-	\textbf{N.B.} Les non-terminaux \textit{P11} et \textit{P12} sont définis dans la grammaire ci-dessous.
+	\textbf{N.B.} Les non-terminaux $\langle P11 \rangle$ et $\langle P12 \rangle$ sont définis dans la grammaire ci-dessous.
 	\item On rajoute la nouvelle règle créée dans la grammaire de base
 \end{enumerate}
 Pour finir, on se retrouve avec une grammaire comme celle-ci:
@@ -258,24 +258,37 @@ Pour finir, on se retrouve avec une grammaire comme celle-ci:
 <P14> ::= <Négation> | <P15>\\
 <P15> ::= <nombre> | `(' <s> `)'
 \end{grammar}
-Puisque $LPeg$ génère un analyseur lexical de type $PEG$, il faut faire attention à l'ordre de déclaration de la grammaire pour avoir une précédence correcte. En outre, il y a quelques autres règles à respecter:
+Puisque $LPeg$ génère un analyseur lexical de type $PEG$, il faut faire attention à l'ordre de déclaration de la grammaire pour avoir une précédence correcte. En outre, il y a quelques autres règles à considérer:
 \begin{enumerate}
-	\item Si le modèle d'expression autorise les variables, et des mots-clés (ex. \lstinline|true|, \lstinline|false|), il est nécessaire de les placer à la toute fin de la grammaire, par exemple
+	\item Si le modèle d'expression autorise les variables, et des mots-clés (ex. \lstinline|true|, \lstinline|false|), il est nécessaire de placer les variables à la toute fin de la grammaire, par exemple
 	\begin{grammar}
 <P15> ::= <nombre> | <booléen> | `(' <s> `)' | <variable>
 	\end{grammar}
-	Le cas échéant, l'analyseur lexical lira \lstinline|true| (ou \lstinline|false|) et considérera le symbole comme étant une variable.
+	Le cas échéant, l'analyseur lexical lira, dans notre exemple, \lstinline|true| (ou \lstinline|false|) et considérera le symbole comme étant une variable et non le mot-clé \lstinline|true|.
+	\item Les opérateurs qui ne tiennent pas compte de ce qu'il y a ``autour" d'eux (litéraux, n-aires) doivent avoir la priorité la plus élevée. Dans un cas comme
+	\begin{grammar}
+<P14> ::= <nombre> | <P15>\\
+<P15> ::= <Addition>
+	\end{grammar}
+	la manière décrite plus haut pour construire la grammaire ne fonctionne pas, car $\langle Addition \rangle$ a besoin d'une règle à priorité plus élevée.
+	\item Il n'est pas possible de donner aux opérateurs une priorité égale ou inférieure à 1. Pour cause: $LPeg$ requiert que la première entrée de la table constituant la grammaire soit une chaîne de caractères donnant le nom de la première règle. Exemple simple:
+	\begin{minted}{lua}
+	grammar = {
+		"axiom",
+		axiom = lp.R("09")^1
+	}
+	\end{minted}
 \end{enumerate}
 
 \subsection{Règles utilisées pour les différents types d'opérateurs}
-Les fonctions pour générer les règles sont stockées dans une table, et retournent une règle $LPeg$. Considérons ici que les espaces blancs (\textbackslash s, \textbackslash t, \textbackslash n) sont ignorés. De plus, notons la "prochaine" règle dans la grammaire par $next\_expression$, et la règle courante par $curr\_expression$, et la représentation de l'opérateur (e.g. "+") par $op\_repr$. Notons aussi l'axiome $s$ par $Expression$
+Les fonctions pour générer les règles sont stockées dans une table, et retournent une règle $LPeg$. Considérons ici que les espaces blancs (\textbackslash s, \textbackslash t, \textbackslash n) sont ignorés. De plus, notons la ``prochaine" règle dans la grammaire par $next\_expression$, et la règle courante par $curr\_expression$, et la représentation de l'opérateur (e.g. ``+") par $op\_repr$. Notons aussi l'axiome $s$ par $Expression$
 \subsubsection{Opérateurs binaires}
-Cette règle est un des plus simples et un des plus évidents.
+Cette règle est une des plus simples et un des plus évidents.
 \begin{grammar}
 	<binaire> ::= <next\_expression> <op\_repr> ( <curr\_expression> | <next\_expression> )
 \end{grammar}
 \subsubsection{Opérateurs ternaires}
-Il existe deux variantes d'opérateurs ternaires, la première étant le bloc conditionnel, "if ... then ... else", et l'autre ressemblant au "inline if", par exemple "... ? ... : ...". Pour décrire ces deux opérateurs, on dénombre les représentations des opérateurs par $op\_reprN, \ N \in {1, 3}$.
+Il existe deux variantes d'opérateurs ternaires, la première étant le bloc conditionnel, ``if ... then ... else", et l'autre ressemblant au ``inline if", par exemple ``... ? ... : ...". Pour décrire ces deux opérateurs, on dénombre les représentations des opérateurs par $op\_reprN, \ N \in {1, 3}$.
 \begin{enumerate}
 	\item Pour la première version, la règle utilisée est 
 	\begin{grammar}
@@ -299,7 +312,7 @@ Pour ce type d'opérateur, on est obligé de faire une répétition sur la repr�
 	<unaire\_postfixe> ::= <next\_expression> <op\_repr>+
 \end{grammar}
 \subsubsection{Opérateurs n-aires}
-Pour représenter les opérateurs n-aires, j'ai décidé d'utiliser la forme "représentation\_opérateur'('opérande1, opérande2, ..., opérandeN')', ce qui nous donne:
+Pour représenter les opérateurs n-aires, j'ai décidé d'utiliser la forme représentation\_opérateur `(' opérande1, opérande2, ..., opérandeN `)', ce qui nous donne:
 \begin{grammar}
 	<naire> ::= <op\_repr> `(' <Expression> \{ `,' <Expression> \} `)'
 \end{grammar}
@@ -341,7 +354,7 @@ Il y a cependant certaines situations où nous sommes obligés de nous arrêter:
 	\item Le cas où l'opérateur à droite (ou à gauche) n'est pas un opérateur binaire (cela n'a pas de sens de considérer l'associativité gauche / droite pour des opérateurs non binaires)
 	\item Le cas où l'opérateur à droite (ou à gauche) a une priorité plus élevée que l'opérateur qui essaie d'imposer son associativité à gauche. Effectivement, une expression du type \lstinline|1 + 2 * 3| doit produire la table \lstinline|{ left = 1, op = +, right = { left = 2, op = *, right = 3 } }|
 \end{enumerate}
-Le code décrivant cette transformation se trouve sur mon \underline{\href{https://github.com/LGabAnnell/formalisms/blob/f3cc67d58ef319d80d5895146f26f0b489c89d21/src/parser.lua\#L140}{github}} (c.f. fonction nommée \lstinline|binary_lassoc|)
+Le code décrivant cette transformation se trouve sur mon \underline{\href{https://github.com/LGabAnnell/formalisms/blob/f3cc67d58ef319d80d5895146f26f0b489c89d21/src/parser.lua\#L140}{github}} (cf. fonction nommée \lstinline|binary_lassoc|)
 \subsection{Autres fonctions de capture notables}
 À part la nécessité de définir la fonction de capture pour l'associativité à gauche, certaines règles nécessitent elles aussi une fonction pour transformer la table produite.
 \subsubsection{Opérateurs unaires postfixes}
@@ -499,17 +512,25 @@ local quaternary = {
 	\end{minted}
 	on peut maintenant donner \mint{lua}{1 u 2 u 3 u 4} en entrée à l'analyseur ce qui produit la table
 	\begin{minted}{lua}
-{ left    = "1",
+{ 
+	left    = "1",
 	middle1 = "2",
 	middle2 = "3",
 	right   = "4",
 	op      = "u",
 	op2     = "u",
 	op3     = "u", 
-	op_type = "quaternary" }
+	op_type = "quaternary" 
+}
 	\end{minted}
 \end{enumerate}
 \section{Conclusion}
+La construction des modèles formels d'opérateurs et d'expressions était le point de départ du travail, et malheureusement aussi ce qui a posé le plus de problèmes. Partant d'abord d'un modèle finalement rejeté, puis arrivant à un modèle théoriquement correct mais qui ne fonctionne pas en pratique, cette partie aura crée un contretemps considérable et ne pas avoir trouvé de solution adaptée est plutôt désolant.
+\ \\ \\
+Cependant, l'analyse lexicale correspond, à mon avis, bien aux attentes du projet. Utiliser un PEG pour générer une grammaire à partir d'opérateurs fonctionne très bien, malgré les quelques considérations à retenir quant aux priorités qu'on attribue aux opérateurs ainsi que le fait de devoir définir des règles pour les différents types d'opérateur. Il est important de noter toutefois que l'intégration complète de la génération de grammaire n'est pas encore faite, la cause principale étant qu'on n'a pas réussi à constituer et à valider un modèle définitif ni pour les opérateurs, ni pour les expressions.
+\ \\ \\
+Finalement, travailler avec $LPeg$ pour la génération de grammaire est très intéressant. C'est un analyseur lexical qui répond aux besoins d'Ardoises, par sa forte modularité et sa manipulation facile, malgré le fait qu'il n'accepte pas la récursion à gauche.
+
 
 \newpage
 \noindent[1]: Parsing Expression Grammars Made Practical, Nicolas Laurent \newline

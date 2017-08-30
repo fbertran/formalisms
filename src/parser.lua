@@ -1,7 +1,7 @@
--- local lp = require("lpeg")
+local lp = require("lpeg")
 
-return function (expression, req)
-  local lp = require(req)
+return function (expression)
+  -- local lp = require(req)
   local prefix = "prefix"
 
   -- Holds the different operators, example for an expression which has
