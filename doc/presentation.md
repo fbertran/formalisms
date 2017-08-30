@@ -156,7 +156,7 @@ Operators and expressions not known beforehand
 
 ---
 
-# Existing lexical analyser generators
+# Some existing lexical analyser generators
 * ANTLR
 * Flex/Bison
 * PEGjs
@@ -171,6 +171,12 @@ Operators and expressions not known beforehand
 * Convenient LUA integration
 
 ---
+
+# Why not LulPeg?
+Too slow: parsing <code style="font-size: 25px">(((((sum(30-20))))))</code> takes over 3 minutes for LulPeg, around 2 seconds for LPeg
+
+---
+
 
 # Generating a grammar from operators
 
@@ -259,20 +265,21 @@ And our grammar finally looks like this
 ---
 
 # Some considerations
-1. Literals and n-ary operators must have highest priority.
+1. Literals and n-ary operators should have the highest priority of the different operators.
 2. If our expression allows variables, they must be added last.
-3. Patterns have been created for the most common operator types; if other types are needed, the pattern must be defined for the parser to accept it.
+3. Patterns have been created for the most common operator types; if other types are needed, the pattern must be defined for the parser to handle it.
 
 ---
 
 # Problem with PEG parsers
 
-### They can't handle left recursion
+## They don't accept left recursion
 
 ---
 
 # Why is this a problem?
-### No left recursion -> no "native" solution for left-associative operators
+
+No left recursion -> no "native" solution for left-associative binary operators
 
 ---
 

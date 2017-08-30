@@ -71,7 +71,7 @@ Ce travail est constitué de deux parties:
 
 \subsection{Layered data}
 Toute cette partie dépend de la librairie \lstinline|Layeredata|, % TODO ajouter référence vers l'article sur layeredata
-qui permet l'héritage prototype en Lua. \lstinline|Layeredata| est aussi responsable pour la vérification de propriétés sur les instances des modèles. \\
+qui permet l'héritage prototype en Lua. \lstinline|Layeredata| est aussi responsable de la vérification de propriétés sur les instances des modèles. \\
 
 \noindent Avec cette librairie, on a la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent du modèle de base. De plus, grâce au formalismes \lstinline|data.record| et \lstinline|data.collection| de la librairie \lstinline|Ardoises/Formalismes| on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
 
@@ -192,11 +192,11 @@ other_expression[meta][expression].addition = Layer.key.deleted
 \end{minted}
 De cette manière, notre modèle \lstinline|other_expression| n'acceptera plus l'opérateur \lstinline|addition|.
 \subsection{Malheureusement...}
-Dû à une limitation de la librairie \lstinline|Layeredata|, l'approche décrite précédemment ne fonctionne pas en pratique. Le problème identifié est qu'en référençant une expression en tant que type d'opérandes pour un opérateur, on se retrouve dans une boucle infinie.
+Dû à une limitation de la librairie \lstinline|Layeredata|, l'approche décrite précédemment ne fonctionne pas en pratique. Le problème identifié est qu'en référençant une expression en tant que type d'opérandes pour un opérateur, on se retrouve dans une boucle infinie lorsque \lstinline|Layeredata| tente de vérifier que l'instance du modèle respecte les propriétés de celui-ci.
 \subsubsection{Solution}
 Nous n'avons pas encore de solution pour ce problème, cependant Alban a décidé d'en prendre la responsabilité.
 \section{Analyse syntaxique}
-La modularité de construction des opérateurs et des expressions que nous proposons fait que nous ne connaissons pas en avance la grammaire nécessaire pour faire l'analyse syntaxique. Il nous est donc imposé de générer la grammaire à partir du modèle d'expression défini par l'utilisateur.
+La modularité de construction des opérateurs et des expressions que nous proposons fait que nous ne connaissons pas en avance la grammaire nécessaire pour effectuer l'analyse syntaxique. Il nous est donc imposé de générer la grammaire à partir du modèle d'expression défini par l'utilisateur.
 Deux solutions pour effectuer cette tâche et faire la construction de l'arbre syntaxique correspondant se présentaient à nous:
 \begin{enumerate}
 	\item Utiliser des expressions rationnelles, qui seraient définies par l'utilisateur pour chaque opérateur.
@@ -204,18 +204,19 @@ Deux solutions pour effectuer cette tâche et faire la construction de l'arbre s
 \end{enumerate}
 J'ai choisi d'utiliser la 2$^{\grave{e}me}$ méthode, car même si les expressions rationnelles auraient pû être un moyen "plus simple", elles posent un problème: les expressions arithmétiques incluant des parenthèses ne sont pas des langages réguliers, puisqu'on peut, en prenant un exemple simple, se retrouver dans un cas comme celui-ci: $\{(\textquoteleft(\textquoteleft^{n}\textquoteleft)\textquoteleft^{n})^{*}, n \ge 0 \}$.
 \subsection{Choix de l'outil}
-Il existe plusieurs générateurs d'analyseurs lexicaux, tels que: \begin{enumerate}
+Il existe plusieurs générateurs d'analyseurs lexicaux, tels que: 
+\begin{enumerate}
 	\item \underline{\href{http://www.antlr.org/about.html}{ANTLR}}, écrit en Java, générant un analyseur $LL(^*)$
 	\item \underline{\href{http://dinosaur.compilertools.net/}{Flex/Bison}}, écrit en C, générant un analyseur $LALR(1)$
 	\item \underline{\href{https://pegjs.org/}{PEGjs}}, écrit en JavaScript, générant un parser $PEG$
 	\item \underline{\href{https://github.com/LuaDist/lpeg}{LPeg}}, écrit en C, compatible avec Lua, générant un parser $PEG$
 	\item \underline{\href{https://github.com/pygy/LuLPeg}{LulPeg}}, implémentation en pur Lua de $LPeg$.
 \end{enumerate}
-Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, j'ai choisi d'utiliser LPeg. LulPeg a aussi été considéré, cependant celui-ci est beaucoup plus lent que LPeg. En effet, pour produire un arbre syntaxique à partir de l'expression 
+Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, le choix est tombé sur LPeg. LulPeg a aussi été considéré, cependant celui-ci est beaucoup plus lent que LPeg. En effet, pour produire un arbre syntaxique à partir de l'expression 
 \begin{minted}{lua}
 (((((sum(30-20))))))
 \end{minted}
-LPeg finit en 2.233 secondes, tandis que LulPeg prend 213 secondes (3 minutes et 33 secondes). Ces résultats sont des moyennes calculées sur 1'000 exécutions pour LPeg et 18 exécutions pour LulPeg (1'000 exécutions de LulPeg aurait pris environ 50 heures), et chronométrées avec la commande \lstinline|time|, sur Ubuntu 16.04 et un ordinateur équipé d'un processeur Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz. \\
+LPeg finit en 2.233 secondes, tandis que LulPeg prend 213 secondes (3 minutes et 33 secondes). Ces nombres sont des moyennes calculées sur 1'000 exécutions pour LPeg et 18 exécutions pour LulPeg (1'000 exécutions de LulPeg aurait pris environ 50 heures), et chronométrées avec la commande \lstinline|time|, sur Ubuntu 16.04 et un ordinateur équipé d'un processeur Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz. \\
 De plus, par sa modularité (les $PEG$ donnent la possibilité de composer des grammaires de manière procédurale), LPeg permet de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
 \subsection{Génération de grammaire}
 Supposons les opérateurs simples suivants:
@@ -510,6 +511,8 @@ local quaternary = {
 }
 	\end{minted}
 \end{enumerate}
+\section{Conclusion}
+
 \newpage
 \noindent[1]: Parsing Expression Grammars Made Practical, Nicolas Laurent \newline
 [2]: Direct Left-Recursive Parsing Expression Grammars, Laurence Tratt
