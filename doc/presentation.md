@@ -40,7 +40,7 @@ None of these provide the level of parametrisation that Ardoises aims to give to
 
 ---
 
-### Most important feature
+# Most important feature
 * Modularity
 
 --- 
@@ -123,6 +123,7 @@ local addition_ = {
   operands  = { literal1, literal2 }
 }
 </pre>
+
 ---
 
 <img src="expression-tree.png" style="width: 100%">
@@ -141,7 +142,8 @@ Defining the type of an operand as an expression -> infinite loop. Layeredata sh
 --- 
 
 # Solution
-I don't know, ask Alban.
+
+N/A
 
 ---
 
@@ -178,5 +180,116 @@ Operators and expressions not known beforehand
 
 ---
 
+# Example
+
+<table>
+	<tr style="width: 100%;">
+    	<th style="width: 2%;">Operator</th>
+        <th style="width: 2%;">Priority</th>
+        <th style="width: 2%;">Type</th>
+        <th style="width: 2%;">Representation</th>
+	</tr>
+    <tr>
+    	<td style="text-align: center;">Addition</td>
+        <td style="text-align: center;">11</td>
+        <td style="text-align: center;">binary</td>
+        <td style="text-align: center;">'+'</td>
+	</tr>
+    <tr>
+    	<td style="text-align: center;">Substraction</td>
+        <td style="text-align: center;">11</td>
+        <td style="text-align: center;">binary</td>
+        <td style="text-align: center;">'-'</td>
+	</tr>
+    <tr>
+    	<td style="text-align: center;">Multiplication</td>
+        <td style="text-align: center;">12</td>
+        <td style="text-align: center;">binary</td>
+        <td style="text-align: center;">'*'</td>
+	</tr>
+    <tr>
+    	<td style="text-align: center;">Number</td>
+        <td style="text-align: center;">15</td>
+        <td style="text-align: center;">literal</td>
+        <td style="text-align: center;">[0-9]+</td>
+	</tr>
+</table>
+
+---
+
+# Example
+First we create the literal / terminal rule
+<pre style="font-size: 20px;">
+&lt;Number&gt; ::= [0-9]+
+</pre>
+And add it to the grammar
+<pre style="font-size: 20px;">
+&lt;P15&gt; ::= &lt;Number&gt;
+</pre>
+
+---
+
+# Example
+Then the multiplication rule
+<pre style="font-size: 20px;">
+&lt;Multiplication&gt; ::= &lt;P15&gt; '*' (&lt;P12&gt; | &lt;P15&gt;)
+</pre>
+And add it to the grammar
+<pre style="font-size: 20px;">
+&lt;P12&gt; ::= &lt;Multiplication&gt; | &lt;P15&gt;
+&lt;P15&gt; ::= &lt;Number&gt;
+</pre>
+
+---
+
+# Example
+Then repeat for the addition and substraction operators
+<pre style="font-size: 20px;">
+&lt;Addition&gt;     ::= &lt;P12&gt; '+' (&lt;P11&gt; | &lt;P12&gt;)
+&lt;Substraction&gt; ::= &lt;P12&gt; '-' (&lt;P11&gt; | &lt;P12&gt;)
+</pre>
+And our grammar finally looks like this
+<pre style="font-size: 20px;">
+&lt;S&gt;   ::= &lt;P11&gt;
+&lt;P11&gt; ::= &lt;Addition&gt; | &lt;Substraction&gt; | &lt;P12&gt;
+&lt;P12&gt; ::= &lt;Multiplication&gt; | &lt;P15&gt;
+&lt;P15&gt; ::= &lt;Number&gt;
+</pre>
+
+---
+
 # Some considerations
-1. 
+1. Literals and n-ary operators must have highest priority.
+2. If our expression allows variables, they must be added last.
+3. Patterns have been created for the most common operator types; if other types are needed, the pattern must be defined for the parser to accept it.
+
+---
+
+# Problem with PEG parsers
+
+### They can't handle left recursion
+
+---
+
+# Why is this a problem?
+### No left recursion -> no "native" solution for left-associative operators
+
+---
+
+# Why is this a problem
+
+An expression such as <pre style="font-size: 13px">1 + 2 + 3</pre> will always be parsed into
+<pre style="font-size:13px">{ 1 + { 2 + 3 } }</pre>
+by LPeg
+
+---
+
+# Solution
+
+Assuming our <code>'+'</code> operator is left-associative, once LPeg has produced the  table
+
+<pre style="font-size: 13px">{ 1 + { 2 + 3 } }</pre>
+
+we can simply operate on it in a recursive fashion to obtain what we want, i.e.
+
+<pre style="font-size: 13px">{ { 1 + 2 } + 3 }</pre>

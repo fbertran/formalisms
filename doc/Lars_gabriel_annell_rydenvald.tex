@@ -242,9 +242,9 @@ On va ensuite rajouter un à un les opérateurs dans cette grammaire, de la mani
 	\item On trie la table des opérateurs, par priorité, dans l'ordre décroissant.
 	\item Pour chaque type d'opérateur, on crée la règle correspondante. Par exemple, l'opérateur binaire $Addition$ dans notre table, aura la règle
 	\begin{grammar}
-		<Addition> ::= <P12> `+' ( <Addition> | <P12> )
+		<Addition> ::= <P12> `+' ( <P11> | <P12> )
 	\end{grammar}
-	\textbf{N.B.} Le non-terminal \textit{P12} est défini dans la grammaire ci-dessous.
+	\textbf{N.B.} Les non-terminaux \textit{P11} et \textit{P12} sont définis dans la grammaire ci-dessous.
 	\item On rajoute la nouvelle règle créée dans la grammaire de base
 \end{enumerate}
 Pour finir, on se retrouve avec une grammaire comme celle-ci:
@@ -362,7 +362,7 @@ local function postfix_capture(p)
 	local function construct(list)
 	  -- On sait que la table va ressembler à quelque chose 
 	  -- comme { expression ~ ~ ~ ~ }. On commence donc par le dernier élément
-	  -- de la table, et on 
+	  -- de la table, et on crée une nouvelle table de manière récursive
 		local function rec(n, t)
 		  if n == 1 then
 			  return list[1]

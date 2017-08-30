@@ -1,6 +1,7 @@
-local lp = require("lpeg")
+-- local lp = require("lpeg")
 
-return function (expression)
+return function (expression, req)
+  local lp = require(req)
   local prefix = "prefix"
 
   -- Holds the different operators, example for an expression which has
@@ -299,7 +300,7 @@ return function (expression)
   -- and end with the lowest ones
   local function build_grammar(expr)
 
-    if (expr == nil or tlen(expr) < 0) then
+    if (expr == nil or tlen(expr) < 1) then
       return nil
     end
 
@@ -400,7 +401,14 @@ return function (expression)
         patterns[var_op.type](var_op)
     end
 
+    if req == "lulpeg" then
+      lp.pprint(grammar)
+    end
+
     grammar.axiom = lp.V(prefix .. op_table[tlen(op_table)][1].priority)
+    if req == "lulpeg" then
+      lp.pprint(grammar)
+    end
 
     return lp.P(grammar)
   end
