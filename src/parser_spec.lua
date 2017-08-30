@@ -518,13 +518,13 @@ describe("parser", function ()
 
     it("parses correctly, input = " .. v.expression_string, function ()
       local cmpres = deepcompare(result, v.expected, true)
-      if not cmpres then
-        print("input", v.expression_string)
-        print("result:")
-        pprint(result)
-        print("expected")
-        pprint(v.expected)
-      end
+      -- if not cmpres then
+      --   print("input", v.expression_string)
+      --   print("result:")
+      --   pprint(result)
+      --   print("expected")
+      --   pprint(v.expected)
+      -- end
       assert.is_true(cmpres)
     end)
   end

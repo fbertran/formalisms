@@ -341,7 +341,7 @@ Il y a cependant certaines situations où nous sommes obligés de nous arrêter:
 	\item Le cas où l'opérateur à droite (ou à gauche) n'est pas un opérateur binaire (cela n'a pas de sens de considérer l'associativité gauche / droite pour des opérateurs non binaires)
 	\item Le cas où l'opérateur à droite (ou à gauche) a une priorité plus élevée que l'opérateur qui essaie d'imposer son associativité à gauche. Effectivement, une expression du type \lstinline|1 + 2 * 3| doit produire la table \lstinline|{ left = 1, op = +, right = { left = 2, op = *, right = 3 } }|
 \end{enumerate}
-Le code décrivant cette transformation se trouve sur mon \underline{\href{https://github.com/LGabAnnell/formalisms/blob/dev/src/parser.lua\#L139}{github}} (c.f. fonction nommée \lstinline|binary_lassoc|)
+Le code décrivant cette transformation se trouve sur mon \underline{\href{https://github.com/LGabAnnell/formalisms/blob/f3cc67d58ef319d80d5895146f26f0b489c89d21/src/parser.lua\#L140}{github}} (c.f. fonction nommée \lstinline|binary_lassoc|)
 \subsection{Autres fonctions de capture notables}
 À part la nécessité de définir la fonction de capture pour l'associativité à gauche, certaines règles nécessitent elles aussi une fonction pour transformer la table produite.
 \subsubsection{Opérateurs unaires postfixes}
@@ -497,18 +497,16 @@ local quaternary = {
 	priority  = 13
 }
 	\end{minted}
-	on peut maintenant écrire \mint{lua}{1 u 2 u 3 u 4} ce qui produit la table
+	on peut maintenant donner \mint{lua}{1 u 2 u 3 u 4} en entrée à l'analyseur ce qui produit la table
 	\begin{minted}{lua}
-{
-	left    = "1",
+{ left    = "1",
 	middle1 = "2",
 	middle2 = "3",
 	right   = "4",
 	op      = "u",
 	op2     = "u",
-	op3     = "u",
-	op_type = "quaternary"
-}
+	op3     = "u", 
+	op_type = "quaternary" }
 	\end{minted}
 \end{enumerate}
 \section{Conclusion}
