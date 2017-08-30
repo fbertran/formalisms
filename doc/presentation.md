@@ -293,7 +293,7 @@ by LPeg
 
 # Solution
 
-Assuming our <code>'+'</code> operator is left-associative, once LPeg has produced the  table
+Assuming our <code>addition</code> operator is left-associative, once LPeg has produced the  table
 
 <pre style="font-size: 13px">{ 1 + { 2 + 3 } }</pre>
 
