@@ -1,26 +1,28 @@
-return function (Layer, Not)
+return function (Layer, not_operator)
   local refines = Layer.key.refines
 
   local operator = Layer.require "operator"
   local collection = Layer.require "data.collection"
 
-  Not [refines] = {
+  local _, re = Layer.require "expression"
+
+  not_operator [refines] = {
     operator,
   }
 
-  Not.operator = "!"
-  Not.priority = 13
-
-  Not.is_associative = false
-  Not.is_commutative = false
-  Not.operands = {
-    [collection] = {
-      minimum = 1,
-      maximum = 1,
-      value_type = "boolean",
+  not_operator [meta] = {
+    of       = false,
+    operands = {
+      [refines] = { collection },
+      [meta   ] = {
+        [collection] = {
+          minimum    = 2,
+          maximum    = 2,
+          value_type = re.operator [meta].of,
+        },
+      },
     },
-    type = collection,
   }
 
-  return Not
+  return not_operator
 end
