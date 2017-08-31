@@ -229,11 +229,7 @@ Il existe plusieurs générateurs d'analyseurs lexicaux, tels que:
 	\item \underline{\href{https://github.com/LuaDist/lpeg}{LPeg}}, écrit en C, compatible avec Lua, générant un parser $PEG$
 	\item \underline{\href{https://github.com/pygy/LuLPeg}{LulPeg}}, implémentation en pur Lua de $LPeg$.
 \end{enumerate}
-Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, le choix est tombé sur $LPeg$. $LulPeg$ a aussi été considéré, cependant celui-ci est beaucoup plus lent que $LPeg$. En effet, pour produire un arbre syntaxique à partir de l'expression 
-\begin{minted}{lua}
-(((((sum(30-20))))))
-\end{minted}
-LPeg finit en 2.233 secondes, tandis que $LulPeg$ prend 213 secondes (3 minutes et 33 secondes). Ces nombres sont des moyennes calculées sur 1'000 exécutions pour $LPeg$ et 18 exécutions pour $LulPeg$ (1'000 exécutions de $LulPeg$ aurait pris environ 50 heures), et chronométrées avec la commande \lstinline|time|, sur Ubuntu 16.04 et un ordinateur équipé d'un processeur Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz. \\
+Puisque le projet est écrit en Lua, pour avoir une interopérabilité facile entre les définitions d'opérateurs et expressions, le choix est tombé sur $LPeg$. $LulPeg$ a aussi été considéré, cependant celui-ci est beaucoup plus lent que $LPeg$. En effet, pour produire un arbre syntaxique à partir de l'expression \mintinline{lua}{(((((sum(30-20))))))}, LPeg finit en 2.233 secondes, tandis que $LulPeg$ prend 213 secondes (3 minutes et 33 secondes). Ces nombres sont des moyennes calculées sur 1'000 exécutions pour $LPeg$ et 18 exécutions pour $LulPeg$ (1'000 exécutions de $LulPeg$ aurait pris environ 50 heures), et chronométrées avec la commande \lstinline|time|, sur Ubuntu 16.04 et un ordinateur équipé d'un processeur Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz. \\
 De plus, par sa modularité (les $PEG$ donnent la possibilité de composer des grammaires de manière procédurale), $LPeg$ permet de facilement générer une grammaire à partir des opérateurs définis par l'utilisateur.
 \subsection{Génération de grammaire}
 Supposons les opérateurs simples suivants:
