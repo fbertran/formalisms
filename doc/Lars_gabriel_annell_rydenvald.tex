@@ -341,7 +341,7 @@ Malheureusement, $LPeg$ ne gère pas les récursions à gauche, et une éliminat
 <Expr'> ::= `+' <Expr'> | <nombre>
 \end{grammar}
 ne suffit pas. On a encore une associativité à droite. \\ \\
-Il existe des implémentations pour introduire la récursion à gauche dans les grammaires $PEG$, telles que \underline{\href{https://github.com/norswap/whimsy/blob/master/doc/autumn/README.md}{Autumn}}\textsuperscript{[1]} ou celle proposée par Laurence Tratt\textsuperscript{[2]}. Puisque nous utilisons $LPeg$ et Lua, aucune de ces deux méthodes ne sont possibles dans le cadre de ce travail, il nous faut donc notre propre implémentation pour gérer les opérateurs binaires étant déclarés comme étant associatifs à gauche.
+Il existe des implémentations pour introduire la récursion à gauche dans les grammaires $PEG$, telles que \underline{\href{https://github.com/norswap/whimsy/blob/master/doc/autumn/README.md}{Autumn}}\textsuperscript{\cite{autumn}} ou celle proposée par Laurence Tratt\textsuperscript{\cite{directLeftRecursive}}. Puisque nous utilisons $LPeg$ et Lua, aucune de ces deux méthodes ne sont possibles dans le cadre de ce travail, il nous faut donc notre propre implémentation pour gérer les opérateurs binaires étant déclarés comme étant associatifs à gauche.
 \subsubsection{Solution pour Ardoises}
 $LPeg$ nous permet de déclarer des fonctions de capture pour ce qui est lu par l'analyseur généré. Supposons la grammaire suivante:
 \begin{grammar}
@@ -369,7 +369,7 @@ Il y a cependant certaines situations où nous sommes obligés de nous arrêter:
 \end{enumerate}
 Le code décrivant cette transformation se trouve sur mon \underline{\href{https://github.com/LGabAnnell/formalisms/blob/f3cc67d58ef319d80d5895146f26f0b489c89d21/src/parser.lua\#L140}{github}} (cf. fonction nommée \lstinline|binary_lassoc|)
 \subsection{Autres fonctions de capture notables}
-À part la nécessité de définir la fonction de capture pour l'associativité à gauche, certaines règles nécessitent elles aussi une fonction pour transformer la table produite.
+À part la nécessité de définir la fonction de capture pour l'associativité à gauche, certaines règles requièrent elles aussi une fonction pour transformer la table produite.
 \subsubsection{Opérateurs unaires postfixes}
 L'impossibilité d'utiliser la récursion à gauche avec $LPeg$ pose aussi un problème pour les opérateurs postfixes. Si on avait la récursion à gauche, on aurait simplement pu écrire
 \begin{grammar}
@@ -561,6 +561,7 @@ Finalement, travailler avec $LPeg$ pour la génération de grammaire est très i
 	Alban Linard, Benoît Barbot, Didier Buchs, Maximilien Colange,
 	Clément Démoulins, Lom Messan Hillah, and Alexis Martin,
 	\emph{Layered Data: a Modular Formal Definition	without Formalisms}
+	
 \end{thebibliography}
 
 \end{document}
