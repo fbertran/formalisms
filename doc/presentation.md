@@ -167,7 +167,6 @@ Operators and expressions not known beforehand
 
 # Choice: LPeg
 * Allows grammar composition
-* Can parse context-free grammars
 * Convenient LUA integration
 
 ---
@@ -285,9 +284,10 @@ No left recursion -> no "native" solution for left-associative binary operators
 
 # Why is this a problem
 
-An expression such as <pre style="font-size: 13px">1 + 2 + 3</pre> will always be parsed into
+An input such as <pre style="font-size: 13px">1 + 2 + 3</pre> will always be parsed into
 <pre style="font-size:13px">{ 1 + { 2 + 3 } }</pre>
-by LPeg
+by LPeg, while we might want
+<pre style="font-size:13px">{ { 1 + 2 } + 3 }</pre>
 
 ---
 
