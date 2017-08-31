@@ -58,22 +58,22 @@
 \newpage
 
 \section{Introduction}
-Ce travail repose sur Ardoises\cite{ardoises}, 
+Ce travail repose sur Ardoises\textsuperscript{\cite{ardoises}}, 
 qui est une plateforme de modélisation formelle. Elle permet aux utilisateurs de créer des modèles formels modulaires, d'effectuer des vérifications de propriétés sur ces modèles et offre une représentation visuelle des formalismes. \\
 
-Ce travail est constitué de deux parties:
+\noindent Ce travail est constitué de deux parties:
 \begin{enumerate}
-	\item La création de modèles formels d'opérateurs et de modèles formels d'expressions. La distinction entre les modèles "opérateurs" et "expressions" est nécessaire pour assurer la modularité des modèles, qui est une fonctionnalité importante du logiciel Ardoises.
+	\item La création de modèles formels d'opérateurs et d'expressions. La distinction entre les modèles "opérateurs" et "expressions" est nécessaire pour assurer la modularité des modèles, qui est une fonctionnalité importante du logiciel Ardoises.
 	\item Pour faciliter la visualisation des modèles formels d'expressions, on propose aussi un analyseur syntaxique dont la grammaire acceptée sera basée sur le modèle d'expression donné par l'utilisateur.
 \end{enumerate}
 
 \section{Formalismes d'opérateurs et d'expressions}
 
 \subsection{Layered data}
-Toute cette partie dépend de la librairie \lstinline|Layeredata|\cite{layeredata},
+Toute cette partie dépend de la librairie \lstinline|Layeredata|\textsuperscript{\cite{layeredata}},
 qui permet l'héritage prototype en Lua. \lstinline|Layeredata| est aussi responsable de la vérification de propriétés sur les instances des modèles. \\
 
-\noindent Avec cette librairie, on a la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent des modèles de base. De plus, grâce au formalismes \lstinline|data.record| et \lstinline|data.collection| de la librairie \lstinline|Ardoises/Formalismes| on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
+\noindent Avec cette librairie, on a la possibilité de créer des modèles de base, puis de les spécialiser en définissant plus précisément les propriétés des modèles qui héritent des modèles de base. De plus, grâce au formalismes \lstinline|data.record| et \lstinline|data.collection| de la librairie \underline{\href{https://github.com/ardoises/formalisms}{\lstinline|Ardoises/Formalismes|}} on peut imposer des propriétés que les modèles plus spécifiques devront satisfaire.
 
 \subsection{Distinction entre opérateurs et expressions}
 Même si cela paraît évident, il est important de noter les différences entre opérateurs et expressions; un opérateur est constitué d'un symbole (sa représentation textuelle), accepte un certain nombre d'opérandes et possède certaines propriétés, tandis qu'une expression est constituée d'un ou plusieurs opérateurs. Sachant qu'une opérande d'un opérateur peut être une sous-expression, il nous faut donc un moyen (de préférence simple) pour exprimer les sous-expressions acceptées.
@@ -530,8 +530,7 @@ La construction des modèles formels d'opérateurs et d'expressions était le po
 Cependant, l'analyse lexicale correspond, à mon avis, bien aux attentes du projet. Utiliser un PEG pour générer une grammaire à partir d'opérateurs fonctionne très bien, malgré les quelques considérations à retenir quant aux priorités qu'on attribue aux opérateurs ainsi que le fait de devoir définir des règles pour les différents types d'opérateur. Il est important de noter toutefois que l'intégration complète de la génération de grammaire n'est pas encore faite, la cause principale étant qu'on n'a pas réussi à constituer et à valider un modèle définitif ni pour les opérateurs, ni pour les expressions.
 \ \\ \\
 Finalement, travailler avec $LPeg$ pour la génération de grammaire est très intéressant. C'est un analyseur lexical qui répond aux besoins d'Ardoises, par sa forte modularité et sa manipulation facile, malgré le fait qu'il n'accepte pas la récursion à gauche.
-\section{Références}
-\renewcommand\refname{}
+\renewcommand\refname{Références}
 \begin{thebibliography}{9}
 	\bibitem{autumn}
 	Nicolas Laurent,
@@ -549,9 +548,6 @@ Finalement, travailler avec $LPeg$ pour la génération de grammaire est très i
 	Alban Linard, Benoît Barbot, Didier Buchs, Maximilien Colange,
 	Clément Démoulins, Lom Messan Hillah, and Alexis Martin,
 	\emph{Layered Data: a Modular Formal Definition	without Formalisms}
-	
-	
-	
 \end{thebibliography}
 
 \end{document}
