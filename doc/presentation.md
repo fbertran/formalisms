@@ -270,15 +270,15 @@ And our grammar finally looks like this
 
 ---
 
-# Problem with PEG parsers
+# Problem with LPeg
 
-## They don't accept left recursion
+## It doesn't accept left recursion
 
 ---
 
 # Why is this a problem?
 
-No left recursion -> no "native" solution for left-associative binary operators
+No left recursion &rArr; no "native" solution for left-associative binary operators
 
 ---
 
@@ -300,3 +300,6 @@ Assuming our <code>addition</code> operator is left-associative, once LPeg has p
 we can simply operate on it in a recursive fashion to obtain what we want, i.e.
 
 <pre style="font-size: 13px">{ { 1 + 2 } + 3 }</pre>
+
+---
+
