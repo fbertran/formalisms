@@ -1,5 +1,4 @@
 local parser = require "parser"
-local pprint = require "pprint"
 
 require "busted.runner" {}
 

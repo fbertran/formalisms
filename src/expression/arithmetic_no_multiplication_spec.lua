@@ -7,17 +7,6 @@ local refines    = Layer.key.refines
 local meta       = Layer.key.meta
 local expression = Layer.require "expression"
 local deleted    = Layer.key.deleted
-local pprint     = require "pprint"
-
-local function checkDeps(layer)
-  for _, v in Layer.Proxy.dependencies(layer) do
-    if getmetatable(v) == Layer.Proxy then
-      checkDeps(v)
-    else
-      pprint(v)
-    end
-  end
-end
 
 describe ("Arithmetic without multiplication", function ()
   it ("doesn't allow multiplication operator", function ()
@@ -40,8 +29,6 @@ describe ("Arithmetic without multiplication", function ()
     layer.operands = { l1, l2}
 
     Layer.Proxy.check_all(layer)
-
-    -- checkDeps(layer.operands[1].operator)
 
     assert.is_nil(next(Layer.messages))
   end)
