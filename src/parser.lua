@@ -401,14 +401,7 @@ return function (expression)
         patterns[var_op.type](var_op)
     end
 
-    if req == "lulpeg" then
-      lp.pprint(grammar)
-    end
-
     grammar.axiom = lp.V(prefix .. op_table[tlen(op_table)][1].priority)
-    if req == "lulpeg" then
-      lp.pprint(grammar)
-    end
 
     return lp.P(grammar)
   end

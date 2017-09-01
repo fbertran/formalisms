@@ -303,3 +303,5 @@ we can simply operate on it in a recursive fashion to obtain what we want, i.e.
 
 ---
 
+# Other capture functions
+
