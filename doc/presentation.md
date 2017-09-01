@@ -1,6 +1,11 @@
 <!-- footer: Lars Gabriel Annell Rydenvald --->
 <!-- page_number: true -->
 
+
+<style type="text/css">
+	pre, code { font-size: 16px !important;  }
+</style>
+
 <h1 style="text-align: center; font-size: 120px">Ardoises</h1>
 <h1 style="text-align: center">Operator and expression formalisms</h1>
 
@@ -54,7 +59,7 @@ Let the expression that uses the operator model define the type of the operands
 
 # Example - Addition operator
 
-<pre style="font-size:16px">
+```lua
 addition [meta] = {
   operands = {
     [refines] = { collection },
@@ -69,14 +74,14 @@ addition [meta] = {
     },
   },
 }
-</pre>
+```
 
 ---
 
 # Example - Addition operator
 ### Using it in an expression
 The type of the operands are defined here
-<pre style="font-size:16px">
+```lua
 local r_addition = {
   [refines] = { addition },
   [meta   ] = { of = ref }, -- ref is a reference to our expression 
@@ -89,7 +94,7 @@ addition_expression[meta] = {
     ...
   }
 }
-</pre>
+```
 ---
 
 <h1 style="text-align: center">Expression formalisms</h1>
@@ -107,7 +112,7 @@ addition_expression[meta] = {
 ### At the concrete level:
 * A tree of sub-expressions
 
-<pre style="font-size: 16px">
+```lua
 local literal_1 = {
   [refines] = { addition_expression },
   operator  = addition_expression[meta][expression].number,
@@ -125,7 +130,7 @@ local addition_ = {
   operator  = addition_expression[meta][expression].addition,
   operands  = { literal1, literal2 }
 }
-</pre>
+```
 
 ---
 
@@ -175,7 +180,7 @@ Operators and expressions not known beforehand
 ---
 
 # Why not LulPeg?
-Too slow: parsing <code style="font-size: 25px">(((((sum(30-20))))))</code> takes over 3 minutes for LulPeg, around 2 seconds for LPeg
+Too slow: parsing <code style="font-size: 25px !important;">(((((sum(30-20))))))</code> takes over 3 minutes for LulPeg, around 2 seconds for LPeg
 
 ---
 
@@ -227,11 +232,11 @@ Too slow: parsing <code style="font-size: 25px">(((((sum(30-20))))))</code> take
 
 # Example
 First we create the literal / terminal rule
-<pre style="font-size: 20px;">
+<pre style="font-size:20px !important;">
 &lt;Number&gt; ::= [0-9]+
 </pre>
 And add it to the grammar
-<pre style="font-size: 20px;">
+<pre style="font-size: 20px !important;">
 &lt;P15&gt; ::= &lt;Number&gt;
 </pre>
 
@@ -239,11 +244,11 @@ And add it to the grammar
 
 # Example
 Then the multiplication rule
-<pre style="font-size: 20px;">
+<pre style="font-size: 20px !important;">
 &lt;Multiplication&gt; ::= &lt;P15&gt; '*' (&lt;P12&gt; | &lt;P15&gt;)
 </pre>
 And add it to the grammar
-<pre style="font-size: 20px;">
+<pre style="font-size: 20px !important;">
 &lt;P12&gt; ::= &lt;Multiplication&gt; | &lt;P15&gt;
 &lt;P15&gt; ::= &lt;Number&gt;
 </pre>
@@ -269,7 +274,7 @@ And our grammar finally looks like this
 # Some considerations
 1. Literals and n-ary operators should have the highest priority of the different operators.
 2. If our expression allows variables, they must be added last.
-3. Patterns have been created for the most common operator types; if other types are needed, the pattern must be defined for the parser to handle it.
+3. Patterns have been created for the most common operator types; if other types are needed, the pattern must be defined for the parser to be able to handle it.
 
 ---
 
@@ -287,10 +292,10 @@ No left recursion &rArr; no "native" solution for left-associative binary operat
 
 # Why is this a problem
 
-An input such as <pre style="font-size: 16px">1 + 2 + 3</pre> will always be parsed into
-<pre style="font-size:16px">{ 1 + { 2 + 3 } }</pre>
+An input such as <pre>1 + 2 + 3</pre> will always be parsed into
+<pre>{ 1 + { 2 + 3 } }</pre>
 by LPeg, while we might want
-<pre style="font-size:16px">{ { 1 + 2 } + 3 }</pre>
+<pre>{ { 1 + 2 } + 3 }</pre>
 
 ---
 
@@ -298,11 +303,11 @@ by LPeg, while we might want
 
 Assuming our <code>addition</code> operator is left-associative, once LPeg has produced the  table
 
-<pre style="font-size: 16px">{ 1 + { 2 + 3 } }</pre>
+<pre>{ 1 + { 2 + 3 } }</pre>
 
 we can simply operate on it in a recursive fashion to obtain what we want, i.e.
 
-<pre style="font-size: 16px">{ { 1 + 2 } + 3 }</pre>
+<pre>{ { 1 + 2 } + 3 }</pre>
 
 ---
 
@@ -310,13 +315,13 @@ we can simply operate on it in a recursive fashion to obtain what we want, i.e.
 
 1.  Decide on operator type name, e.g. *quaternary*
 2.  Create the pattern
-<pre style="font-size:16px;">
+```lua
 local pattern = (
   next_expr * white * first * white *
   lp.V("axiom") * white * second * white *
   lp.V("axiom") * white * third * white * (curr_expr + next_expr)
 )
-</pre>
+```
 3. Create a capture function, can be as simple as just returning a table
 4. Insert into our `patterns` table
 
@@ -325,7 +330,7 @@ local pattern = (
 # How to create a pattern for a new operator type
 
 Example of a capture function for our *quaternary* operator
-<pre style="font-size:16px">
+```lua
 -- p is the pattern from the last slide
 function quaternary_capture (p)
   -- We use LPegs capture and apply function operator ( / )
@@ -347,15 +352,19 @@ function quaternary_capture (p)
     }
   end
 end
-</pre>
+```
 
 --- 
 
 # How to create a pattern for a new operator type
 
-When all this is done, we add it to our `patterns` table (in parser.lua)
+When all this is done, we add it to our <code style="font-size:25px !important">patterns</code> table (in parser.lua)
 
-<pre style="font-size:16px;">
+---
+
+It should look like this
+
+```lua
 local patterns = {
   ...,
   quaternary = function (operator, curr_expr, next_expr)
@@ -368,11 +377,6 @@ local patterns = {
     first = lp.C(first)
     second = lp.C(second)
     third = lp.C(third)
-</pre>
-
----
-
-<pre style="font-size: 16px">
     -- Create the pattern
     local pattern = (
       next_expr * white * first * white *
@@ -385,8 +389,5 @@ local patterns = {
   end,
   ...
 }
-</pre>
-
-```lua
-local f = 2
 ```
+
