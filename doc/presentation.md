@@ -1,4 +1,5 @@
 <!-- footer: Lars Gabriel Annell Rydenvald --->
+<!-- page_number: true -->
 
 <h1 style="text-align: center; font-size: 120px">Ardoises</h1>
 <h1 style="text-align: center">Operator and expression formalisms</h1>
@@ -53,7 +54,7 @@ Let the expression that uses the operator model define the type of the operands
 
 # Example - Addition operator
 
-<pre style="font-size:13px">
+<pre style="font-size:16px">
 addition [meta] = {
   operands = {
     [refines] = { collection },
@@ -61,7 +62,8 @@ addition [meta] = {
       [collection] = {
         minimum    = 2,
         maximum    = 2,
-        value_type = re.operator [meta].of, -- re will be a reference to the expression instance
+        value_type = re.operator [meta].of, -- re will be a reference to 
+                                            -- the expression instance
                                             -- containing this operator
       },
     },
@@ -74,10 +76,11 @@ addition [meta] = {
 # Example - Addition operator
 ### Using it in an expression
 The type of the operands are defined here
-<pre style="font-size:13px">
+<pre style="font-size:16px">
 local r_addition = {
   [refines] = { addition },
-  [meta   ] = { of = ref }, -- ref is a reference to our expression containing the addition operator
+  [meta   ] = { of = ref }, -- ref is a reference to our expression 
+                            -- containing the addition operator
 }
 
 addition_expression[meta] = {
@@ -104,7 +107,7 @@ addition_expression[meta] = {
 ### At the concrete level:
 * A tree of sub-expressions
 
-<pre style="font-size: 13px">
+<pre style="font-size: 16px">
 local literal_1 = {
   [refines] = { addition_expression },
   operator  = addition_expression[meta][expression].number,
@@ -284,10 +287,10 @@ No left recursion &rArr; no "native" solution for left-associative binary operat
 
 # Why is this a problem
 
-An input such as <pre style="font-size: 13px">1 + 2 + 3</pre> will always be parsed into
-<pre style="font-size:13px">{ 1 + { 2 + 3 } }</pre>
+An input such as <pre style="font-size: 16px">1 + 2 + 3</pre> will always be parsed into
+<pre style="font-size:16px">{ 1 + { 2 + 3 } }</pre>
 by LPeg, while we might want
-<pre style="font-size:13px">{ { 1 + 2 } + 3 }</pre>
+<pre style="font-size:16px">{ { 1 + 2 } + 3 }</pre>
 
 ---
 
@@ -295,13 +298,95 @@ by LPeg, while we might want
 
 Assuming our <code>addition</code> operator is left-associative, once LPeg has produced the  table
 
-<pre style="font-size: 13px">{ 1 + { 2 + 3 } }</pre>
+<pre style="font-size: 16px">{ 1 + { 2 + 3 } }</pre>
 
 we can simply operate on it in a recursive fashion to obtain what we want, i.e.
 
-<pre style="font-size: 13px">{ { 1 + 2 } + 3 }</pre>
+<pre style="font-size: 16px">{ { 1 + 2 } + 3 }</pre>
 
 ---
 
-# Other capture functions
+# How to create a pattern for a new operator type
 
+1.  Decide on operator type name, e.g. *quaternary*
+2.  Create the pattern
+<pre style="font-size:16px;">
+local pattern = (
+  next_expr * white * first * white *
+  lp.V("axiom") * white * second * white *
+  lp.V("axiom") * white * third * white * (curr_expr + next_expr)
+)
+</pre>
+3. Create a capture function, can be as simple as just returning a table
+4. Insert into our `patterns` table
+
+---
+
+# How to create a pattern for a new operator type
+
+Example of a capture function for our *quaternary* operator
+<pre style="font-size:16px">
+-- p is the pattern from the last slide
+function quaternary_capture (p)
+  -- We use LPegs capture and apply function operator ( / )
+  return p / function (left, op1, middle1, op2, middle2, op3, right)
+    -- And we basically return a table
+    -- We could just use LPeg.Ct (capture table)
+    -- However if we need to define the keys of our table,
+    -- we can't use that function, since LPeg.Ct returns a table
+    -- with numbers as keys
+    return {
+      left    = left,
+      op      = op1,
+      op2     = op2,
+      op3     = op3,
+      middle1 = middle1,
+      middle2 = middle2,
+      right   = right,
+      op_type = "quaternary"
+    }
+  end
+end
+</pre>
+
+--- 
+
+# How to create a pattern for a new operator type
+
+When all this is done, we add it to our `patterns` table (in parser.lua)
+
+<pre style="font-size:16px;">
+local patterns = {
+  ...,
+  quaternary = function (operator, curr_expr, next_expr)
+    -- We start by getting the textual representations
+    -- of the operator
+    local first, second, third = lp.P(operator.operator),
+      lp.P(operator.operator1), lp.P(operator.operator2)
+      
+    -- We tell LPeg to capture these represantions (tokens)
+    first = lp.C(first)
+    second = lp.C(second)
+    third = lp.C(third)
+</pre>
+
+---
+
+<pre style="font-size: 16px">
+    -- Create the pattern
+    local pattern = (
+      next_expr * white * first * white *
+      lp.V("axiom") * white * second * white * lp.V("axiom") * white *
+      third * white * (curr_expr + next_expr)
+    )
+    
+    -- Return the capture function
+    return quaternary_capture(pattern)
+  end,
+  ...
+}
+</pre>
+
+```lua
+local f = 2
+```
