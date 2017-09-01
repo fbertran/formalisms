@@ -15,7 +15,7 @@ return function (expression)
   -- This way we can easily retrieve properties such as the operator's priority
   local op_map = { }
 
-  local white = lp.S(" \t") ^ 0
+  local white = lp.S(" \t\n") ^ 0
 
   -- patterns for primitive types (number / boolean) and variables
   local value_types = {
