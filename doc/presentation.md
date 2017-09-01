@@ -391,3 +391,5 @@ local patterns = {
 }
 ```
 
+<code style="font-size:25px!important">operator</code> is the operator object, <code style="font-size:25px!important">curr_expr</code> references the operator's level in the grammar, and <code style="font-size:25px!important">next_expr</code> is the level above.
+
