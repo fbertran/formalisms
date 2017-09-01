@@ -1,7 +1,6 @@
 <!-- footer: Lars Gabriel Annell Rydenvald --->
 <!-- page_number: true -->
 
-
 <style type="text/css">
 	pre, code { font-size: 16px !important;  }
 </style>
@@ -377,6 +376,7 @@ local patterns = {
     first = lp.C(first)
     second = lp.C(second)
     third = lp.C(third)
+    
     -- Create the pattern
     local pattern = (
       next_expr * white * first * white *

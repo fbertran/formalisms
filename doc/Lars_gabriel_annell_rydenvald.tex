@@ -330,7 +330,7 @@ Pour représenter les opérateurs n-aires, on utilise la forme représentation\_
 	<naire> ::= <op\_repr> `(' <Expression> \{ `,' <Expression> \} `)'
 \end{grammar}
 \subsection{Associativité à gauche}
-\subsubsection{Problème des PEG}
+\subsubsection{Problème de $LPeg$}
 On constate que tous les opérateurs binaires dans le tableau précédent sont associatifs à droite. Or, on voudrait pouvoir préciser l'associativité lors de la déclaration des opérateurs, puisque cela modifie l'arbre syntaxique produit par l'analyseur lexical. Dans le cas d'un analyseur $LR$, l'associativité à gauche se traduit simplement par une récursion à gauche, telle que
 \begin{grammar}
 	<Expr> ::= <Expr> `+' <nombre> | <nombre>
