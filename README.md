@@ -1,29 +1,13 @@
-# Standard Formalisms Library for CosyVerif
+# Standard Formalisms Library for Ardoises
 
-This repository contains a standard library of formalisms, or pieces or
-formalisms, to use within the [CosyVerif](http://cosyverif.org) platform.
+This repository contains a standard library of formalisms, or pieces or formalisms,
+to use within the [Ardoises](https://github.com/ardoises) platform.
 
 ## Install
 
-CosyVerif formalisms are a set of [Lua](http://www.lua.org) modules.
-It is bundled in [Luarocks](https://luarocks.org), a package manager for Lua.
-To install it, first install Lua (version 5.2 or 5.3), for instance using the
-following commands:
-
-```sh
-  # requires the python pip command
-  pip install hererocks
-  hererocks my-prefix -r^ --lua=5.2
-  ./my-prefix/bin/luarocks install cosy-formalisms
-```
-
-To run examples, put them in a file and launch it with:
-
-```sh
-  ./my-prefix/bin/lua my-file.lua
-```
-You can also run the Lua interpreter interactively (by giving it no parameter),
-but remember to remove all `local` keywords from examples.
+Ardoises formalisms are a set of [Lua](http://www.lua.org) modules.
+The standard formalisms are bundled in [Luarocks](https://luarocks.org),
+a package manager for Lua.
 
 ## Contributing
 
@@ -32,25 +16,22 @@ please fork and make a pull request!
 
 ## Discussion, Bugs, ...
 
-Please create [a new issue](https://github.com/CosyVerif/formalisms/issues/new)
+Please create [a new issue](https://github.com/ardoises/formalisms/issues/new)
 if you have found a bug, or request a new feature.
-For other discussions, you can use the
-[gitter](https://gitter.im/CosyVerif/formalisms) chat.
+For other discussions, you can use the [gitter](https://gitter.im/ardoises) chat.
 
 ## Requirements
 
-Please learn the bases of the [Lua](http://www.lua.org) language before
-reading this tutorial. For instance, you can read
-[Programming in Lua](http://www.lua.org/pil/contents.html) (part I should be
-sufficient).
+Please learn the bases of the [Lua](http://www.lua.org) language before reading this tutorial.
+For instance, you can read [Programming in Lua](http://www.lua.org/pil/contents.html)
+(part I should be sufficient).
 
 ## Tutorial
 
 Let us start by creating some simple automata.
-First, we have to define the formalism for automata, and then create some
-models.
+First, we have to define the formalism for automata, and then create some models.
 
-Contrary to usual metamodeling languages, Cosy does not use a
+Contrary to usual metamodeling languages, Ardoises do not use a
 [class-based inheritance](https://en.wikipedia.org/wiki/Class-based_programming)
 approach, but instead uses a
 [prototype-based inheritance](https://en.wikipedia.org/wiki/Prototype-based_programming).
@@ -71,7 +52,7 @@ as parameters:
 The function to define should return the formalism or model, but this `return`
 can be omitted for convenience.
 This convention allows to load formalisms and models either locally or from
-a remote Cosy server.
+a remote Ardoises server.
 
 ```lua
 return function (Layer, automaton, ref)
@@ -119,7 +100,7 @@ An [automaton](https://en.wikipedia.org/wiki/Automata_theory) is based on a
 hypermultigraph, a rarely defined mix of
 [hypergraphs](https://en.wikipedia.org/wiki/Hypergraph)
 and [multigraphs](https://en.wikipedia.org/wiki/Multigraph).
-The Standard Formalisms Library for CosyVerif provides a formalism for the
+The Standard Formalisms Library for Ardoises provides a formalism for the
 generic form of graphs, as well as formalisms to constrain it.
 
 Our automaton is built over the hypermultigraph structure, with a restriction
@@ -140,7 +121,7 @@ automaton [refines] = {
 ```
 
 Please not that we have used `Layer.require` instead of `require` to import
-the dependencies. This is required to allow loading from a Cosy server as well
+the dependencies. This is required to allow loading from a Ardoises server as well
 as from the filesystem.
 
 _Refines_ means something like "inherits on steroids".
@@ -192,7 +173,7 @@ other uses will not be affected.
 
 We could also have created a more traditional alias as below.
 However, it is not the preferred solution, because its lacks extensibility.
-The "cosy way" creates new containers for states and transitions, that can
+The "ardoises way" creates new containers for states and transitions, that can
 themselves be specialized, whereas the "below way" does not allow specialization
 at all.
 
@@ -320,10 +301,5 @@ automaton.alphabet = {
 }
 ```
 
-Congratulations, you have just created your first formalism in CosyVerif!
+Congratulations, you have just created your first formalism in Ardoises!
 Next step is to create an instance of automaton above this formalism.
-
-<!---
-  Ardoise tag: aHR0cHM6Ly9naXRodWIuY29tL2FyZG9pc2Vz
-  Base64 "https://github.com/ardoises"
--->

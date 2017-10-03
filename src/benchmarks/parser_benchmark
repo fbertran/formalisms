@@ -1,0 +1,14 @@
+#! /bin/bash
+repeats=1000;
+output_file="benchmarks/"$1;
+cmd="lua t.lua (((((sum(30-20))))))"
+
+
+echo ${output_file}
+
+cd ..
+
+for (( i = 0; i < $repeats; i++ ))
+do
+  /usr/bin/time -f "%E,%U,%S" -o ${output_file} -a $cmd > /dev/null 2>&1
+done;
